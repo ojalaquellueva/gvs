@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Database connection parameters
+# For production, keep these parameters outside script working directory
+# Edit db_config_path in params.sh accordingly
+host='<host_name_or_ip>'
+
+user_admin='<admin-level_user>'
+user_read='<read-only_user>'
+
+# Admin-level user password
+pwd_user_admin='<admin-level_password>'
+
+# CDS read-only database user pwd
+# Needed for access by api (user www-data)
+pgpwd='<read-only_user_password>'
+
+db_cds='cds'
+db_gadm='gadm'

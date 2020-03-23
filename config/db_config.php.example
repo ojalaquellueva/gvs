@@ -1,0 +1,19 @@
+<?php
+
+///////////////////////////////////////////////
+// Read-only database config fie for CDS
+///////////////////////////////////////////////
+
+$HOST = '<hostname_or_ip>';
+$USER_R = '<read-only_user_name>';	// Read-only user
+$USER_W = '<write_user_name>';		// Write-access user
+$DB = 'gnrs';
+
+// Batch-processing db. 
+// Can be same or different from main db, or not.
+// Consider using separate batch db to avoid tying up 
+// the public-access db if processing very
+// large inputs.
+$DB_BATCH = "gnrs";
+
+?>
