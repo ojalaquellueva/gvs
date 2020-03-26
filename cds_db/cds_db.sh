@@ -48,9 +48,8 @@ DIR_LOCAL=$DIR
 # Main
 #########################################################################
 
-
-### UNDER CONSTRUCTION
-### ADAPTING FROM gnrs_db.sh...
+# Disable full rebuild while develop final components
+: <<'COMMENT_BLOCK_1'
 
 ############################################
 # Create database in admin role & reassign
@@ -159,10 +158,7 @@ echoi $e -n "- Removing dumpfile..."
 rm $dumpfile
 source "$includes_dir/check_status.sh"	
 
-
-
-# Skip everything else for now
-: <<'COMMENT_BLOCK_1'
+COMMENT_BLOCK_1
 
 
 ############################################
@@ -170,9 +166,15 @@ source "$includes_dir/check_status.sh"
 ############################################
 
 echoi $e -n "Creating core tables..."
-PGOPTIONS='--client-min-messages=warning' psql -d $db_cds --set ON_ERROR_STOP=1 -q -f $DIR_LOCAL/sql/create_core_tables.sql
+PGOPTIONS='--client-min-messages=warning' psql -d $db_cds --set ON_ERROR_STOP=1 -q -f $DIR/sql/create_core_tables.sql
 source "$includes_dir/check_status.sh"  
 
+
+
+
+
+# Skip everything else for now
+: <<'COMMENT_BLOCK_2'
 
 ############################################
 # Build political division tables
@@ -289,8 +291,6 @@ echoi $i "done"
 ############################################
 # Transfer information from bien2 tables
 ############################################
-: <<'COMMENT_BLOCK_2'
-COMMENT_BLOCK_2
 
 echoi $e -n "Correcting known issues...."
 PGOPTIONS='--client-min-messages=warning' psql -d $db_cds --set ON_ERROR_STOP=1 -q -f $DIR_LOCAL/sql/correct_errors.sql
@@ -331,7 +331,7 @@ echoi $e -n "Adjusting permissions..."
 for tbl in `psql -qAt -c "select tablename from pg_tables where schemaname = 'public';" $db_cds` ; do  psql -c "alter table \"$tbl\" owner to bien" $db_cds > /dev/null >> $tmplog; done
 source "$includes_dir/check_status.sh"
 
-COMMENT_BLOCK_1
+COMMENT_BLOCK_2
 
 ######################################################
 # Report total elapsed time and exit
