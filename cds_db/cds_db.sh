@@ -36,13 +36,53 @@ includes_dir=$DIR"/../includes"
 # Load parameters, functions and get command-line options
 source "$includes_dir/startup_master.sh"
 
-# Set process name and confirm operation
-pname="Build centroid validation database $db_cds"
-source "$includes_dir/confirm.sh"
+# # Set process name and confirm operation
+# pname="Build centroid validation database $db_cds"
+# source "$includes_dir/confirm.sh"
 
 # Set local directories to same as main
 data_dir_local=$data_base_dir
+data_dir=$data_base_dir
 DIR_LOCAL=$DIR
+
+######################################################
+# Custom confirmation message. 
+# Will only be displayed if -s (silent) option not used.
+######################################################
+
+# Current user
+curr_user="$(whoami)"
+
+# Admin user message
+user_admin_disp=$curr_user
+if [[ "$USER_ADMIN" != "" ]]; then
+	user_admin_disp="$USER_ADMIN"
+fi
+
+# Read-only user message
+user_read_disp="[n/a]"
+if [[ "$USER_READ" != "" ]]; then
+	user_read_disp="$USER_READ"
+fi
+
+# Reset confirmation message
+msg_conf="$(cat <<-EOF
+
+Run process '$pname' using the following parameters: 
+
+GADM table:		$TBL_GEOM
+GADM source db:		${SCH_GEOM}.${DB_GEOM}
+Data directory:		$data_dir
+Current user:		$curr_user
+Admin user/db owner:	$user_admin_disp
+Read-only user:		$user_read_disp
+
+EOF
+)"		
+confirm "$msg_conf"
+
+# Start time, send mail if requested and echo begin message
+source "$includes_dir/start_process.sh"  
 
 #########################################################################
 # Main

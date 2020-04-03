@@ -38,8 +38,16 @@ functions_path="/home/boyle/cds/src/includes"
 data_base_dir="/home/boyle/bien/cds/data"
 #data_base_dir="data"		 # Relative path
 
-# Read only user to add to new tables
-user_read="public_bien"
+# Makes user_admin the owner of the db and all objects in db
+# If leave user_admin blank ("") then database will be owned
+# by whatever user you use to run this script, and postgis tables
+# will belong to postgres
+USER_ADMIN="bien"		# Admin user
+
+# Give user_read select permission on the database
+# If leave blank ("") user_read will not be added and only
+# you will have access to db
+USER_READ="bien_private"	# Read only user
 
 # Destination email for process notifications
 # You must supply a valid email if you used the -m option
