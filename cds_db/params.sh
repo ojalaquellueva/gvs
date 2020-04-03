@@ -5,6 +5,13 @@
 # Check and change as needed
 ##############################################################
 
+# Reference database for world geometries
+TBL_GEOM="gadm"		# World geometries table
+DB_GEOM="gadm"		# Source db for world geom table
+SCH_GEOM="public"	# Schema of world geom table
+
+# Name of database
+
 # Path to db_config.sh
 # For production, keep outside app working directory & supply
 # absolute path

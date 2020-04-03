@@ -50,7 +50,6 @@ DIR_LOCAL=$DIR
 
 # Disable full rebuild while develop final components
 : <<'COMMENT_BLOCK_1'
-COMMENT_BLOCK_1
 
 ############################################
 # Create database in admin role & reassign
@@ -135,23 +134,20 @@ echoi $i "done"
 # from scratch
 ############################################
 
-echoi $e "Importing table \"$TBL_GEOM\" from DB \"$DB_GEOM\":"
+echoi $e "Importing existing table \"gadm\" from schema \"$sch_main\" in DB \"$db_main\":"
 
 # Dump table from source databse
-echoi $e -n "- Exporting dumpfile..."
+echoi $e -n "- Creating dumpfile..."
 dumpfile="/tmp/cds_world_geom.sql"
-sudo -Hiu postgres pg_dump --no-owner -t "${SCH_GEOM}.${TBL_GEOM}" "$DB_GEOM" > $dumpfile
+sudo -Hiu postgres pg_dump --no-owner -t "${sch_main}.world_geom" "$db_main" > $dumpfile
 source "$includes_dir/check_status.sh"	
 
-# Correct schema references if $SCH_GEOM<>"public"
-# Will screw up the dumpfile if source schema is already "public"
-if [[ ! "$SCH_GEOM" == "public" ]]; then
-	echoi $e -n "- Correcting schema references in dumpfile..."
-	sed -i -e "s/${SCH_GEOM}./public./g" $dumpfile
-	sed -i -e "s/Schema: ${SCH_GEOM};/Schema: public;/g" $dumpfile
-	sed -i -e "s/ ${SCH_GEOM}./ public./g" $dumpfile
-	source "$includes_dir/check_status.sh"	
-fi
+# Correct schema references. 
+echoi $e -n "- Correcting schema references in dumpfile..."
+sed -i -e "s/${sch_main}./public./g" $dumpfile
+sed -i -e "s/Schema: ${sch_main};/Schema: public;/g" $dumpfile
+sed -i -e "s/ postgis./ public./g" $dumpfile
+source "$includes_dir/check_status.sh"	
 
 # Import table from dumpfile to target db & schema
 echoi $e -n "- Importing table from dumpfile..."
@@ -161,6 +157,9 @@ source "$includes_dir/check_status.sh"
 echoi $e -n "- Removing dumpfile..."
 rm $dumpfile
 source "$includes_dir/check_status.sh"	
+
+COMMENT_BLOCK_1
+
 
 ############################################
 # Build core tables
