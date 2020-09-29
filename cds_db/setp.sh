@@ -31,16 +31,17 @@ if [ -z ${master+x} ]; then
 	export glogfile="$DIR/log/logfile_"$local_basename".txt"
 	sudo mkdir -p "$DIR/log" 
 	sudo touch $glogfile
+
+	# Set includes directory path, relative to $DIR
+	includes_dir=$DIR"/../includes"
+
+	# Load parameters, functions and get command-line options
+	source "$includes_dir/startup_master.sh"
+
+	# # Set process name and confirm operation
+	pname="Set permissions for database $DB_CDS"
+
 fi
-
-# Set includes directory path, relative to $DIR
-includes_dir=$DIR"/../includes"
-
-# Load parameters, functions and get command-line options
-source "$includes_dir/startup_master.sh"
-
-# # Set process name and confirm operation
-pname="Set permissions for database $DB_CDS"
 
 # Set local directories to same as main
 data_dir_local=$data_base_dir

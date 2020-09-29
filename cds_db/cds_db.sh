@@ -20,6 +20,11 @@ COMMENT_BLOCK_x
 # Enable the following for strict debugging only:
 #set -e
 
+# Pointless command to trigger sudo password request. 
+# Should remain in effect for all sudo commands in this 
+# script, regardless of sudo timeout
+sudo pwd >/dev/null
+
 # The name of this file. Tells sourced scripts not to reload general  
 # parameters and command line options as they are being called by  
 # another script. Allows component scripts to be called individually  
@@ -29,6 +34,11 @@ master=`basename "$0"`
 # Get working directory
 DIR="${BASH_SOURCE%/*}"
 if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
+
+# Start logfile
+export glogfile="$DIR/log/logfile_"$master".txt"
+sudo mkdir -p "$DIR/log" 
+sudo touch $glogfile
 
 # Set includes directory path, relative to $DIR
 includes_dir=$DIR"/../includes"
@@ -50,37 +60,40 @@ DIR_LOCAL=$DIR
 # Will only be displayed if -s (silent) option not used.
 ######################################################
 
-# Current user
-curr_user="$(whoami)"
+if [ "$i" == "true" ]; then
 
-# Admin user message
-user_admin_disp=$curr_user
-if [[ "$USER_ADMIN" != "" ]]; then
-	user_admin_disp="$USER_ADMIN"
-fi
+	# Current user
+	curr_user="$(whoami)"
 
-# Read-only user message
-user_read_disp="[n/a]"
-if [[ "$USER_READ" != "" ]]; then
-	user_read_disp="$USER_READ"
-fi
+	# Admin user message
+	user_admin_disp=$curr_user
+	if [[ "$USER_ADMIN" != "" ]]; then
+		user_admin_disp="$USER_ADMIN"
+	fi
 
-# Reset confirmation message
-msg_conf="$(cat <<-EOF
+	# Read-only user message
+	user_read_disp="[n/a]"
+	if [[ "$USER_READ" != "" ]]; then
+		user_read_disp="$USER_READ"
+	fi
 
-Run process '$pname' using the following parameters: 
+	# Reset confirmation message
+	msg_conf="$(cat <<-EOF
 
-CDS DB name:		$DB_CDS
-GADM source db:		${SCH_GEOM}.${DB_GEOM}
-GADM table:		$TBL_GEOM
-Data directory:		$data_dir
-Current user:		$curr_user
-Admin user/db owner:	$user_admin_disp
-Read-only user:		$user_read_disp
+	Run process '$pname' using the following parameters: 
+
+	CDS DB name:		$DB_CDS
+	GADM source db:		${SCH_GEOM}.${DB_GEOM}
+	GADM table:		$TBL_GEOM
+	Data directory:		$data_dir
+	Current user:		$curr_user
+	Admin user/db owner:	$user_admin_disp
+	Read-only user:		$user_read_disp
 
 EOF
-)"		
-confirm "$msg_conf"
+	)"		
+	confirm "$msg_conf"
+fi
 
 # Start time, send mail if requested and echo begin message
 source "$includes_dir/start_process.sh"  
@@ -88,11 +101,6 @@ source "$includes_dir/start_process.sh"
 #########################################################################
 # Main
 #########################################################################
-
-# Pointless command to trigger sudo password request. 
-# Should remain in effect for all sudo commands in this 
-# script, regardless of sudo timeout
-sudo pwd >/dev/null
 
 
 
@@ -241,54 +249,12 @@ COMMENT_BLOCK_1
 # Alter ownership and permissions
 ############################################
 
-if [ "$USER_ADMIN" != "" ]; then
-	echoi $e "Changing database ownership and permissions:"
-
-	echoi $e -n "- Changing DB owner to '$USER_ADMIN'..."
-	sudo -Hiu postgres PGOPTIONS='--client-min-messages=warning' psql --set ON_ERROR_STOP=1 -q -c "ALTER DATABASE $DB_CDS OWNER TO $USER_ADMIN" 
-	source "$includes_dir/check_status.sh"  
-
-	echoi $e -n "- Granting permissions to '$USER_ADMIN'..."
-	sudo -Hiu postgres PGOPTIONS='--client-min-messages=warning' psql -q <<EOF
-	\set ON_ERROR_STOP on
-	REVOKE CONNECT ON DATABASE $DB_CDS FROM PUBLIC;
-	GRANT CONNECT ON DATABASE $DB_CDS TO $USER_ADMIN;
-	GRANT ALL PRIVILEGES ON DATABASE $DB_CDS TO $USER_ADMIN;
-	\c $DB_CDS
-	GRANT USAGE ON SCHEMA public TO $USER_ADMIN;
-	GRANT SELECT ON ALL TABLES IN SCHEMA public TO $USER_ADMIN;
-	GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO $USER_ADMIN;
-EOF
-	echoi $i "done"
-
-	echoi $e "- Transferring ownership of non-postgis relations to user '$USER_ADMIN':"
-	# Note: views not changed as all at this point are postgis relations
-
-	echoi $e -n "-- Tables..."
-	for tbl in `psql -qAt -c "select tablename from pg_tables where schemaname='public' and tableowner<>'postgres';" $DB_CDS` ; do  sudo -Hiu postgres PGOPTIONS='--client-min-messages=warning' psql -q -c "alter table \"$tbl\" owner to $USER_ADMIN" $DB_CDS ; done
-	source "$includes_dir/check_status.sh"  
-
-	echoi $e -n "-- Sequences..."
-	for tbl in `psql -qAt -c "select sequence_name from information_schema.sequences where sequence_schema = 'public';" $DB_CDS` ; do  sudo -Hiu postgres PGOPTIONS='--client-min-messages=warning' psql -q -c "alter sequence \"$tbl\" owner to $USER_ADMIN" $DB_CDS ; done
-	source "$includes_dir/check_status.sh"  
-	
-fi
-
-if [[ ! "$USER_READ" == "" ]]; then
-	echoi $e -n "- Granting read access to \"$USER_READ\"..."
-	sudo -Hiu postgres PGOPTIONS='--client-min-messages=warning' psql -q <<EOF
-	\set ON_ERROR_STOP on
-	REVOKE CONNECT ON DATABASE $DB_CDS FROM PUBLIC;
-	GRANT CONNECT ON DATABASE $DB_CDS TO $USER_READ;
-	\c $DB_CDS
-	GRANT USAGE ON SCHEMA public TO $USER_READ;
-	GRANT SELECT ON ALL TABLES IN SCHEMA public TO $USER_READ;
-EOF
-	echoi $i "done"
-fi 
+source "$DIR/setp.sh"
 
 ######################################################
 # Report total elapsed time and exit
 ######################################################
 
-source "$includes_dir/finish.sh"
+if [ "$i" == "true" ]; then
+	source "$includes_dir/finish.sh"
+fi
