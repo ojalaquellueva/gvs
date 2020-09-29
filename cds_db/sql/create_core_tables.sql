@@ -21,7 +21,6 @@ DROP TABLE IF EXISTS user_data;
 CREATE TABLE user_data (
 id BIGSERIAL NOT NULL PRIMARY KEY,
 job text DEFAULT NULL,
-batch integer DEFAULT NULL,
 latitude_verbatim text DEFAULT NULL,
 longitude_verbatim text DEFAULT NULL,
 latitude numeric DEFAULT NULL,

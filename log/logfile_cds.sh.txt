@@ -1,0 +1,55 @@
+
+------ Process started at Tue Sep 29 15:48:07 PDT 2020 ------
+
+
+------ Process started at Tue Sep 29 15:57:29 PDT 2020 ------
+
+
+------ Process started at Tue Sep 29 15:58:55 PDT 2020 ------
+
+
+------ Process started at Tue Sep 29 15:59:20 PDT 2020 ------
+
+- Dropping indexes on user_data...
+------ Process started at Tue Sep 29 16:00:25 PDT 2020 ------
+
+- Dropping indexes on user_data...done (.09 sec)
+
+------ Process started at Tue Sep 29 16:10:25 PDT 2020 ------
+
+- Dropping indexes on user_data...done (.09 sec)
+Importing input file to user_data_raw...
+------ Process started at Tue Sep 29 16:11:28 PDT 2020 ------
+
+Dropping indexes on user_data...done (.08 sec)
+Importing input file to user_data_raw...
+------ Process started at Tue Sep 29 16:12:28 PDT 2020 ------
+
+Dropping indexes on user_data...done (.08 sec)
+Importing input file to user_data_raw...
+------ Process started at Tue Sep 29 16:13:34 PDT 2020 ------
+
+Dropping indexes on user_data...done (.08 sec)
+Importing input file to user_data_raw...
+------ Process started at Tue Sep 29 16:14:03 PDT 2020 ------
+
+Dropping indexes on user_data...done (.09 sec)
+Importing input file to user_data_raw...done (.10 sec)
+
+------ Process started at Tue Sep 29 16:22:17 PDT 2020 ------
+
+Importing raw data...done (.08 sec)
+Loading raw data to table user_data...- Dropping indexes on user_data...done (.07 sec)
+
+------ Process started at Tue Sep 29 16:23:57 PDT 2020 ------
+
+Importing raw data...done (.08 sec)
+Loading raw data to table user_data- Dropping indexes on user_data...done (.10 sec)
+- Loading user_data...done (.17 sec)
+
+------ Process started at Tue Sep 29 16:24:20 PDT 2020 ------
+
+Importing raw data...done (.07 sec)
+Loading raw data to table user_data
+- Dropping indexes on user_data...done (.09 sec)
+- Loading user_data...done (.08 sec)
