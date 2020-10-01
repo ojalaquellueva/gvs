@@ -53,3 +53,8 @@ centroid_max_uncertainty numeric DEFAULT NULL,
 latlong_err text DEFAULT NULL
 ) 
 ;
+-- Add the wgs84 point geometry column, including constraints
+-- See: https://postgis.net/docs/AddGeometryColumn.html
+-- Also: https://gis.stackexchange.com/questions/8699/creating-spatial-tables-with-postgis
+SELECT AddGeometryColumn ('public','user_data','geom',4326,'POINT',2, false);
+
