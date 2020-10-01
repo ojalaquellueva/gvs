@@ -50,7 +50,8 @@ centroid_dist_relative numeric DEFAULT NULL,
 centroid_poldiv text DEFAULT NULL,
 centroid_type text DEFAULT NULL,
 centroid_max_uncertainty numeric DEFAULT NULL,
-latlong_err text DEFAULT NULL
+latlong_err text DEFAULT NULL,
+geog GEOGRAPHY(Point)
 ) 
 ;
 -- Add the wgs84 point geometry column, including constraints
