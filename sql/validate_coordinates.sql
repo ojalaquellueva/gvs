@@ -8,7 +8,7 @@
 
 -- Verify that verbatim coordinates are numeric
 UPDATE user_data
-SET latlong_err='Invalid coordinates: non-numeric'
+SET latlong_err='Coordinates non-numeric'
 WHERE (
 isnumeric(latitude_verbatim)='f' OR  isnumeric(longitude_verbatim)='f'
 )
@@ -25,7 +25,7 @@ AND job=:'job'
 
 -- Check invalid values
 UPDATE user_data
-SET latlong_err='Invalid coordinates: values out of bounds'
+SET latlong_err='Coordinate values out of bounds'
 WHERE (
 latitude>90 OR latitude<-90 OR longitude<-180 OR longitude>180
 )
@@ -36,5 +36,11 @@ AND job=:'job'
 UPDATE user_data
 SET geom=ST_SetSRID(ST_MakePoint(longitude, latitude), 4326)
 WHERE latlong_err IS NULL
+AND job=:'job'
+;
+-- Convert geometry to separate geography column
+UPDATE user_data
+SET geog=ST_Transform(geom,4326)
+WHERE geom IS NOT NULL
 AND job=:'job'
 ;

@@ -86,3 +86,33 @@ centroid_pos_long=ST_X(centroid_pos),
 centroid_bb_lat=ST_Y(centroid_bb),
 centroid_bb_long=ST_X(centroid_bb)
 ;
+
+--
+-- Add indexes
+--
+
+-- Non-spatial indexes
+CREATE INDEX centroid_county_parish_gid_0_idx ON centroid_county_parish 
+	USING btree (gid_0);
+CREATE INDEX centroid_county_parish_country_idx ON centroid_county_parish 
+	USING btree (country);
+CREATE INDEX centroid_county_parish_gid_1_idx ON centroid_county_parish 
+	USING btree (gid_1);
+CREATE INDEX centroid_county_parish_state_province_idx ON centroid_county_parish 
+	USING btree (state_province);
+CREATE INDEX centroid_county_parish_gid_2_idx ON centroid_county_parish 
+	USING btree (gid_2);
+CREATE INDEX centroid_county_parish_county_parish_idx ON centroid_county_parish 
+	USING btree (county_parish);
+	
+-- Spatial index
+CREATE INDEX centroid_county_parish_geom_idx ON centroid_county_parish 
+	USING GIST (geom);
+CREATE INDEX centroid_county_parish_centroid_idx ON centroid_county_parish 
+	USING GIST (centroid);
+CREATE INDEX centroid_county_parish_centroid_pos_idx ON centroid_county_parish 
+	USING GIST (centroid_pos);
+CREATE INDEX centroid_county_parish_centroid_bb_idx ON centroid_county_parish 
+	USING GIST (centroid_bb);
+
+

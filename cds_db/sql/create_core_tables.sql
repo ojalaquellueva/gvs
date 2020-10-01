@@ -17,7 +17,8 @@ longitude text DEFAULT NULL,
 user_id text DEFAULT NULL
 );
 
-
+-- Column country_cent_dist_geog for testing only
+-- Remove when done
 DROP TABLE IF EXISTS user_data;
 CREATE TABLE user_data (
 id BIGSERIAL NOT NULL PRIMARY KEY,
@@ -34,6 +35,7 @@ state text DEFAULT NULL,
 gid_2 text DEFAULT NULL,
 county text DEFAULT NULL,
 country_cent_dist numeric DEFAULT NULL,
+country_cent_dist_geog numeric DEFAULT NULL,
 country_cent_dist_relative numeric DEFAULT NULL,
 country_cent_type text DEFAULT NULL,
 country_max_uncertainty numeric DEFAULT NULL,

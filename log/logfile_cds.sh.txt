@@ -115,3 +115,19 @@ Importing user data:
 - Insert raw data to table "user_data"...done (.12 sec)
 - Dropping temp table...done (.09 sec)
 Validating coordinates...done (.11 sec)
+
+------ Process started at Thu Oct  1 08:49:59 PDT 2020 ------
+
+Importing user data:
+- Creating temp table "user_data_raw_job_20201001_0849888867903_20429"...done (.32 sec)
+- Importing raw data to temp table...done (.11 sec)
+- Clearing user_data (TESTING ONLY)...
+------ Process started at Thu Oct  1 08:50:36 PDT 2020 ------
+
+Importing user data:
+- Creating temp table "user_data_raw_job_20201001_0850777459835_20665"...done (.27 sec)
+- Importing raw data to temp table...done (.07 sec)
+- Clearing user_data (TESTING ONLY)...done (.11 sec)
+- Insert raw data to table "user_data"...done (.11 sec)
+- Dropping temp table...done (.10 sec)
+Validating coordinates...done (.14 sec)

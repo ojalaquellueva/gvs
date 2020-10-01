@@ -74,3 +74,25 @@ centroid_bb_lat=ST_Y(centroid_bb),
 centroid_bb_long=ST_X(centroid_bb)
 ;
 
+--
+-- Add indexes
+--
+
+-- Non-spatial indexes
+CREATE INDEX centroid_country_country_idx ON centroid_country 
+	USING btree (country);
+CREATE INDEX centroid_country_gid_idx ON centroid_country 
+	USING btree (gid);
+	
+-- Spatial index
+CREATE INDEX centroid_country_geom_idx ON centroid_country 
+	USING GIST (geom);
+CREATE INDEX centroid_country_centroid_idx ON centroid_country 
+	USING GIST (centroid);
+CREATE INDEX centroid_country_centroid_pos_idx ON centroid_country 
+	USING GIST (centroid_pos);
+CREATE INDEX centroid_country_centroid_bb_idx ON centroid_country 
+	USING GIST (centroid_bb);
+
+
+
