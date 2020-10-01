@@ -1,6 +1,10 @@
 -- ----------------------------------------------------------
--- Load raw data to table user_data
--- This step is source-specific
+-- Load user data from job-specific temp raw data table to 
+-- table user_data
+-- 
+-- Requires parameters:
+-- 	job					job #
+-- 	raw_data_tbl_temp	Name of temp table
 -- ----------------------------------------------------------
 
 -- Insert raw data
@@ -16,10 +20,5 @@ SELECT
 latitude,
 longitude,
 user_id
-FROM user_data_raw
+FROM :raw_data_tbl_temp
 ;
-
--- Index job
-DROP INDEX IF EXISTS user_data_job_idx;
-CREATE INDEX user_data_job_idx ON user_data (job);
-

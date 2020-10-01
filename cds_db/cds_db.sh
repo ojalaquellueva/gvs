@@ -181,6 +181,11 @@ CREATE EXTENSION postgis;
 EOF
 echoi $i "done"
 
+# Functions
+echoi $e -n "Installing custom functions..."
+PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS --set ON_ERROR_STOP=1 -q -f $DIR/sql/functions.sql
+source "$includes_dir/check_status.sh"  
+
 ##########################################################
 # Import existing world_geom table in local GADM database.
 # TEMPORARY HACK until code import directly from GADM.

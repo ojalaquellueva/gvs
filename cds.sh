@@ -104,6 +104,9 @@ while [ "$1" != "" ]; do
         						e="false"
         						i="false"
         						;;
+        -v | --nullval )        shift
+        						nullval="$1"
+                            	;;
         -m | --mail )         	m="true"
                                 ;;
         -a | --appendlog )		appendlog="true" 	# Start new logfile, 
@@ -213,32 +216,93 @@ fi
 # Main
 #########################################################################
 
+# Generate unique job ID
+# Date in nanoseconds plus random integer for good measure
+job="job_$(date +%Y%m%d_%H%M%N)_${RANDOM}"	
 
 ############################################
 # Load raw data to table user_data
 ############################################
 
 # Import the input file
-if [ "$api" == "false" ]; then
-	echoi $e -n "Importing raw data..."
-	sql="\COPY user_data_raw(latitude,longitude) FROM '${infile}' DELIMITER ',' CSV HEADER"
-	cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -U $USER -d $DB_CDS --set ON_ERROR_STOP=1 -q -c \"$sql\""
-	eval $cmd
-	source "$DIR/includes/check_status.sh" 
-fi
+echoi $e "Importing user data:"
 
-# Load the raw data to table user_data
-echoi $e "Loading raw data to table user_data"
+# Compose name of temporary, job-specific raw data table
+raw_data_tbl_temp="user_data_raw_${job}"
+
+# Create job-specific temp table to hold raw data
+echoi $e -n "- Creating temp table \"$raw_data_tbl_temp\"..."
+cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -v raw_data_tbl_temp="${raw_data_tbl_temp}" -f $DIR_LOCAL/sql/create_raw_data_temp.sql"
+eval $cmd
+source "$DIR/includes/check_status.sh"
+
+# Import the file to tempoprary raw data table
+# $nullas statement set as optional command line parameter
+echoi $e -n "- Importing raw data to temp table..."
+
+# ///////////////// #
+# NOTE: need option to import user_id
+# ///////////////// #
+metacmd="\COPY $raw_data_tbl_temp(latitude,longitude) FROM '${infile}' DELIMITER ',' CSV $nullas  HEADER"
+cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql $DB_CDS --set ON_ERROR_STOP=1 -q -c \"$metacmd\""
+eval $cmd
+source "$DIR/includes/check_status.sh"
+
+
+# ///////// TESTING ONLY  ///////// 
+echoi $e -n "- Clearing user_data (TESTING ONLY)..."
+sql="TRUNCATE user_data"
+cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql $DB_CDS --set ON_ERROR_STOP=1 -q -c \"$sql\""
+eval $cmd
+source "$DIR/includes/check_status.sh"
+# ///////// TESTING ONLY  ///////// 
+
+
+
+# Insert the raw data to user data table
+echoi $e -n "- Insert raw data to table \"user_data\"..."
+cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -v raw_data_tbl_temp="$raw_data_tbl_temp" -f $DIR_LOCAL/sql/load_user_data.sql"
+eval $cmd
+source "$DIR/includes/check_status.sh"
+
+# Drop the temp table
+echoi $e -n "- Dropping temp table..."
+sql="DROP TABLE $raw_data_tbl_temp"
+cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql $DB_CDS --set ON_ERROR_STOP=1 -q -c \"$sql\""
+eval $cmd
+source "$DIR/includes/check_status.sh"
+
+############################################
+# Validate the coordinates
+############################################
+
+# Import the input file
+#echoi $e "Validating coordinates:"
+
+# Create job-specific temp table to hold raw data
+echoi $e -n "Validating coordinates..."
+cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -f $DIR_LOCAL/sql/validate_coordinates.sql"
+eval $cmd
+source "$DIR/includes/check_status.sh"
+
+
+
+
+
+echo "STOPPING..."; exit 0
+
+
+
+
+
+
+
+
+
+
 
 echoi $e -n "- Dropping indexes on user_data..."
 cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -U $USER -d $DB_CDS --set ON_ERROR_STOP=1 -q -f $DIR_LOCAL/sql/drop_indexes_user_data.sql"
-eval $cmd
-source "$DIR/includes/check_status.sh" 
-
-# This deletes any existing data in table user_data
-# Assume user_data_raw has been populated
-echoi $e -n "- Loading user_data..."
-cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -U $USER -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -f $DIR_LOCAL/sql/load_user_data.sql"
 eval $cmd
 source "$DIR/includes/check_status.sh" 
 

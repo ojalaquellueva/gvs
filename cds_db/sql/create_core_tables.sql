@@ -11,6 +11,7 @@ build_date timestamp
 
 DROP TABLE IF EXISTS user_data_raw;
 CREATE TABLE user_data_raw (
+job text DEFAULT NULL,
 latitude text DEFAULT NULL,
 longitude text DEFAULT NULL,
 user_id text DEFAULT NULL

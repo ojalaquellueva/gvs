@@ -53,3 +53,55 @@ Importing raw data...done (.07 sec)
 Loading raw data to table user_data
 - Dropping indexes on user_data...done (.09 sec)
 - Loading user_data...done (.08 sec)
+
+------ Process started at Wed Sep 30 10:25:56 PDT 2020 ------
+
+Importing user data:
+-- Creating table user_data_raw_job_20200930_1025497049286_29232...done (.46 sec)
+-- Importing raw data to temp table...
+------ Process started at Wed Sep 30 10:26:32 PDT 2020 ------
+
+Importing user data:
+-- Creating table user_data_raw_job_20200930_1026220182520_12596...done (.15 sec)
+-- Importing raw data to temp table...
+------ Process started at Wed Sep 30 10:27:28 PDT 2020 ------
+
+Importing user data:
+-- Creating table user_data_raw_job_20200930_1027122397464_10597...done (.26 sec)
+-- Importing raw data to temp table...done (.07 sec)
+-- Loading to raw data table with job...done (.10 sec)
+
+------ Process started at Wed Sep 30 10:33:24 PDT 2020 ------
+
+Importing user data:
+- Creating table user_data_raw_job_20200930_1033519940035_106...done (.21 sec)
+- Importing raw data to temp table...done (.07 sec)
+- Loading raw data to table user_data...done (.09 sec)
+- Dropping temp table...done (.08 sec)
+
+------ Process started at Wed Sep 30 10:37:08 PDT 2020 ------
+
+Importing user data:
+- Creating temp table "user_data_raw_job_20200930_1037804842258_21531"...done (.44 sec)
+- Importing raw data to temp table...done (.07 sec)
+- Insert raw data to table "user_data"...done (.09 sec)
+- Dropping temp table...done (.09 sec)
+
+------ Process started at Wed Sep 30 17:11:30 PDT 2020 ------
+
+Importing user data:
+- Creating temp table "user_data_raw_job_20200930_1711130992331_3699"...done (.16 sec)
+- Importing raw data to temp table...done (.07 sec)
+- Clearing user_data (TESTING ONLY)...done (.10 sec)
+- Insert raw data to table "user_data"...done (.07 sec)
+- Dropping temp table...done (.09 sec)
+Validating coordinates...
+------ Process started at Wed Sep 30 17:12:39 PDT 2020 ------
+
+Importing user data:
+- Creating temp table "user_data_raw_job_20200930_1712033644125_27924"...done (.09 sec)
+- Importing raw data to temp table...done (.06 sec)
+- Clearing user_data (TESTING ONLY)...done (.10 sec)
+- Insert raw data to table "user_data"...done (.07 sec)
+- Dropping temp table...done (.08 sec)
+Validating coordinates...done (.07 sec)
