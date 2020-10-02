@@ -291,6 +291,11 @@ cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS --set
 eval $cmd
 source "$DIR/includes/check_status.sh"
 
+# Create job-specific temp table to hold raw data
+echoi $e -n "Checking centroids..."
+cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -f $DIR_LOCAL/sql/check_centroid.sql"
+eval $cmd
+source "$DIR/includes/check_status.sh"
 
 
 

@@ -129,12 +129,12 @@ WHERE a.country=b.country
 ;
 
 --
--- Longest distance from centroid to shape perimeter
+-- Longest distance from centroid to shape perimeter, in degrees
 --
 
 UPDATE centroid_country
-SET cent_dist_max=ST_MaxDistance(centroid, geom)
-;
+SET cent_dist_max=ST_MaxDistance(centroid, geom);
+
 UPDATE centroid_country
 SET cent_pos_dist_max=ST_MaxDistance(centroid_pos, geom)
 ;

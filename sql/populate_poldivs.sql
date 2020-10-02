@@ -9,7 +9,7 @@ UPDATE user_data
 SET country=pip.country, gid_0=pip.gid_0
 FROM 
 (
-    SELECT user_data.id, centroid_country.gid AS gid_0, centroid_country.country 
+    SELECT user_data.id, centroid_country.gid_0, centroid_country.country 
     FROM user_data INNER JOIN centroid_country 
     ON st_contains(centroid_country.geom,user_data.geom)
 ) pip 

@@ -174,3 +174,48 @@ Importing user data:
 - Dropping temp table...done (.09 sec)
 Validating coordinates...done (.09 sec)
 Populating political divisions...done (3.55 sec)
+
+------ Process started at Fri Oct  2 13:47:03 PDT 2020 ------
+
+Importing user data:
+- Creating temp table "user_data_raw_job_20201002_1347784128748_6147"...done (.10 sec)
+- Importing raw data to temp table...done (.08 sec)
+- Clearing user_data (TESTING ONLY)...done (.11 sec)
+- Insert raw data to table "user_data"...done (.11 sec)
+- Dropping temp table...done (.09 sec)
+Validating coordinates...done (.12 sec)
+Populating political divisions...
+------ Process started at Fri Oct  2 13:48:26 PDT 2020 ------
+
+Importing user data:
+- Creating temp table "user_data_raw_job_20201002_1348152711511_12429"...done (.09 sec)
+- Importing raw data to temp table...done (.07 sec)
+- Clearing user_data (TESTING ONLY)...done (.11 sec)
+- Insert raw data to table "user_data"...done (.09 sec)
+- Dropping temp table...done (.09 sec)
+Validating coordinates...done (.10 sec)
+Populating political divisions...done (3.52 sec)
+
+------ Process started at Fri Oct  2 16:29:50 PDT 2020 ------
+
+Importing user data:
+- Creating temp table "user_data_raw_job_20201002_1629852436208_27714"...done (.26 sec)
+- Importing raw data to temp table...done (.10 sec)
+- Clearing user_data (TESTING ONLY)...done (.13 sec)
+- Insert raw data to table "user_data"...done (.11 sec)
+- Dropping temp table...done (.10 sec)
+Validating coordinates...done (.14 sec)
+Populating political divisions...done (3.97 sec)
+Checking centroids...done (.15 sec)
+
+------ Process started at Fri Oct  2 16:32:31 PDT 2020 ------
+
+Importing user data:
+- Creating temp table "user_data_raw_job_20201002_1632627166146_21506"...done (.21 sec)
+- Importing raw data to temp table...done (.08 sec)
+- Clearing user_data (TESTING ONLY)...done (.10 sec)
+- Insert raw data to table "user_data"...done (.09 sec)
+- Dropping temp table...done (.09 sec)
+Validating coordinates...done (.11 sec)
+Populating political divisions...done (3.74 sec)
+Checking centroids...done (.12 sec)
