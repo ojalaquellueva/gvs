@@ -17,8 +17,7 @@ longitude text DEFAULT NULL,
 user_id text DEFAULT NULL
 );
 
--- Column country_cent_dist_geog for testing only
--- Remove when done
+-- Remove testing columns when done
 DROP TABLE IF EXISTS user_data;
 CREATE TABLE user_data (
 id BIGSERIAL NOT NULL PRIMARY KEY,
@@ -35,7 +34,6 @@ state text DEFAULT NULL,
 gid_2 text DEFAULT NULL,
 county text DEFAULT NULL,
 country_cent_dist numeric DEFAULT NULL,
-country_cent_dist_geog numeric DEFAULT NULL,
 country_cent_dist_relative numeric DEFAULT NULL,
 country_cent_type text DEFAULT NULL,
 country_max_uncertainty numeric DEFAULT NULL,
@@ -61,3 +59,13 @@ geog GEOGRAPHY(Point)
 -- Also: https://gis.stackexchange.com/questions/8699/creating-spatial-tables-with-postgis
 SELECT AddGeometryColumn ('public','user_data','geom',4326,'POINT',2, false);
 
+--
+-- Add indexes
+--
+
+-- Non-spatial indexes
+CREATE INDEX user_data_job_idx ON user_data USING btree (job);
+	
+-- Spatial index
+CREATE INDEX user_data_geom_idx ON user_data USING GIST (geom);
+CREATE INDEX user_data_geog_idx ON user_data USING GIST (geog);

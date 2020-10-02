@@ -131,3 +131,46 @@ Importing user data:
 - Insert raw data to table "user_data"...done (.11 sec)
 - Dropping temp table...done (.10 sec)
 Validating coordinates...done (.14 sec)
+
+------ Process started at Thu Oct  1 09:27:35 PDT 2020 ------
+
+Importing user data:
+- Creating temp table "user_data_raw_job_20201001_0927636692116_22885"...done (.19 sec)
+- Importing raw data to temp table...done (.07 sec)
+- Clearing user_data (TESTING ONLY)...done (.09 sec)
+- Insert raw data to table "user_data"...done (.12 sec)
+- Dropping temp table...done (.10 sec)
+Validating coordinates...done (.09 sec)
+Populating political divisions...
+------ Process started at Thu Oct  1 09:28:15 PDT 2020 ------
+
+Importing user data:
+- Creating temp table "user_data_raw_job_20201001_0928282501752_15249"...done (.08 sec)
+- Importing raw data to temp table...done (.07 sec)
+- Clearing user_data (TESTING ONLY)...done (.09 sec)
+- Insert raw data to table "user_data"...done (.10 sec)
+- Dropping temp table...done (.11 sec)
+Validating coordinates...done (.10 sec)
+Populating political divisions...done (3.84 sec)
+
+------ Process started at Thu Oct  1 09:32:10 PDT 2020 ------
+
+Importing user data:
+- Creating temp table "user_data_raw_job_20201001_0932887927473_23356"...done (.10 sec)
+- Importing raw data to temp table...done (.08 sec)
+- Clearing user_data (TESTING ONLY)...done (.10 sec)
+- Insert raw data to table "user_data"...done (.08 sec)
+- Dropping temp table...done (.09 sec)
+Validating coordinates...done (.12 sec)
+Populating political divisions...done (3.83 sec)
+
+------ Process started at Thu Oct  1 15:21:44 PDT 2020 ------
+
+Importing user data:
+- Creating temp table "user_data_raw_job_20201001_1521471198688_12941"...done (.22 sec)
+- Importing raw data to temp table...done (.08 sec)
+- Clearing user_data (TESTING ONLY)...done (.13 sec)
+- Insert raw data to table "user_data"...done (.09 sec)
+- Dropping temp table...done (.09 sec)
+Validating coordinates...done (.09 sec)
+Populating political divisions...done (3.55 sec)

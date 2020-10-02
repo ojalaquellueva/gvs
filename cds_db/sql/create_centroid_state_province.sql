@@ -10,13 +10,23 @@ gid_0 text,
 country text,
 gid_1 text,
 state_province text,
-geom geometry,
+geom geometry(Geometry,4326),
+geog geography,
 centroid geometry(Point,4326),
 centroid_pos geometry(Point,4326),
-centroid_bb geometry(Point,4326)
+centroid_bb geometry(Point,4326),
+centroid_main geometry(Point,4326),
+centroid_main_pos geometry(Point,4326),
+centroid_main_bb geometry(Point,4326),
+cent_dist_max numeric DEFAULT NULL,
+cent_pos_dist_max numeric DEFAULT NULL,
+cent_bb_dist_max numeric DEFAULT NULL,
+cent_main_dist_max numeric DEFAULT NULL,
+cent_main_pos_dist_max numeric DEFAULT NULL,
+cent_main_bb_dist_max numeric DEFAULT NULL
 );
 
--- Insert country polygons
+-- Insert state polygons
 INSERT INTO centroid_state_province (
 gid_0,
 country,
@@ -34,6 +44,16 @@ FROM gadm
 WHERE name_1 IS NOT NULL
 GROUP BY gid_0, name_0, gid_1, name_1
 ;
+
+-- Populate the geography column
+UPDATE centroid_state_province
+SET geog=Geography(ST_Transform(geom,4326))
+WHERE geom IS NOT NULL
+;
+
+--
+-- Centroids of entire geometry
+-- 
 
 /*
 Regular centroid
@@ -62,32 +82,6 @@ UPDATE centroid_state_province
 SET centroid_bb=ST_Centroid(ST_Envelope(geom))
 ;
 
-/*
-Convenience decimal lat & long columns for each centroid type
-*/
-ALTER TABLE centroid_state_province
-ADD COLUMN centroid_lat NUMERIC,
-ADD COLUMN centroid_long NUMERIC,
-ADD COLUMN centroid_pos_lat NUMERIC,
-ADD COLUMN centroid_pos_long NUMERIC,
-ADD COLUMN centroid_bb_lat NUMERIC,
-ADD COLUMN centroid_bb_long NUMERIC
-;
-
-UPDATE centroid_state_province
-SET
-centroid_lat=ST_Y(centroid),
-centroid_long=ST_X(centroid),
-centroid_pos_lat=ST_Y(centroid_pos),
-centroid_pos_long=ST_X(centroid_pos),
-centroid_bb_lat=ST_Y(centroid_bb),
-centroid_bb_long=ST_X(centroid_bb)
-;
-
---
--- Add indexes
---
-
 -- Non-spatial indexes
 CREATE INDEX centroid_state_province_gid_0_idx ON centroid_state_province 
 	USING btree (gid_0);
@@ -97,10 +91,88 @@ CREATE INDEX centroid_state_province_gid_1_idx ON centroid_state_province
 	USING btree (gid_1);
 CREATE INDEX centroid_state_province_state_province_idx ON centroid_state_province 
 	USING btree (state_province);
-	
--- Spatial index
+
+--
+-- Centroids of largest polygon
+-- 
+
+-- Standard centroid
+UPDATE centroid_state_province a
+SET centroid_main=b.geom
+FROM
+(
+WITH geoms AS (
+    SELECT gid_1, (ST_Dump(geom)).geom AS geom 
+    FROM centroid_state_province
+)
+SELECT DISTINCT ON (gid_1) gid_1, ST_Centroid(geom) AS geom
+FROM geoms
+ORDER BY gid_1 ASC, ST_Area(geom) DESC
+) b
+WHERE a.gid_1=b.gid_1
+;
+
+-- POS centroid
+UPDATE centroid_state_province a
+SET centroid_main_pos=b.geom
+FROM
+(
+WITH geoms AS (
+    SELECT gid_1, (ST_Dump(geom)).geom AS geom 
+    FROM centroid_state_province
+)
+SELECT DISTINCT ON (gid_1) gid_1, ST_PointOnSurface(geom) AS geom
+FROM geoms
+ORDER BY gid_1 ASC, ST_Area(geom) DESC
+) b
+WHERE a.gid_1=b.gid_1
+;
+
+-- Bounding box centroid 
+UPDATE centroid_state_province a
+SET centroid_main_bb=b.geom
+FROM
+(
+WITH geoms AS (
+    SELECT gid_1, (ST_Dump(geom)).geom AS geom 
+    FROM centroid_state_province
+)
+SELECT DISTINCT ON (gid_1) gid_1, ST_Centroid(ST_Envelope(geom)) AS geom
+FROM geoms
+ORDER BY gid_1 ASC, ST_Area(geom) DESC
+) b
+WHERE a.gid_1=b.gid_1
+;
+
+--
+-- Longest distance from centroid to shape perimeter
+--
+
+UPDATE centroid_state_province
+SET cent_dist_max=ST_MaxDistance(centroid, geom)
+;
+UPDATE centroid_state_province
+SET cent_pos_dist_max=ST_MaxDistance(centroid_pos, geom)
+;
+UPDATE centroid_state_province
+SET cent_bb_dist_max=ST_MaxDistance(centroid_bb, geom)
+;
+UPDATE centroid_state_province
+SET cent_main_dist_max=ST_MaxDistance(centroid_main, geom)
+;
+UPDATE centroid_state_province
+SET cent_main_pos_dist_max=ST_MaxDistance(centroid_main_pos, geom)
+;
+UPDATE centroid_state_province
+SET cent_main_bb_dist_max=ST_MaxDistance(centroid_main_bb, geom)
+;
+
+
+-- Spatial indexes
 CREATE INDEX centroid_state_province_geom_idx ON centroid_state_province 
 	USING GIST (geom);
+CREATE INDEX centroid_state_province_geog_idx ON centroid_state_province 
+	USING GIST (geog);
 CREATE INDEX centroid_state_province_centroid_idx ON centroid_state_province 
 	USING GIST (centroid);
 CREATE INDEX centroid_state_province_centroid_pos_idx ON centroid_state_province 
@@ -108,5 +180,8 @@ CREATE INDEX centroid_state_province_centroid_pos_idx ON centroid_state_province
 CREATE INDEX centroid_state_province_centroid_bb_idx ON centroid_state_province 
 	USING GIST (centroid_bb);
 
+CREATE INDEX centroid_state_province_centroid_main_idx ON centroid_state_province USING GIST (centroid_main);
+CREATE INDEX centroid_state_province_centroid_main_pos_idx ON centroid_state_province USING GIST (centroid_main_pos);
+CREATE INDEX centroid_state_province_centroid_main_bb_idx ON centroid_state_province USING GIST (centroid_main_bb);
 
 

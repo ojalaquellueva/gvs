@@ -6,23 +6,28 @@
 DROP TABLE IF EXISTS centroid_country;
 CREATE TABLE centroid_country (
 id bigserial not null primary key,
-gid text,
+gid_0 text,
 country text,
-geom geometry,
+geom geometry(Geometry,4326),
+geog geography,
 centroid geometry(Point,4326),
 centroid_pos geometry(Point,4326),
 centroid_bb geometry(Point,4326),
-centroid_lat numeric,
-centroid_long numeric,
-centroid_pos_lat numeric,
-centroid_pos_long numeric,
-centroid_bb_lat numeric,
-centroid_bb_long numeric
+centroid_main geometry(Point,4326),
+centroid_main_pos geometry(Point,4326),
+centroid_main_bb geometry(Point,4326),
+cent_dist_max numeric DEFAULT NULL,
+cent_pos_dist_max numeric DEFAULT NULL,
+cent_bb_dist_max numeric DEFAULT NULL,
+cent_main_dist_max numeric DEFAULT NULL,
+cent_main_pos_dist_max numeric DEFAULT NULL,
+cent_main_bb_dist_max numeric DEFAULT NULL
 );
 
 -- Insert country polygons
+-- This takes a LONG time!
 INSERT INTO centroid_country (
-gid,
+gid_0,
 country,
 geom
 )
@@ -33,6 +38,16 @@ ST_Union(geom)
 FROM gadm
 GROUP BY gid_0, name_0
 ;
+
+-- Populate the geography column
+UPDATE centroid_country
+SET geog=Geography(ST_Transform(geom,4326))
+WHERE geom IS NOT NULL
+;
+
+--
+-- Centroids of entire geometry
+-- 
 
 /*
 Regular centroid
@@ -61,17 +76,79 @@ UPDATE centroid_country
 SET centroid_bb=ST_Centroid(ST_Envelope(geom))
 ;
 
-/*
-Convenience decimal lat & long columns for each centroid type
-*/
+--
+-- Centroids of largest polygon
+-- 
+
+-- Standard centroid
+UPDATE centroid_country a
+SET centroid_main=b.geom
+FROM
+(
+WITH geoms AS (
+    SELECT country, (ST_Dump(geom)).geom AS geom 
+    FROM centroid_country
+)
+SELECT DISTINCT ON (country) country, ST_Centroid(geom) AS geom
+FROM geoms
+ORDER BY country ASC, ST_Area(geom) DESC
+) b
+WHERE a.country=b.country
+;
+
+-- POS centroid
+UPDATE centroid_country a
+SET centroid_main_pos=b.geom
+FROM
+(
+WITH geoms AS (
+    SELECT country, (ST_Dump(geom)).geom AS geom 
+    FROM centroid_country
+)
+SELECT DISTINCT ON (country) country, ST_PointOnSurface(geom) AS geom
+FROM geoms
+ORDER BY country ASC, ST_Area(geom) DESC
+) b
+WHERE a.country=b.country
+;
+
+-- Bounding box centroid 
+UPDATE centroid_country a
+SET centroid_main_bb=b.geom
+FROM
+(
+WITH geoms AS (
+    SELECT country, (ST_Dump(geom)).geom AS geom 
+    FROM centroid_country
+)
+SELECT DISTINCT ON (country) country, ST_Centroid(ST_Envelope(geom)) AS geom
+FROM geoms
+ORDER BY country ASC, ST_Area(geom) DESC
+) b
+WHERE a.country=b.country
+;
+
+--
+-- Longest distance from centroid to shape perimeter
+--
+
 UPDATE centroid_country
-SET
-centroid_lat=ST_Y(centroid),
-centroid_long=ST_X(centroid),
-centroid_pos_lat=ST_Y(centroid_pos),
-centroid_pos_long=ST_X(centroid_pos),
-centroid_bb_lat=ST_Y(centroid_bb),
-centroid_bb_long=ST_X(centroid_bb)
+SET cent_dist_max=ST_MaxDistance(centroid, geom)
+;
+UPDATE centroid_country
+SET cent_pos_dist_max=ST_MaxDistance(centroid_pos, geom)
+;
+UPDATE centroid_country
+SET cent_bb_dist_max=ST_MaxDistance(centroid_bb, geom)
+;
+UPDATE centroid_country
+SET cent_main_dist_max=ST_MaxDistance(centroid_main, geom)
+;
+UPDATE centroid_country
+SET cent_main_pos_dist_max=ST_MaxDistance(centroid_main_pos, geom)
+;
+UPDATE centroid_country
+SET cent_main_bb_dist_max=ST_MaxDistance(centroid_main_bb, geom)
 ;
 
 --
@@ -81,18 +158,19 @@ centroid_bb_long=ST_X(centroid_bb)
 -- Non-spatial indexes
 CREATE INDEX centroid_country_country_idx ON centroid_country 
 	USING btree (country);
-CREATE INDEX centroid_country_gid_idx ON centroid_country 
-	USING btree (gid);
+CREATE INDEX centroid_country_gid_0_idx ON centroid_country 
+	USING btree (gid_0);
 	
 -- Spatial index
-CREATE INDEX centroid_country_geom_idx ON centroid_country 
-	USING GIST (geom);
-CREATE INDEX centroid_country_centroid_idx ON centroid_country 
-	USING GIST (centroid);
-CREATE INDEX centroid_country_centroid_pos_idx ON centroid_country 
-	USING GIST (centroid_pos);
-CREATE INDEX centroid_country_centroid_bb_idx ON centroid_country 
-	USING GIST (centroid_bb);
+CREATE INDEX centroid_country_geom_idx ON centroid_country USING GIST (geom);
+CREATE INDEX centroid_country_geog_idx ON centroid_country USING GIST (geog);
+CREATE INDEX centroid_country_centroid_idx ON centroid_country USING GIST (centroid);
+CREATE INDEX centroid_country_centroid_pos_idx ON centroid_country USING GIST (centroid_pos);
+CREATE INDEX centroid_country_centroid_bb_idx ON centroid_country USING GIST (centroid_bb);
+CREATE INDEX centroid_country_centroid_main_idx ON centroid_country USING GIST (centroid_main);
+CREATE INDEX centroid_country_centroid_main_pos_idx ON centroid_country USING GIST (centroid_main_pos);
+CREATE INDEX centroid_country_centroid_main_bb_idx ON centroid_country USING GIST (centroid_main_bb);
+
 
 
 

@@ -12,16 +12,20 @@ gid_1 text,
 state_province text,
 gid_2 text,
 county_parish text,
-geom geometry,
+geom geometry(Geometry,4326),
+geog geography,
 centroid geometry(Point,4326),
 centroid_pos geometry(Point,4326),
 centroid_bb geometry(Point,4326),
-centroid_lat numeric,
-centroid_long numeric,
-centroid_pos_lat numeric,
-centroid_pos_long numeric,
-centroid_bb_lat numeric,
-centroid_bb_long numeric
+centroid_main geometry(Point,4326),
+centroid_main_pos geometry(Point,4326),
+centroid_main_bb geometry(Point,4326),
+cent_dist_max numeric DEFAULT NULL,
+cent_pos_dist_max numeric DEFAULT NULL,
+cent_bb_dist_max numeric DEFAULT NULL,
+cent_main_dist_max numeric DEFAULT NULL,
+cent_main_pos_dist_max numeric DEFAULT NULL,
+cent_main_bb_dist_max numeric DEFAULT NULL
 );
 
 -- Insert country polygons
@@ -46,6 +50,16 @@ FROM gadm
 WHERE name_2 IS NOT NULL
 GROUP BY gid_0, name_0, gid_1, name_1, gid_2, name_2
 ;
+
+-- Populate the geography column
+UPDATE centroid_county_parish
+SET geog=Geography(ST_Transform(geom,4326))
+WHERE geom IS NOT NULL
+;
+
+--
+-- Centroids of entire geometry
+-- 
 
 /*
 Regular centroid
@@ -74,24 +88,10 @@ UPDATE centroid_county_parish
 SET centroid_bb=ST_Centroid(ST_Envelope(geom))
 ;
 
-/*
-Convenience decimal lat & long columns for each centroid type
-*/
-UPDATE centroid_county_parish
-SET
-centroid_lat=ST_Y(centroid),
-centroid_long=ST_X(centroid),
-centroid_pos_lat=ST_Y(centroid_pos),
-centroid_pos_long=ST_X(centroid_pos),
-centroid_bb_lat=ST_Y(centroid_bb),
-centroid_bb_long=ST_X(centroid_bb)
-;
-
---
--- Add indexes
---
-
+-- 
 -- Non-spatial indexes
+-- 
+
 CREATE INDEX centroid_county_parish_gid_0_idx ON centroid_county_parish 
 	USING btree (gid_0);
 CREATE INDEX centroid_county_parish_country_idx ON centroid_county_parish 
@@ -105,9 +105,90 @@ CREATE INDEX centroid_county_parish_gid_2_idx ON centroid_county_parish
 CREATE INDEX centroid_county_parish_county_parish_idx ON centroid_county_parish 
 	USING btree (county_parish);
 	
--- Spatial index
+
+--
+-- Centroids of largest polygon
+-- 
+
+-- Standard centroid
+UPDATE centroid_county_parish a
+SET centroid_main=b.geom
+FROM
+(
+WITH geoms AS (
+    SELECT gid_2, (ST_Dump(geom)).geom AS geom 
+    FROM centroid_county_parish
+)
+SELECT DISTINCT ON (gid_2) gid_2, ST_Centroid(geom) AS geom
+FROM geoms
+ORDER BY gid_2 ASC, ST_Area(geom) DESC
+) b
+WHERE a.gid_2=b.gid_2
+;
+
+-- POS centroid
+UPDATE centroid_county_parish a
+SET centroid_main_pos=b.geom
+FROM
+(
+WITH geoms AS (
+    SELECT gid_2, (ST_Dump(geom)).geom AS geom 
+    FROM centroid_county_parish
+)
+SELECT DISTINCT ON (gid_2) gid_2, ST_PointOnSurface(geom) AS geom
+FROM geoms
+ORDER BY gid_2 ASC, ST_Area(geom) DESC
+) b
+WHERE a.gid_2=b.gid_2
+;
+
+-- Bounding box centroid 
+UPDATE centroid_county_parish a
+SET centroid_main_bb=b.geom
+FROM
+(
+WITH geoms AS (
+    SELECT gid_2, (ST_Dump(geom)).geom AS geom 
+    FROM centroid_county_parish
+)
+SELECT DISTINCT ON (gid_2) gid_2, ST_Centroid(ST_Envelope(geom)) AS geom
+FROM geoms
+ORDER BY gid_2 ASC, ST_Area(geom) DESC
+) b
+WHERE a.gid_2=b.gid_2
+;
+
+--
+-- Longest distance from centroid to shape perimeter
+--
+
+UPDATE centroid_county_parish
+SET cent_dist_max=ST_MaxDistance(centroid, geom)
+;
+UPDATE centroid_county_parish
+SET cent_pos_dist_max=ST_MaxDistance(centroid_pos, geom)
+;
+UPDATE centroid_county_parish
+SET cent_bb_dist_max=ST_MaxDistance(centroid_bb, geom)
+;
+UPDATE centroid_county_parish
+SET cent_main_dist_max=ST_MaxDistance(centroid_main, geom)
+;
+UPDATE centroid_county_parish
+SET cent_main_pos_dist_max=ST_MaxDistance(centroid_main_pos, geom)
+;
+UPDATE centroid_county_parish
+SET cent_main_bb_dist_max=ST_MaxDistance(centroid_main_bb, geom)
+;
+
+--
+-- Spatial indexes
+-- 
+
 CREATE INDEX centroid_county_parish_geom_idx ON centroid_county_parish 
 	USING GIST (geom);
+CREATE INDEX centroid_county_parish_geog_idx ON centroid_county_parish 
+	USING GIST (geog);
 CREATE INDEX centroid_county_parish_centroid_idx ON centroid_county_parish 
 	USING GIST (centroid);
 CREATE INDEX centroid_county_parish_centroid_pos_idx ON centroid_county_parish 
