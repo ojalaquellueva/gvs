@@ -8,20 +8,20 @@
 
 -- Reset all consensus values to NULL to be sure
 UPDATE user_data a
-SET centroid_dist=NULL,
+SET centroid_dist_km=NULL,
 centroid_dist_relative=NULL,
 centroid_type=NULL,
-centroid_dist_max=NULL,
+centroid_dist_max_km=NULL,
 centroid_poldiv=NULL
 WHERE job=:'job'
 ;
 
 UPDATE user_data a
 SET 
-centroid_dist=closest_centroid.dist,
+centroid_dist_km=closest_centroid.dist,
 centroid_dist_relative=closest_centroid.dist_relative,
 centroid_type=closest_centroid.cent_type,
-centroid_dist_max=closest_centroid.dist_max,
+centroid_dist_max_km=closest_centroid.dist_max,
 centroid_poldiv=closest_centroid.poldiv
 FROM
 (

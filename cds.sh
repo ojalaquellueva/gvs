@@ -281,6 +281,11 @@ cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS --set
 eval $cmd
 source "$DIR/includes/check_status.sh"
 
+echoi $e -n "Calculating coordinate uncertainty..."
+cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -f $DIR_LOCAL/sql/coordinate_uncertainty.sql"
+eval $cmd
+source "$DIR/includes/check_status.sh"
+
 ############################################
 # Populate political divisions
 ############################################

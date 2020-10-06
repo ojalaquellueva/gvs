@@ -1,30 +1,6 @@
 -- -----------------------------------------------------------------
--- Create table of states (state_province) and their centroids
+-- Populate table of states (state_province) and their centroids
 -- -----------------------------------------------------------------
-
--- Create table
-DROP TABLE IF EXISTS centroid_state_province;
-CREATE TABLE centroid_state_province (
-id bigserial not null primary key,
-gid_0 text,
-country text,
-gid_1 text,
-state_province text,
-geom geometry(Geometry,4326),
-geog geography,
-centroid geometry(Point,4326),
-centroid_pos geometry(Point,4326),
-centroid_bb geometry(Point,4326),
-centroid_main geometry(Point,4326),
-centroid_main_pos geometry(Point,4326),
-centroid_main_bb geometry(Point,4326),
-cent_dist_max numeric DEFAULT NULL,
-cent_pos_dist_max numeric DEFAULT NULL,
-cent_bb_dist_max numeric DEFAULT NULL,
-cent_main_dist_max numeric DEFAULT NULL,
-cent_main_pos_dist_max numeric DEFAULT NULL,
-cent_main_bb_dist_max numeric DEFAULT NULL
-);
 
 -- Insert state polygons
 INSERT INTO centroid_state_province (

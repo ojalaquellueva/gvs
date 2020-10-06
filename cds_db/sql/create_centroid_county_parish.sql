@@ -1,32 +1,6 @@
 -- -----------------------------------------------------------------
--- Create table of counties (county_parish) and their centroids
+-- Populate table of counties (county_parish) and their centroids
 -- -----------------------------------------------------------------
-
--- Create table
-DROP TABLE IF EXISTS centroid_county_parish;
-CREATE TABLE centroid_county_parish (
-id bigserial not null primary key,
-gid_0 text,
-country text,
-gid_1 text,
-state_province text,
-gid_2 text,
-county_parish text,
-geom geometry(Geometry,4326),
-geog geography,
-centroid geometry(Point,4326),
-centroid_pos geometry(Point,4326),
-centroid_bb geometry(Point,4326),
-centroid_main geometry(Point,4326),
-centroid_main_pos geometry(Point,4326),
-centroid_main_bb geometry(Point,4326),
-cent_dist_max numeric DEFAULT NULL,
-cent_pos_dist_max numeric DEFAULT NULL,
-cent_bb_dist_max numeric DEFAULT NULL,
-cent_main_dist_max numeric DEFAULT NULL,
-cent_main_pos_dist_max numeric DEFAULT NULL,
-cent_main_bb_dist_max numeric DEFAULT NULL
-);
 
 -- Insert country polygons
 INSERT INTO centroid_county_parish (

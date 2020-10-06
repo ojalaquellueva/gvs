@@ -1,28 +1,6 @@
 -- -----------------------------------------------------------------
--- Create table of countries and their centroids
+-- Populate table of countries and their centroids
 -- -----------------------------------------------------------------
-
--- Create table
-DROP TABLE IF EXISTS centroid_country;
-CREATE TABLE centroid_country (
-id bigserial not null primary key,
-gid_0 text,
-country text,
-geom geometry(Geometry,4326),
-geog geography,
-centroid geometry(Point,4326),
-centroid_pos geometry(Point,4326),
-centroid_bb geometry(Point,4326),
-centroid_main geometry(Point,4326),
-centroid_main_pos geometry(Point,4326),
-centroid_main_bb geometry(Point,4326),
-cent_dist_max numeric DEFAULT NULL,
-cent_pos_dist_max numeric DEFAULT NULL,
-cent_bb_dist_max numeric DEFAULT NULL,
-cent_main_dist_max numeric DEFAULT NULL,
-cent_main_pos_dist_max numeric DEFAULT NULL,
-cent_main_bb_dist_max numeric DEFAULT NULL
-);
 
 -- Insert country polygons
 -- This takes a LONG time!
