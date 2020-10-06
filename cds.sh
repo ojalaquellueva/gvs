@@ -251,7 +251,7 @@ source "$DIR/includes/check_status.sh"
 
 # ///////// TESTING ONLY  ///////// 
 echoi $e -n "- Clearing user_data (TESTING ONLY)..."
-sql="TRUNCATE user_data"
+sql="TRUNCATE user_data RESTART IDENTITY"
 cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql $DB_CDS --set ON_ERROR_STOP=1 -q -c \"$sql\""
 eval $cmd
 source "$DIR/includes/check_status.sh"
@@ -273,138 +273,48 @@ eval $cmd
 source "$DIR/includes/check_status.sh"
 
 ############################################
-# Validate the coordinates
+# Validate coordinates
 ############################################
 
-# Import the input file
-#echoi $e "Validating coordinates:"
-
-# Create job-specific temp table to hold raw data
 echoi $e -n "Validating coordinates..."
 cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -f $DIR_LOCAL/sql/validate_coordinates.sql"
 eval $cmd
 source "$DIR/includes/check_status.sh"
 
-# Create job-specific temp table to hold raw data
+############################################
+# Populate political divisions
+############################################
+
 echoi $e -n "Populating political divisions..."
 cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -f $DIR_LOCAL/sql/populate_poldivs.sql"
 eval $cmd
 source "$DIR/includes/check_status.sh"
 
-# Create job-specific temp table to hold raw data
-echoi $e -n "Checking centroids..."
-cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -f $DIR_LOCAL/sql/check_centroid.sql"
+############################################
+# Check centroids
+############################################
+
+echoi $e "Calculating centroids:"
+
+echoi $e -n "- country..."
+cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -v MAX_DIST=$MAX_DIST -v MAX_DIST_REL=$MAX_DIST_REL -f $DIR_LOCAL/sql/check_centroid_country.sql"
 eval $cmd
 source "$DIR/includes/check_status.sh"
 
-
-
-
-echo "STOPPING..."; exit 0
-
-
-
-
-
-
-
-
-
-
-
-echoi $e -n "- Dropping indexes on user_data..."
-cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -U $USER -d $DB_CDS --set ON_ERROR_STOP=1 -q -f $DIR_LOCAL/sql/drop_indexes_user_data.sql"
+echoi $e -n "- state..."
+cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -v MAX_DIST=$MAX_DIST -v MAX_DIST_REL=$MAX_DIST_REL -f $DIR_LOCAL/sql/check_centroid_state.sql"
 eval $cmd
-source "$DIR/includes/check_status.sh" 
+source "$DIR/includes/check_status.sh"
 
-
-
-echo "STOPPING..."; exit 0
-
-: <<'COMMENT_BLOCK_1'
-
-############################################
-# Check against existing results in cache
-############################################
-
-echoi $e -n "- Checking existing results in cache..."
-cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -U $USER -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -f $DIR_LOCAL/sql/check_cache.sql"
+echoi $e -n "- county..."
+cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -v MAX_DIST=$MAX_DIST -v MAX_DIST_REL=$MAX_DIST_REL -f $DIR_LOCAL/sql/check_centroid_county.sql"
 eval $cmd
-source "$DIR/includes/check_status.sh" 
+source "$DIR/includes/check_status.sh"
 
-#echo "EXITING!!!"; exit 0
-
-############################################
-# Resolve Political divisions
-############################################
-
-echoi $e "Country:"
-
-echoi $e -n "- exact..."
-cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -U $USER -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -f $DIR_LOCAL/sql/resolve_country_exact.sql"
+echoi $e -n "Determining consensus centroid..."
+cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -f $DIR_LOCAL/sql/consensus_centroid.sql"
 eval $cmd
-source "$DIR/includes/check_status.sh" 
-
-echoi $e -n "- fuzzy..."
-cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -U $USER -d $DB_CDS --set ON_ERROR_STOP=1 -q -v match_threshold=$match_threshold -v job=$job -f $DIR_LOCAL/sql/resolve_country_fuzzy.sql"
-eval $cmd
-source "$DIR/includes/check_status.sh" 
-
-echoi $e "State/province:"
-
-echoi $e -n "- exact..."
-cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -U $USER -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -f $DIR_LOCAL/sql/resolve_sp_exact.sql"
-eval $cmd
-source "$DIR/includes/check_status.sh" 
-
-echoi $e -n "- fuzzy..."
-cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -U $USER -d $DB_CDS --set ON_ERROR_STOP=1 -q -v match_threshold=$match_threshold -v job=$job -f $DIR_LOCAL/sql/resolve_sp_fuzzy.sql"
-eval $cmd
-source "$DIR/includes/check_status.sh" 
-
-echoi $e "County/parish:"
-
-echoi $e -n "- exact..."
-cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -U $USER -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -f $DIR_LOCAL/sql/resolve_cp_exact.sql"
-eval $cmd
-source "$DIR/includes/check_status.sh" 
-
-echoi $e -n "- fuzzy..."
-cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -U $USER -d $DB_CDS --set ON_ERROR_STOP=1 -q -v match_threshold=$match_threshold -v job=$job -f $DIR_LOCAL/sql/resolve_cp_fuzzy.sql"
-eval $cmd
-source "$DIR/includes/check_status.sh" 
-
-############################################
-# Summarize results
-############################################
-
-echoi $e -n "Summarizing results..."
-cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -U $USER -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -f $DIR_LOCAL/sql/summarize.sql"
-eval $cmd
-source "$DIR/includes/check_status.sh" 
-
-############################################
-# Populate ISO codes (add-on feature)
-############################################
-
-echoi $e -n "Populating ISO codes..."
-cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -U $USER -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -f $DIR_LOCAL/sql/iso_codes.sql"
-eval $cmd
-source "$DIR/includes/check_status.sh" 
-
-############################################
-# Updating cache
-############################################
-
-# Add new results to cache
-echoi $e -n "Updating cache..."
-cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -U $USER -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -f $DIR_LOCAL/sql/update_cache.sql"
-eval $cmd
-source "$DIR/includes/check_status.sh" 
-
-
-COMMENT_BLOCK_1
-
+source "$DIR/includes/check_status.sh"
 
 ######################################################
 # Report total elapsed time and exit if running solo

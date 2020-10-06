@@ -5,6 +5,24 @@
 # Check and change as needed
 ##############################################################
 
+######################################
+# is_centroid thresholds
+#
+# Country, state and county canditate 
+# centroids must surpass these thresholds 
+# to qualify as a "true" centroid
+# (is_centroid=1)
+##########################
+
+# Maximum distance (km) to true political division centroid
+MAX_DIST=5
+
+# Maximum relative distance
+# Proportion of actual distance to true centroid
+# divided by maximum possible distance (from farthest
+# point on political division perimiter to true centroid)
+MAX_DIST_REL=0.01
+
 ##########################
 # Paths, adjust according  
 # to your installation
