@@ -19,9 +19,6 @@
 : <<'COMMENT_BLOCK_x'
 COMMENT_BLOCK_x
 
-# for testing
-job="whatever"
-
 ######################################################
 # Set basic parameters, functions and options
 ######################################################
@@ -158,13 +155,9 @@ fi
 if  [ "$api" == "true" ]; then
 	pgpassword="PGPASSWORD=$pgpwd"
 	
-	# Only set remaining options if api=true
-	# Hence no defaults above
-	if [ "$silent" == "true" ]; then
-		e="false"
-	else
-		e="true"
-	fi
+	# Turn off all echoes, regardless of echo options sent
+	e="false"
+	i="false"
 fi
 
 # Check email address in params if -m option chosen
@@ -320,6 +313,16 @@ echoi $e -n "Determining consensus centroid..."
 cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -f $DIR_LOCAL/sql/consensus_centroid.sql"
 eval $cmd
 source "$DIR/includes/check_status.sh"
+
+############################################
+# Export the results
+############################################
+
+echoi $e -n "Dumping results to file '$outfile'..."
+metacmd="\COPY user_data TO '${outfile}' CSV HEADER"
+cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql $DB_CDS --set ON_ERROR_STOP=1 -q -c \"$metacmd\""
+eval $cmd
+echoi $i "done"
 
 ######################################################
 # Report total elapsed time and exit if running solo
