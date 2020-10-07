@@ -74,17 +74,11 @@ DIR_LOCAL=$DIR
 infile=""	# Input file and path
 outfile=""	# Output file and path
 api="false"		# Assume not an api call
+pgpassword=""	# Not needed if not an api call
 silent="false"	# off; sets both $e and $i to false if true
 i="true"						# Interactive mode on by default
 e="true"						# Echo on by default
 appendlog="false"				# Append to existing logfile 
-
-# psql default options
-# User and password not set by default
-# Must have passwordless authentication for these to work
-opt_pgpassword=""	# Omit if not an api call
-opt_user=""			# Omit if not an api call
-
 
 while [ "$1" != "" ]; do
     case $1 in
@@ -156,11 +150,10 @@ else
 	outfile="${outdir}/${outfilename}"
 fi
 
-# Set user and password for api access
-# Parameters $USER and $PWD_USER set in config file params.sh
+# Set PGPASSWORD for api access
+# Parameter $pgpwd set in config file
 if  [ "$api" == "true" ]; then
-	opt_pgpassword="PGPASSWORD=$PWD_USER"
-	opt_user="-U $USER"
+	pgpassword="PGPASSWORD=$pgpwd"
 	
 	# Turn off all echoes, regardless of echo options sent
 	e="false"
@@ -232,7 +225,7 @@ raw_data_tbl_temp="user_data_raw_${job}"
 
 # Create job-specific temp table to hold raw data
 echoi $e -n "- Creating temp table \"$raw_data_tbl_temp\"..."
-cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -v raw_data_tbl_temp="${raw_data_tbl_temp}" -f $DIR_LOCAL/sql/create_raw_data_temp.sql"
+cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -v raw_data_tbl_temp="${raw_data_tbl_temp}" -f $DIR_LOCAL/sql/create_raw_data_temp.sql"
 eval $cmd
 source "$DIR/includes/check_status.sh"
 
@@ -244,7 +237,7 @@ echoi $e -n "- Importing raw data to temp table..."
 # NOTE: need option to import user_id
 # ///////////////// #
 metacmd="\COPY $raw_data_tbl_temp(latitude,longitude) FROM '${infile}' DELIMITER ',' CSV $nullas  HEADER"
-cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user -d $DB_CDS --set ON_ERROR_STOP=1 -q -c \"$metacmd\""
+cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql $DB_CDS --set ON_ERROR_STOP=1 -q -c \"$metacmd\""
 eval $cmd
 source "$DIR/includes/check_status.sh"
 
@@ -252,7 +245,7 @@ source "$DIR/includes/check_status.sh"
 # ///////// TESTING ONLY  ///////// 
 echoi $e -n "- Clearing user_data (TESTING ONLY)..."
 sql="TRUNCATE user_data RESTART IDENTITY"
-cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user -d $DB_CDS --set ON_ERROR_STOP=1 -q -c \"$sql\""
+cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql $DB_CDS --set ON_ERROR_STOP=1 -q -c \"$sql\""
 eval $cmd
 source "$DIR/includes/check_status.sh"
 # ///////// TESTING ONLY  ///////// 
@@ -261,14 +254,14 @@ source "$DIR/includes/check_status.sh"
 
 # Insert the raw data to user data table
 echoi $e -n "- Insert raw data to table \"user_data\"..."
-cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user  -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -v raw_data_tbl_temp="$raw_data_tbl_temp" -f $DIR_LOCAL/sql/load_user_data.sql"
+cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -v raw_data_tbl_temp="$raw_data_tbl_temp" -f $DIR_LOCAL/sql/load_user_data.sql"
 eval $cmd
 source "$DIR/includes/check_status.sh"
 
 # Drop the temp table
 echoi $e -n "- Dropping temp table..."
 sql="DROP TABLE $raw_data_tbl_temp"
-cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user -d $DB_CDS --set ON_ERROR_STOP=1 -q -c \"$sql\""
+cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql $DB_CDS --set ON_ERROR_STOP=1 -q -c \"$sql\""
 eval $cmd
 source "$DIR/includes/check_status.sh"
 
@@ -277,12 +270,12 @@ source "$DIR/includes/check_status.sh"
 ############################################
 
 echoi $e -n "Validating coordinates..."
-cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user  -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -f $DIR_LOCAL/sql/validate_coordinates.sql"
+cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -f $DIR_LOCAL/sql/validate_coordinates.sql"
 eval $cmd
 source "$DIR/includes/check_status.sh"
 
 echoi $e -n "Calculating coordinate uncertainty..."
-cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user  -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -f $DIR_LOCAL/sql/coordinate_uncertainty.sql"
+cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -f $DIR_LOCAL/sql/coordinate_uncertainty.sql"
 eval $cmd
 source "$DIR/includes/check_status.sh"
 
@@ -291,7 +284,7 @@ source "$DIR/includes/check_status.sh"
 ############################################
 
 echoi $e -n "Populating political divisions..."
-cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user  -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -f $DIR_LOCAL/sql/populate_poldivs.sql"
+cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -f $DIR_LOCAL/sql/populate_poldivs.sql"
 eval $cmd
 source "$DIR/includes/check_status.sh"
 
@@ -302,22 +295,22 @@ source "$DIR/includes/check_status.sh"
 echoi $e "Calculating centroids:"
 
 echoi $e -n "- country..."
-cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user  -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -v MAX_DIST=$MAX_DIST -v MAX_DIST_REL=$MAX_DIST_REL -f $DIR_LOCAL/sql/check_centroid_country.sql"
+cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -v MAX_DIST=$MAX_DIST -v MAX_DIST_REL=$MAX_DIST_REL -f $DIR_LOCAL/sql/check_centroid_country.sql"
 eval $cmd
 source "$DIR/includes/check_status.sh"
 
 echoi $e -n "- state..."
-cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user  -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -v MAX_DIST=$MAX_DIST -v MAX_DIST_REL=$MAX_DIST_REL -f $DIR_LOCAL/sql/check_centroid_state.sql"
+cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -v MAX_DIST=$MAX_DIST -v MAX_DIST_REL=$MAX_DIST_REL -f $DIR_LOCAL/sql/check_centroid_state.sql"
 eval $cmd
 source "$DIR/includes/check_status.sh"
 
 echoi $e -n "- county..."
-cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user  -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -v MAX_DIST=$MAX_DIST -v MAX_DIST_REL=$MAX_DIST_REL -f $DIR_LOCAL/sql/check_centroid_county.sql"
+cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -v MAX_DIST=$MAX_DIST -v MAX_DIST_REL=$MAX_DIST_REL -f $DIR_LOCAL/sql/check_centroid_county.sql"
 eval $cmd
 source "$DIR/includes/check_status.sh"
 
 echoi $e -n "Determining consensus centroid..."
-cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user  -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -f $DIR_LOCAL/sql/consensus_centroid.sql"
+cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -f $DIR_LOCAL/sql/consensus_centroid.sql"
 eval $cmd
 source "$DIR/includes/check_status.sh"
 
@@ -327,7 +320,7 @@ source "$DIR/includes/check_status.sh"
 
 echoi $e -n "Dumping results to file '$outfile'..."
 metacmd="\COPY user_data TO '${outfile}' CSV HEADER"
-cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user -d $DB_CDS --set ON_ERROR_STOP=1 -q -c \"$metacmd\""
+cmd="$pgpassword PGOPTIONS='--client-min-messages=warning' psql $DB_CDS --set ON_ERROR_STOP=1 -q -c \"$metacmd\""
 eval $cmd
 echoi $i "done"
 

@@ -30,7 +30,7 @@ $results_filename = $basename . "_out.tsv";
 
 # Full path and name of results file
 $results_file = $data_dir_tmp . $results_filename;
-$results_file = "/tmp/" . $results_filename;
+//$results_file = "/tmp/" . $results_filename;
 
 ///////////////////////////////////
 // Functions
@@ -226,7 +226,7 @@ if ( $mode=="resolve" ) { 	// BEGIN mode_if
 	$data_dir_tmp_full = $data_dir_tmp . "/";
 	// Form the final command
 // 	$cmd = $BATCH_DIR . "controller.pl $opt_mode $opt_matches -in '$file_tmp'  -out '$results_file' -sources '$sources' -class $class -nbatch $NBATCH -d t ";
-	$cmd = $BATCH_DIR . "cds.sh -s -f '$file_tmp' -o '$results_file'";
+	$cmd = $BATCH_DIR . "cds.sh -a -f '$file_tmp' -o '$results_file'";
 	
 	// Execute the TNRSBatch command
 	exec($cmd, $output, $status);
