@@ -1117,3 +1117,16 @@ Calculating centroids:
 - county...done (.12 sec)
 Determining consensus centroid...done (.11 sec)
 Dumping results to file 'data/cds_testfile_comb_cds_results.csv'...done
+
+------ Process started at Wed Oct  7 14:20:06 PDT 2020 ------
+
+Importing user data:
+- Creating temp table "user_data_raw_job_20201007_1420066141638_3546"...done (.09 sec)
+- Importing raw data to temp table...done (.08 sec)
+- Insert raw data to table "user_data"...
+------ Process started at Wed Oct  7 14:23:08 PDT 2020 ------
+
+Importing user data:
+- Creating temp table "user_data_raw_job_20201007_1423019300457_13203"...done (.10 sec)
+- Importing raw data to temp table...done (.08 sec)
+- Clearing user_data (TESTING ONLY)...

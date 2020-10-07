@@ -59,18 +59,6 @@ if [ -z ${master+x} ] && [ "$i" == "true" ]; then
 	# Current user
 	curr_user="$(whoami)"
 
-	# Admin user message
-	user_admin_disp=$curr_user
-	if [[ "$USER_ADMIN" != "" ]]; then
-		user_admin_disp="$USER_ADMIN"
-	fi
-
-	# Read-only user message
-	user_read_disp="[n/a]"
-	if [[ "$USER_READ" != "" ]]; then
-		user_read_disp="$USER_READ"
-	fi
-
 	# Reset confirmation message
 	msg_conf="$(cat <<-EOF
 
@@ -78,8 +66,8 @@ if [ -z ${master+x} ] && [ "$i" == "true" ]; then
 
 	DB name:		$DB_CDS
 	Current user:		$curr_user
-	Admin user/db owner:	$user_admin_disp
-	Read-only user:		$user_read_disp
+	Admin user/db owner:	$USER_ADMIN
+	Read-only user:		$USER_READ
 
 EOF
 	)"		
@@ -105,15 +93,18 @@ fi
 ############################################
 # Alter ownership and permissions
 ############################################
+echoi $e "Setting ownership and permissions:"
 
-if [ "$USER_ADMIN" != "" ]; then
-	echoi $e "Changing database ownership and permissions:"
-
-	echoi $e -n "- Changing DB owner to '$USER_ADMIN'..."
+echoi $e -n "- Setting permissions for admin user '$USER_ADMIN'"
+if [[ "$USER_ADMIN" == "" ]]; then
+	echoi $e "...admin user not set"
+else
+	echoi $e ":"
+	echoi $e -n "-- Changing DB owner to '$USER_ADMIN'"
 	sudo -Hiu postgres PGOPTIONS='--client-min-messages=warning' psql --set ON_ERROR_STOP=1 -q -c "ALTER DATABASE $DB_CDS OWNER TO $USER_ADMIN" 
 	source "$includes_dir/check_status.sh"  
 
-	echoi $e -n "- Granting permissions to '$USER_ADMIN'..."
+	echoi $e -n "-- Granting permissions to '$USER_ADMIN'..."
 	sudo -Hiu postgres PGOPTIONS='--client-min-messages=warning' psql -q <<EOF
 	\set ON_ERROR_STOP on
 	REVOKE CONNECT ON DATABASE $DB_CDS FROM PUBLIC;
@@ -126,10 +117,10 @@ if [ "$USER_ADMIN" != "" ]; then
 EOF
 	source "$includes_dir/check_status.sh" 
 
-	echoi $e "- Transferring ownership of non-postgis relations to user '$USER_ADMIN':"
+	echoi $e "-- Transferring ownership of non-postgis relations to user '$USER_ADMIN':"
 	# Only postgis table should be spatial_ref_sys
 	
-	echoi $e -n "-- Tables..."
+	echoi $e -n "--- Tables..."
 #	for tbl in `psql -qAt -c "select tablename from pg_tables where schemaname='public' and tableowner<>'postgres';" $DB_CDS` ; do  sudo -Hiu postgres PGOPTIONS='--client-min-messages=warning' psql -q -c "alter table \"$tbl\" owner to $USER_ADMIN" $DB_CDS ; done
 	# Using "tablename not in (...)" instead of "tableowner<>'postgres'" 
 	# prevents ownership change being blocked for tables created manually 
@@ -137,18 +128,18 @@ EOF
 	for tbl in `psql -qAt -c "select tablename from pg_tables where schemaname='public' and tablename not in ('spatial_ref_sys');" $DB_CDS` ; do  sudo -Hiu postgres PGOPTIONS='--client-min-messages=warning' psql -q -c "alter table \"$tbl\" owner to $USER_ADMIN" $DB_CDS ; done
 	source "$includes_dir/check_status.sh"  
 
-	echoi $e -n "-- Sequences..."
+	echoi $e -n "--- Sequences..."
 	for tbl in `psql -qAt -c "select sequence_name from information_schema.sequences where sequence_schema = 'public';" $DB_CDS` ; do  sudo -Hiu postgres PGOPTIONS='--client-min-messages=warning' psql -q -c "alter sequence \"$tbl\" owner to $USER_ADMIN" $DB_CDS ; done
 	source "$includes_dir/check_status.sh"  
 	
 	echoi $e -n "-- Views..."
 	for tbl in `psql -qAt -c "select table_name from information_schema.views where table_schema = 'public' and table_name not in ('geography_columns','geometry_columns','raster_columns','raster_overviews');" $DB_CDS` ; do  psql -c "alter view \"$tbl\" owner to $USER_ADMIN" $DB_CDS ; done
 	source "$includes_dir/check_status.sh"  
-
 fi
 
+echoi $e -n "- Granting read access to read-only user \"$USER_READ\"..."
 if [[ ! "$USER_READ" == "" ]]; then
-	echoi $e -n "- Granting read access to \"$USER_READ\"..."
+	
 	sudo -Hiu postgres PGOPTIONS='--client-min-messages=warning' psql -q <<EOF
 	\set ON_ERROR_STOP on
 	REVOKE CONNECT ON DATABASE $DB_CDS FROM PUBLIC;
@@ -158,6 +149,8 @@ if [[ ! "$USER_READ" == "" ]]; then
 	GRANT SELECT ON ALL TABLES IN SCHEMA public TO $USER_READ;
 EOF
 	source "$includes_dir/check_status.sh" 
+else 
+	$echoi $e "read-only user not set"
 fi 
 
 ######################################################

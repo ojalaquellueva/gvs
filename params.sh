@@ -23,6 +23,11 @@ MAX_DIST=5
 # point on political division perimiter to true centroid)
 MAX_DIST_REL=0.01
 
+# Complete clear all data from table user_data
+# For development only
+# Any value other than true, does nothing
+CLEAR_USER_DATA="true"
+
 ##########################
 # Paths, adjust according  
 # to your installation

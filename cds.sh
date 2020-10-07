@@ -203,7 +203,7 @@ starttime="$(date)"
 start=`date +%s%N`; prev=$start
 pid=$$
 
-if [[ "$m" = "true" ]]; then 
+if [[ "$m" == "true" ]]; then 
 	source "${includes_dir}/mail_process_start.sh"	# Email notification
 fi
 
@@ -248,19 +248,18 @@ cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user -d
 eval $cmd
 source "$DIR/includes/check_status.sh"
 
-
-# ///////// TESTING ONLY  ///////// 
-echoi $e -n "- Clearing user_data (TESTING ONLY)..."
-sql="TRUNCATE user_data RESTART IDENTITY"
-cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user -d $DB_CDS --set ON_ERROR_STOP=1 -q -c \"$sql\""
-eval $cmd
-source "$DIR/includes/check_status.sh"
-# ///////// TESTING ONLY  ///////// 
-
-
+if [ "$CLEAR_USER_DATA" == "true" ]; then
+	# Admin-level option to completely clear table user_data, for testing
+	# Set in params file
+	echoi $e -n "- Clearing user_data (TESTING ONLY)..."
+	sql="TRUNCATE user_data RESTART IDENTITY"
+	cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user -d $DB_CDS --set ON_ERROR_STOP=1 -q -c \"$sql\""
+	eval $cmd
+	source "$DIR/includes/check_status.sh"
+fi
 
 # Insert the raw data to user data table
-echoi $e -n "- Insert raw data to table \"user_data\"..."
+echoi $e -n "- Inserting raw data to table \"user_data\"..."
 cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user  -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -v raw_data_tbl_temp="$raw_data_tbl_temp" -f $DIR_LOCAL/sql/load_user_data.sql"
 eval $cmd
 source "$DIR/includes/check_status.sh"

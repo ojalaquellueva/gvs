@@ -234,12 +234,7 @@ if ( $mode=="resolve" ) { 	// BEGIN mode_if
 		$err_msg="ERROR: cds exit status: $status\r\n";
 		$err_code=500; goto err;
 	}
-	//if ($status) die("
-	// \$status=$status
-	// \$file_tmp='$file_tmp'
-	// \$results_file='$results_file'
-	// \$cmd=\"$cmd\"
-	// ");
+
 	///////////////////////////////////
 	// Retrieve the tab-delimited results
 	// file and convert to JSON
@@ -253,7 +248,7 @@ if ( $mode=="resolve" ) { 	// BEGIN mode_if
 
 	if ( $mode=="meta" ) { 
 		$sql="
-		SELECT db_version, build_date, code_version
+		SELECT db_version, build_date, code_version 
 		FROM meta
 		;
 		";
@@ -279,7 +274,6 @@ header('Content-type: application/json');
 
 // Send data
 echo $results_json;
-//echo $cmd;
 
 ///////////////////////////////////
 // Error: return http status code

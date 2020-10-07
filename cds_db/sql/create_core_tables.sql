@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS meta;
 CREATE TABLE meta (
 db_version text DEFAULT NULL,
 code_version text DEFAULT NULL,
-build_date timestamp
+build_date date
 );
 
 DROP TABLE IF EXISTS centroid_country;
@@ -91,6 +91,7 @@ DROP TABLE IF EXISTS user_data;
 CREATE TABLE user_data (
 id BIGSERIAL NOT NULL PRIMARY KEY,
 job text DEFAULT NULL,
+date_created TIMESTAMP WITH TIME ZONE,
 latitude_verbatim text DEFAULT NULL,
 longitude_verbatim text DEFAULT NULL,
 latitude numeric DEFAULT NULL,
@@ -143,6 +144,7 @@ CREATE INDEX user_data_job_idx ON user_data USING btree (job);
 CREATE INDEX user_data_gid_0_idx ON user_data USING btree (gid_0);
 CREATE INDEX user_data_gid_1_idx ON user_data USING btree (gid_1);
 CREATE INDEX user_data_gid_2_idx ON user_data USING btree (gid_2);
+CREATE INDEX user_data_date_created_idx ON user_data USING btree (date_created);
 
 -- Spatial index
 CREATE INDEX user_data_geom_idx ON user_data USING GIST (geom);

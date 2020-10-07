@@ -49,7 +49,7 @@ $lines = 5;
 //	Options: resolve*|meta
 // 	E.g., $mode="meta"
 $mode="resolve";			// Resolve names
-// $mode="meta";			// Return metadata on CDS & sources
+$mode="meta";			// Return metadata on CDS & sources
 
 /////////////////////////////////////////
 // Display options
@@ -128,7 +128,13 @@ if ( $mode=="resolve" ) {
 ///////////////////////////////
 
 // Convert to JSON
-$json_data = json_encode(array('opts' => $opts_arr, 'data' => $data_arr));	
+if ($mode=='resolve') {
+	# Options + data
+	$json_data = json_encode(array('opts' => $opts_arr, 'data' => $data_arr));	
+} else {
+	# Just options
+	$json_data = json_encode(array('opts' => $opts_arr));	
+}
 
 ///////////////////////////////
 // Decompose the JSON
@@ -151,12 +157,10 @@ if ($disp_opts_array) {
 }
 
 if ($disp_opts) {
-	// Convert booleans to text for display
-	$mode_disp = isset($opts['mode']) ? $mode : "resolve";
 	
 	// Echo the options
 	echo "CDS options:\r\n";
-	echo "  mode: " . $mode_disp . "\r\n";
+	echo "  mode: " . $mode . "\r\n";
 	//echo "  batches: " . $opts['batches'] . "\r\n";
 	echo "\r\n";
 }

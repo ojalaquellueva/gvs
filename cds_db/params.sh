@@ -42,12 +42,12 @@ data_base_dir="/home/boyle/bien/cds/data"
 # If leave user_admin blank ("") then database will be owned
 # by whatever user you use to run this script, and postgis tables
 # will belong to postgres
-#USER_ADMIN="bien"		# Admin user
+USER_ADMIN="bien"		# Admin user
 
 # Give user_read select permission on the database
 # If leave blank ("") user_read will not be added and only
 # you will have access to db
-#USER_READ="bien_read"	# Read only user
+USER_READ="bien_read"	# Read only user
 
 # Destination email for process notifications
 # You must supply a valid email if you used the -m option
