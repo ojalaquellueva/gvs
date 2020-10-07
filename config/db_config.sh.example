@@ -3,17 +3,18 @@
 # Database connection parameters
 # For production, keep these parameters outside script working directory
 # Edit db_config_path in params.sh accordingly
-host='<host_name_or_ip>'
 
-user_admin='<admin-level_user>'
-user_read='<read-only_user>'
+#host='<host_name_or_ip>'
+DB_CDS='cds'
 
-# Admin-level user password
-pwd_user_admin='<admin-level_password>'
+USER_ADMIN='<admin-level_user>'	# Full privileges
+USER_READ='<read-only_user>'	# SELECT only 
+USER='<main_app_user>'			# SELECT, UPDATE, DELETE 
 
-# CDS read-only database user pwd
+# GNRS database user pwd
 # Needed for access by api (user www-data)
-pgpwd='<read-only_user_password>'
+# Recommend echo from external file, e.g.,
+# PWD_USER=$(cat /path/to/passwordfile)			
+PWD_USER="<the_password>"
 
-db_cds='cds'
-db_gadm='gadm'
+
