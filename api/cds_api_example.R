@@ -74,13 +74,6 @@ results[ , c('latitude_verbatim', 'longitude_verbatim', 'latitude', 'longitude',
 	'latlong_err', 'coordinate_decimal_places', 'coordinate_inherent_uncertainty_m')
 	]
 
-# A few columns showing coordinate validation
-#results $match.score <- format(round(as.numeric(results $Overall_score),2), nsmall=2)
-results[ , c('latitude_verbatim', 'longitude_verbatim', 'latitude', 'longitude', 
-	'latlong_err', 'coordinate_decimal_places', 'coordinate_inherent_uncertainty_m')
-	]
-
-
 # A few columns showing political division matching
 #results $match.score <- format(round(as.numeric(results $Overall_score),2), nsmall=2)
 results[ , c('latitude_verbatim', 'longitude_verbatim', 'latitude', 'longitude', 

@@ -21,7 +21,7 @@ MAX_DIST=5
 # Proportion of actual distance to true centroid
 # divided by maximum possible distance (from farthest
 # point on political division perimiter to true centroid)
-MAX_DIST_REL=0.01
+MAX_DIST_REL=0.0001
 
 # Complete clear all data from table user_data
 # For development only

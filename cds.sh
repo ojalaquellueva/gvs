@@ -85,6 +85,10 @@ appendlog="false"				# Append to existing logfile
 opt_pgpassword=""	# Omit if not an api call
 opt_user=""			# Omit if not an api call
 
+# Optional threshold parameters
+# Empty string: use default values supplied in params.sh
+maxdist=""
+maxdistrel=""
 
 while [ "$1" != "" ]; do
     case $1 in
@@ -98,6 +102,12 @@ while [ "$1" != "" ]; do
                                 ;;
         -o | --outfile )       	shift
                                 outfile=$1
+                                ;;
+        -d | --maxdist )       	shift
+                                maxdist=$1
+                                ;;
+        -r | --maxdistrel )    	shift
+                                maxdistrel=$1
                                 ;;
         -n | --nowarnings )		i="false"
         						;;
@@ -132,7 +142,7 @@ else
 	# Check file exists
 	if [ ! -f "$infile" ]; then
 		echo "ERROR: file '$infile' does not exist"
-		exit 1;
+		exit 1
 	fi
 fi
 
@@ -154,6 +164,28 @@ else
 	base="${filename%.*}"
 	outfilename="${base}_cds_results.${ext}"
 	outfile="${outdir}/${outfilename}"
+fi
+
+# Reset threshold parameter MAX_DIST if supplied
+if [[ ! "$maxdist" == "" ]]; then
+	# Check positive integer
+	if test "$maxdist" -gt 0 2> /dev/null ; then
+		MAX_DIST=$maxdist
+	else
+		echo "ERROR: Option -d/--maxdist must be a positive inteter"
+		exit 1
+	fi
+fi
+
+# Reset threshold parameter MAX_DIST_REL if supplied
+if [[ ! "$maxdistrel" == "" ]]; then
+	# Check over (0:1)
+	if (( $(echo "$maxdistrel > 0" |bc -l) )) && (( $(echo "$maxdistrel < 1" |bc -l) )); then
+			MAX_DIST_REL=$maxdistrel
+	else
+		echo "ERROR1: Option -r/--maxdistrel must be fraction over (0:1)"
+		exit 1
+	fi
 fi
 
 # Set user and password for api access
@@ -191,6 +223,8 @@ if [ "$i" == "true" ]; then
 	Current user:		$curr_user
 	Input file:		$infile
 	Output file:		$outfile
+	MAX_DIST:		$MAX_DIST
+	MAX_DIST_REL:		$MAX_DIST_REL
 
 EOF
 	)"		
