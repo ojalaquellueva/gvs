@@ -49,7 +49,7 @@ $lines = 5;
 //	Options: resolve*|meta
 // 	E.g., $mode="meta"
 $mode="resolve";			// Resolve names
-$mode="meta";			// Return metadata on CDS & sources
+//$mode="meta";			// Return metadata on CDS & sources
 
 /////////////////////////////////////////
 // Display options

@@ -241,7 +241,7 @@ if ( $mode=="resolve" ) { 	// BEGIN mode_if
 	///////////////////////////////////
 	
 	// Import the results file (tab-delimitted) to array
-	$results_array = file_to_array_assoc($results_file, "\t");
+	$results_array = file_to_array_assoc($results_file, ",");
 
 } else {	// CONTINUE mode_if 
 	// Metadaa requests
