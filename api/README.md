@@ -8,8 +8,10 @@
 [Setup & configuration](#setup)  
 [Usage](#usage)  
 [Example scripts](#examples)  
-[Related applications](#related)  
-[References](#references)  
+[Centroid types](#centroid-types)  
+[Centroid thresholds](#thresholds)  
+[Raw input](#input)  
+[Output & definitions](#output)  
 
 <a name="introduction"></a>
 ## Introduction
@@ -95,7 +97,7 @@ php cds_api_example.php
 * See example script `cds_api_example.R`. 
 * Make sure that input file (`cds_testfile.csv`) is available in the same directory as the R script, or adjust file path in the R code.
 
-<a name="centroid_types"></a>
+<a name="centroid-types"></a>
 ## Centroid types
 
 | Abbreviation | Meaning | Notes |
@@ -116,3 +118,65 @@ The following are the thresholds for a point of observation (PO) to qualify as a
 | ------ | ----- | ---------- | -------- |
 | MAX\_DIST | Maximum distance to centroid | 5.0 | Maximum distance in km from actual centroid
 | MAX\_DIST\_REL | Relative maximum distance to centroid | 0.01 | Maximum value of distance from cetroid to PO and centroid to farthest possible point in polygon  
+
+<a name="input"></a>
+## Raw input
+
+Raw input is a plain text file of decimal coordinates (latitude first, then longitude, comma separated), with one pair of coordinate per line, as shown below. If you include a header, it will be treated as invalid coordinate values, with latlong_err="Coordinates non-numeric". 
+
+> 36.580435, -96.53331   
+39.80818224, -91.62289157   
+52.92755, 4.7864   
+52.54731, -2.49544   
+-23.62, -65.43   
+-29.17865102, 149.269218   
+-29.23147803, 152.13519   
+51.81171, -3.8879   
+
+<a name="output"></a>
+## Output & definitions
+
+Below is a list of fields returned by the API and their definitions. GADM: Global administrative Divisions )https://gadm.org/).
+
+| Field  | Definition | Units (if applicable)
+| ------ | ---- | ----------
+| id | Unique integer ID, assigned by CDS |  
+| job | (internal use) |  
+| date_created | Date of query |  
+| latitude_verbatim | Verbatim latitude, as submitted |  
+| longitude_verbatim | Verbatim longitude, as submitted |  
+| latitude | Decimal latitude |  
+| longitude | Decimal longitude |  
+| user_id | (internal use) |  
+| gid_0 | GADM ID of country |  
+| country | GADM name of country |  
+| gid_1 | GADM ID of state |  
+| state | GADM name of state |  
+| gid_2 | GADM ID of county |  
+| county | GADM name of country |  
+| country_cent_dist | Distance to closest country centroid |  km
+| country_cent_dist_relative | Distance from centroid to observation, relative to distance from centroid to farther point in country |  
+| country_cent_type | Centroid type |  
+| country_cent_dist_max | Distance from centroid to farther point in country |  km
+| is_country_centroid | Do coordinates fall within likely centroid thresholds? |  
+| state_cent_dist | Distance to closest state centroid |  km 
+| state_cent_dist_relative | Distance from centroid to observation, relative to distance from centroid to farther point in state |  
+| state_cent_type | Centroid type |  
+| state_cent_dist_max | Distance from centroid to farther point in country |  km
+| is_state_centroid | Do coordinates fall within likely centroid thresholds? |  
+| county_cent_dist | Distance to closest county centroid |  km 
+| county_cent_dist_relative | Distance from centroid to observation, relative to distance from centroid to farther point in county |  
+| county_cent_type | Centroid type  |  
+| county_cent_dist_max | Distance from centroid to farther point in country |  km
+| is_county_centroid | Do coordinates fall within likely centroid thresholds? |  
+| centroid_dist_km | Distance to centroid of most likely political division centroid (i.e., where is\_[poldiv]\_centroid=1 |  km 
+| centroid_dist_relative | Distance from centroid to observation, relative to distance from centroid to farther point in political division, of most likely political division centroid |  
+| centroid_type | Centroid type, of most likely political division centroid |  
+| centroid_dist_max_km | Distance from centroid to farther point in political division, of most likely political division centroid |  km
+| centroid_poldiv | Political division type of most likely political division centroid |  
+| latlong_err | Type of error of invalid coordinates |  
+| coordinate_decimal_places | Minimum decimal places of the verbatim lat, long values |  
+| coordinate_inherent_uncertainty_m: | Inherent uncertainty of the coordinates, due to the number of decimal places used |  m
+| geog | (internal use) |  
+| geom | (internal use) |  
+
