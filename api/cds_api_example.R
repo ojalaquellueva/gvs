@@ -39,11 +39,21 @@ data_json <- jsonlite::toJSON(unname(data))
 #################################
 
 # Set API options
-mode <- "resolve"										# Processing mode
+mode <- "resolve"					# Processing mode
+
+# Threshold parameter options
+# Comment out to use application defaults
+maxdist <- 10					# Maximum distance from centroid to qualify as centroid
+maxdistrel <- 0.1				# Maximum relative distance from centroid (relative to distance
+										# from centroid  to farthest point in political division), to qualify
+										# as centroid
 
 # Convert the options to data frame and then JSON
-opts <- data.frame(c(mode))
+opts <- data.frame( c(mode) )
 names(opts) <- c("mode")
+if ( exists("maxdist") ) opts$maxdist <- maxdist
+if ( exists("maxdistrel") ) opts$maxdistrel <- maxdistrel
+
 opts_json <-  jsonlite::toJSON(opts)
 opts_json <- gsub('\\[','',opts_json)
 opts_json <- gsub('\\]','',opts_json)
@@ -88,12 +98,12 @@ results[ results$latlong_err=='', c('latitude', 'longitude',
 	)]
 
 # Consensue centroid 
-cc <- results[ results$latlong_err=='', c('latitude', 'longitude', 
+results[ results$latlong_err=='', c('latitude', 'longitude', 
 	'is_country_centroid', 	'is_state_centroid', 'is_county_centroid', 
 	'centroid_dist_km', 
-	'centroid_dist_relative', 'centroid_type', 'centroid_dist_max_km', 'centroid_poldiv'
+	'centroid_dist_relative', 'centroid_type', 'centroid_dist_max_km', 'centroid_poldiv',	
+	'max_dist', 'max_dist_rel'
 	)]
-cc[6:nrow(cc),]
 
 #################################
 # Example 2: Get metadata for current 

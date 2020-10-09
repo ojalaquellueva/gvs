@@ -51,6 +51,11 @@ $lines = 10000000000;
 $mode="resolve";			// Resolve names
 //$mode="meta";			// Return metadata on CDS & sources
 
+// Threshold parameter options
+// Set to empty string ("") to use defaults
+$maxdist="";
+$maxdistrel="";
+
 /////////////////////////////////////////
 // Display options
 // 
@@ -87,15 +92,14 @@ include $timer_on; 	// Start the timer
 echo "\n";
 
 ///////////////////////////////
-// Make options array
+// Set options array
 ///////////////////////////////
-$opts_arr = array(
-	"mode"=>$mode,
-	"batches"=>$batches
-	);
 $opts_arr = array(
 	"mode"=>$mode
 	);
+if ( ! $maxdist=="" ) $opts_arr += array("maxdist"=>$maxdist);
+if ( ! $maxdistrel=="" ) $opts_arr += array("maxdistrel"=>$maxdistrel);
+if ( ! $batches=="" ) $opts_arr += array("batches"=>$batches);
 
 ///////////////////////////////
 // Make data array
@@ -160,8 +164,13 @@ if ($disp_opts) {
 	
 	// Echo the options
 	echo "CDS options:\r\n";
-	echo "  mode: " . $mode . "\r\n";
+	//echo "  mode: " . $mode . "\r\n";
 	//echo "  batches: " . $opts['batches'] . "\r\n";
+	foreach($opts_arr as $key => $value) {
+		//foreach($row as $key => $value) {
+			echo "  $key=$value\n";
+		//}
+	}
 	echo "\r\n";
 }
 

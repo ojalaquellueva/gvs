@@ -355,6 +355,15 @@ eval $cmd
 source "$DIR/includes/check_status.sh"
 
 ############################################
+# Save threshold parameters
+############################################
+
+echoi $e -n "Saving threshold parameters..."
+cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user  -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -v MAX_DIST=$MAX_DIST -v MAX_DIST_REL=$MAX_DIST_REL -f $DIR_LOCAL/sql/save_params.sql"
+eval $cmd
+source "$DIR/includes/check_status.sh"
+
+############################################
 # Export the results
 ############################################
 

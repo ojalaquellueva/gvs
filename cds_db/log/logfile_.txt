@@ -1,15 +1,15 @@
 
------- Process started at Wed Oct  7 16:19:00 PDT 2020 ------
+------ Process started at Thu Oct  8 17:32:36 PDT 2020 ------
 
 Setting ownership and permissions:
 - Setting permissions for admin user 'bien':
--- Changing DB owner to 'bien'done (.17 sec)
+-- Changing DB owner to 'bien'done (.25 sec)
 -- Granting permissions to 'bien'...done (.10 sec)
 -- Transferring ownership of non-postgis relations to user 'bien':
---- Tables...done (.95 sec)
---- Sequences...done (.47 sec)
--- Views...done (.07 sec)
-- Granting read access to read-only user "bien_read"...done (.09 sec)
+--- Tables...done (.77 sec)
+--- Sequences...done (.70 sec)
+-- Views...done (.11 sec)
+- Granting read access to read-only user "bien_read"...done (.11 sec)
 
------- Process 'Set permissions for database cds' completed in 1.92 seconds ------
+------ Process 'Set permissions for database cds' completed in 2.11 seconds ------
 

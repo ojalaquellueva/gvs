@@ -185,6 +185,10 @@ if ( $mode=="resolve" ) { 	// BEGIN mode_if
 	if ($rows==0) {
 		$err_msg="ERROR: No data rows!\r\n"; $err_code=400; goto err; 
 	}
+	
+	# Set threshold parameter options, if provided
+	if ( isset($maxdist) ) $opt_maxdist = "-d $maxdist";
+	if ( isset($maxdistrel) ) $opt_maxdistrel = "-r $maxdistrel";
 
 	///////////////////////////////////////////
 	// Save data array to temp directory as 
@@ -226,7 +230,7 @@ if ( $mode=="resolve" ) { 	// BEGIN mode_if
 	$data_dir_tmp_full = $data_dir_tmp . "/";
 	// Form the final command
 // 	$cmd = $BATCH_DIR . "controller.pl $opt_mode $opt_matches -in '$file_tmp'  -out '$results_file' -sources '$sources' -class $class -nbatch $NBATCH -d t ";
-	$cmd = $BATCH_DIR . "cds.sh -a -f '$file_tmp' -o '$results_file'";
+	$cmd = $BATCH_DIR . "cds.sh -a $opt_maxdist $opt_maxdistrel -f '$file_tmp' -o '$results_file'";
 	
 	// Execute the TNRSBatch command
 	exec($cmd, $output, $status);
