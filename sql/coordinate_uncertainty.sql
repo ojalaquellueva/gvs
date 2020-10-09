@@ -1,12 +1,31 @@
 -- ----------------------------------------------------------
--- Determine coordinate precision and estimate max uncertainty
+-- Determine coordinate precision and estimate inherent
+-- uncertainty due to decimal places used
 -- 
--- Requires parameters:
---	job	- job #
--- Requires custom function isnumeric
+-- Requires external parameter job
 -- ----------------------------------------------------------
 
+-- 
+-- Set coordinate max precision constants
+--
+-- Note the use of \gset to set constant to result of query
+-- See: https://stackoverflow.com/a/32597876/275782
+--
+
+-- Total decimal places
+-- Also used to set "scale" parameter for numeric data type cast
+\set DMAX 15
+
+-- Total digits latitude; sets "precision" numeric() parameter
+SELECT :DMAX+2 AS "PLAT" \gset
+
+-- Total digits longitude; sets "precision" numeric() parameter
+SELECT :DMAX+3 AS "PLONG" \gset
+
+--
 -- Calculate precision
+--
+
 UPDATE user_data a
 SET coordinate_decimal_places=b.digits
 FROM (
@@ -21,7 +40,18 @@ WHERE a.id=b.id
 AND job=:'job'
 ;
 
--- Estimate max uncertainty in m
+
+--
+-- Estimate inherent uncertainty in m
+--
+-- Calculates maximum distance between coordinates using verbatim 
+-- decimal places and same coordinates padded with 9s on the right,
+-- to DMAX decimal places
+-- 
+-- CASE statement is special handling for coordinates 
+-- with zero decimal places
+--
+
 UPDATE user_data a
 SET coordinate_inherent_uncertainty_m=max_err_m
 FROM (
@@ -32,18 +62,24 @@ FROM
 SELECT id, 
 ST_GeogFromText('SRID=4326;POINT(' || 
 CONCAT(
-longitude_verbatim,
-(10^(15-LENGTH(SPLIT_PART(longitude_verbatim,'.',2)))-1)::text
+CASE
+WHEN longitude_verbatim NOT LIKE '%.%' THEN longitude_verbatim || '.'
+ELSE longitude_verbatim
+END,
+(10^(:DMAX-LENGTH(SPLIT_PART(longitude_verbatim,'.',2)))-1)::text
 )::numeric
  || ' ' || 
-latitude::numeric(17,15)
+latitude::numeric(:PLAT,:DMAX)
  || ')') AS geog_longmax_latmin, 
 ST_GeogFromText('SRID=4326;POINT(' || 
-longitude::numeric(18,15)
+longitude::numeric(:PLONG,:DMAX)
  || ' ' || 
 CONCAT(
-latitude_verbatim,
-(10^(15-LENGTH(SPLIT_PART(latitude_verbatim,'.',2)))-1)::text
+CASE
+WHEN latitude_verbatim NOT LIKE '%.%' THEN latitude_verbatim || '.'
+ELSE latitude_verbatim
+END,
+(10^(:DMAX-LENGTH(SPLIT_PART(latitude_verbatim,'.',2)))-1)::text
 )::numeric
  || ')') AS geog_longmin_latmax
 FROM user_data

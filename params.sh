@@ -15,18 +15,19 @@
 ##########################
 
 # Maximum distance (km) to true political division centroid
-MAX_DIST=1000
+MAX_DIST=10
 
 # Maximum relative distance
 # Proportion of actual distance to true centroid
 # divided by maximum possible distance (from farthest
 # point on political division perimiter to true centroid)
-MAX_DIST_REL=0.1
+MAX_DIST_REL=0.001
 
 # Complete clear all data from table user_data
 # For development only
 # Any value other than true, does nothing
-CLEAR_USER_DATA="true"
+# TURN OFF DURING PRODUCTION!
+CLEAR_USER_DATA="false"
 
 ##########################
 # Paths, adjust according  
@@ -62,14 +63,6 @@ data_dir_local=$data_dir_local_abs
 #############################################################
 
 ##########################
-# Batch & multi-user
-# parameters
-##########################
-
-# Default batch size. Recommend 10000
-batch_size=10000;
-
-##########################
 # Default input/output file names
 ##########################
 
@@ -87,8 +80,9 @@ results_filename="cds_results.csv"
 
 # 't' to limit number of records imported (for testing)
 # 'f' to run full import
+# recordlimit ignored if use_limit='f'
 use_limit='f'
-recordlimit=1000
+recordlimit=100000000000
 
 ##########################
 # Display/notification parameters

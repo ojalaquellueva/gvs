@@ -11,12 +11,14 @@
 -- TRUNCATE user_data;
 INSERT INTO user_data (
 job,
+date_created,
 latitude_verbatim,
 longitude_verbatim,
 user_id
 )
 SELECT 
 :'job',
+now(),
 latitude,
 longitude,
 user_id
