@@ -1,8 +1,8 @@
-id,job,date_created,latitude_verbatim,longitude_verbatim,latitude,longitude,user_id,gid_0,country,gid_1,state,gid_2,county,country_cent_dist,country_cent_dist_relative,country_cent_type,country_cent_dist_max,is_country_centroid,state_cent_dist,state_cent_dist_relative,state_cent_type,state_cent_dist_max,is_state_centroid,county_cent_dist,county_cent_dist_relative,county_cent_type,county_cent_dist_max,is_county_centroid,centroid_dist_km,centroid_dist_relative,centroid_type,centroid_dist_max_km,centroid_poldiv,max_dist,max_dist_rel,latlong_err,coordinate_decimal_places,coordinate_inherent_uncertainty_m,geog,geom
-1,job_20201009_0955433286812_2259,,0,0,0,0,,,,,,,,,,,,,,,,,,,,,,,,,,,,1000,0.1,In ocean,0,9845757.35522574,0101000020E610000000000000000000000000000000000000,0101000020E610000000000000000000000000000000000000
-7,job_20201009_0955433286812_2259,,-99,10,-99,10,,,,,,,,,,,,,,,,,,,,,,,,,,,,1000,0.1,Coordinate values out of bounds,,,,
-6,job_20201009_0955433286812_2259,,60,200,60,200,,,,,,,,,,,,,,,,,,,,,,,,,,,,1000,0.1,Coordinate values out of bounds,,,,
-5,job_20201009_0955433286812_2259,,100,-200,100,-200,,,,,,,,,,,,,,,,,,,,,,,,,,,,1000,0.1,Coordinate values out of bounds,,,,
-4,job_20201009_0955433286812_2259,,100,-118,100,-118,,,,,,,,,,,,,,,,,,,,,,,,,,,,1000,0.1,Coordinate values out of bounds,,,,
-3,job_20201009_0955433286812_2259,,300,-118,300,-118,,,,,,,,,,,,,,,,,,,,,,,,,,,,1000,0.1,Coordinate values out of bounds,,,,
-2,job_20201009_0955433286812_2259,,abc,def,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,1000,0.1,Coordinates non-numeric,,,,
+id,latitude_verbatim,longitude_verbatim,latitude,longitude,user_id,gid_0,country,gid_1,state,gid_2,county,country_cent_dist,country_cent_dist_relative,country_cent_type,country_cent_dist_max,is_country_centroid,state_cent_dist,state_cent_dist_relative,state_cent_type,state_cent_dist_max,is_state_centroid,county_cent_dist,county_cent_dist_relative,county_cent_type,county_cent_dist_max,is_county_centroid,centroid_dist_km,centroid_dist_relative,centroid_type,centroid_dist_max_km,centroid_poldiv,max_dist,max_dist_rel,latlong_err,coordinate_decimal_places,coordinate_inherent_uncertainty_m
+166,300,-118,300,-118,,,,,,,,,,,,,,,,,,,,,,,,,,,,10,0.001,Coordinate values out of bounds,,
+167,100,-118,100,-118,,,,,,,,,,,,,,,,,,,,,,,,,,,,10,0.001,Coordinate values out of bounds,,
+168,100,-200,100,-200,,,,,,,,,,,,,,,,,,,,,,,,,,,,10,0.001,Coordinate values out of bounds,,
+169,60,200,60,200,,,,,,,,,,,,,,,,,,,,,,,,,,,,10,0.001,Coordinate values out of bounds,,
+170,-99,10,-99,10,,,,,,,,,,,,,,,,,,,,,,,,,,,,10,0.001,Coordinate values out of bounds,,
+164,0,0,0,0,,,,,,,,,,,,,,,,,,,,,,,,,,,,10,0.001,In ocean,0,156899.56829134
+165,abc,def,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,10,0.001,Coordinates non-numeric,,

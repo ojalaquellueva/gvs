@@ -142,8 +142,6 @@ Below is a list of fields returned by the API and their definitions. GADM: Globa
 | Field  | Definition | Units (if applicable)
 | ------ | ---- | ----------
 | id | Unique integer ID, assigned by CDS |  
-| job | (internal use) |  
-| date_created | Date of query |  
 | latitude_verbatim | Verbatim latitude, as submitted |  
 | longitude_verbatim | Verbatim longitude, as submitted |  
 | latitude | Decimal latitude |  
@@ -180,6 +178,4 @@ Below is a list of fields returned by the API and their definitions. GADM: Globa
 | latlong\_err | Type of error of invalid coordinates |  
 | coordinate\_decimal\_places | Minimum decimal places of the verbatim lat, long values |  
 | coordinate\_inherent\_uncertainty\_m | Inherent uncertainty of the coordinates, due to the number of decimal places used |  m
-| geog | (internal use) |  
-| geom | (internal use) |  
 

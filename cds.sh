@@ -368,7 +368,7 @@ source "$DIR/includes/check_status.sh"
 ############################################
 
 echoi $e -n "Dumping results to file '$outfile'..."
-metacmd="\COPY user_data TO '${outfile}' CSV HEADER"
+metacmd="\COPY ( SELECT id, latitude_verbatim, longitude_verbatim, latitude, longitude, user_id, gid_0, country, gid_1, state, gid_2, county, country_cent_dist, country_cent_dist_relative, country_cent_type, country_cent_dist_max, is_country_centroid, state_cent_dist, state_cent_dist_relative, state_cent_type, state_cent_dist_max, is_state_centroid, county_cent_dist, county_cent_dist_relative, county_cent_type, county_cent_dist_max, is_county_centroid, centroid_dist_km, centroid_dist_relative, centroid_type, centroid_dist_max_km, centroid_poldiv, max_dist, max_dist_rel, latlong_err, coordinate_decimal_places, coordinate_inherent_uncertainty_m FROM user_data  WHERE job='"$job"') TO '${outfile}' CSV HEADER"
 cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user -d $DB_CDS --set ON_ERROR_STOP=1 -q -c \"$metacmd\""
 eval $cmd
 echoi $i "done"
