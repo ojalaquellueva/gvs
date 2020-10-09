@@ -18,9 +18,9 @@
 
 The CDS API is an API wrapper for cds.sh, the master script of the Centroid Detection Service (CDS). 
 
-The CDS accepts a point of observation (PO; pair of latitude, longitude coordinates in decimal degrees) and returns the country, state and county in which the point is located, and calculates the distance between the OP the six different types of centroids for each of the three political divisions (see [Centroid Types](#centroid_types)) and indicates for each distance if it is small enough for the OP itself to potentially be a centroid (see [Distance Thresholds](#thresholds). Finally, the CDS indicates which of the the potential PO centroids is the most likely, if any, based on distance to the centroid (DC) and the relative distance (DC / DC.max, the distance from the centroid to the farthest possible point within the political division). In addition, the CDS validates the submitted coordinates and reports errors such as non-numeric values and values out of bounds. Valid coordinates which do not join to any political division are flagged as "Point in ocean".
+The CDS accepts a point of observation (PO; pair of latitude, longitude coordinates in decimal degrees) and returns the country, state and county in which the point is located. It also calculates the distance between the OP and six different types of centroids for each of the three political divisions (see [Centroid Types](#centroid_types)) and indicates for each political division if it is small enough for the OP itself to potentially be a centroid (see [Distance Thresholds](#thresholds). Finally, the CDS indicates which of the three potential political division centroids is the most likely, if any, based on the threshold parameter MAX\_DIST (distance to the actual centroid) and MAX\_DIST_REL (relative distance: distance to actual centroid / distance from actual centroid to the farthest point in the political division). In addition, the CDS validates the submitted coordinates and reports errors such as non-numeric values and values out of bounds. Valid coordinates which do not join to any political division are flagged as "Point in ocean".
 
-The CDS API accept comma separate pairs of latitude and longitude in decimal degrees. It can submit multiple coordinates at once, with each pair of coordinates on its own line. Optionally, the user can include a final, third value on each line (for example, a unique ID to simplify joining the API response rows back to the original dataset. Each request is sent to the API as a POST, with options and data included in the request body as JSON.
+The CDS API accept comma separate pairs of latitude and longitude in decimal degrees. It accepts multiple coordinates at once, with each pair of coordinates on its own line. Each request is sent to the API as a POST, with options and data included in the request body as JSON.
 
 In addition to the coordinate resolution, the CDS offers metadata responses describing current code and database versions, and formatted acknowledgements and citations.
 
@@ -74,8 +74,8 @@ The API accepts the following CDS options, which must be converted to JSON and c
 | Mode | Meaning | Notes |
 | ------ | ------- |  -----|
 | resolve | Resolve coordinates | 
-| maxdist | Set threshold parameter MAX_DIST | Maximum distance in km from actual centroid to quality as centroid. Uses default value (in params.sh) if not set.
-| maxdistrel | Set threshold parameter MAX_DIST_REL | Maximum relative distance: distance from actual centroid divided by distance from centroid to farthes point in political division. Uses default value if not set.
+| maxdist | Set threshold parameter MAX\_DIST | Maximum distance in km from actual centroid to quality as centroid. Uses default value (in params.sh) if not set.
+| maxdistrel | Set threshold parameter MAX\_DIST_REL | Maximum relative distance: distance from actual centroid divided by distance from centroid to farthes point in political division. Uses default value if not set.
 | meta | Return application metadata | Code version, database version and build date.
 
 <a name="examples"></a>
