@@ -74,8 +74,9 @@ The API accepts the following CDS options, which must be converted to JSON and c
 | Mode | Meaning | Notes |
 | ------ | ------- |  -----|
 | resolve | Resolve coordinates | 
-| meta | Return application metadata | 
-
+| maxdist | Set threshold parameter MAX_DIST | Maximum distance in km from actual centroid to quality as centroid. Uses default value (in params.sh) if not set.
+| maxdistrel | Set threshold parameter MAX_DIST_REL | Maximum relative distance: distance from actual centroid divided by distance from centroid to farthes point in political division. Uses default value if not set.
+| meta | Return application metadata | Code version, database version and build date.
 
 <a name="examples"></a>
 ## Example scripts
@@ -87,7 +88,7 @@ Example syntax for interacting with API using php\_curl is given in `cds_api_exa
 ```
 php cds_api_example.php
 ```
-* Adjust parameters as desired in file `params.php`
+* Set parameters directly in script; no command line parameters
 * Also see API parameters section at start of `cds_api_example.php `
 * For CDS options and defaults, see `params.php`
 * Make sure that input file (`cds_testfile.csv`) is available in `$DATADIR` (as set in `params.php`)
@@ -154,29 +155,31 @@ Below is a list of fields returned by the API and their definitions. GADM: Globa
 | state | GADM name of state |  
 | gid_2 | GADM ID of county |  
 | county | GADM name of country |  
-| country_cent_dist | Distance to closest country centroid |  km
-| country_cent_dist_relative | Distance from centroid to observation, relative to distance from centroid to farther point in country |  
-| country_cent_type | Centroid type |  
-| country_cent_dist_max | Distance from centroid to farther point in country |  km
-| is_country_centroid | Do coordinates fall within likely centroid thresholds? |  
-| state_cent_dist | Distance to closest state centroid |  km 
-| state_cent_dist_relative | Distance from centroid to observation, relative to distance from centroid to farther point in state |  
-| state_cent_type | Centroid type |  
-| state_cent_dist_max | Distance from centroid to farther point in country |  km
-| is_state_centroid | Do coordinates fall within likely centroid thresholds? |  
-| county_cent_dist | Distance to closest county centroid |  km 
-| county_cent_dist_relative | Distance from centroid to observation, relative to distance from centroid to farther point in county |  
-| county_cent_type | Centroid type  |  
-| county_cent_dist_max | Distance from centroid to farther point in country |  km
-| is_county_centroid | Do coordinates fall within likely centroid thresholds? |  
-| centroid_dist_km | Distance to centroid of most likely political division centroid (i.e., where is\_[poldiv]\_centroid=1 |  km 
-| centroid_dist_relative | Distance from centroid to observation, relative to distance from centroid to farther point in political division, of most likely political division centroid |  
-| centroid_type | Centroid type, of most likely political division centroid |  
-| centroid_dist_max_km | Distance from centroid to farther point in political division, of most likely political division centroid |  km
-| centroid_poldiv | Political division type of most likely political division centroid |  
-| latlong_err | Type of error of invalid coordinates |  
-| coordinate_decimal_places | Minimum decimal places of the verbatim lat, long values |  
-| coordinate_inherent_uncertainty_m: | Inherent uncertainty of the coordinates, due to the number of decimal places used |  m
+| country\_cent\_dist | Distance to closest country centroid |  km
+| country\_cent\_dist\_relative | Distance from centroid to observation, relative to distance from centroid to farther point in country |  
+| country\_cent\_type | Centroid type |  
+| country\_cent\_dist\_max | Distance from centroid to farther point in country |  km
+| is\_country_centroid | Do coordinates fall within likely centroid thresholds? |  
+| state\_cent_dist | Distance to closest state centroid |  km 
+| state\_cent\_dist\_relative | Distance from centroid to observation, relative to distance from centroid to farther point in state |  
+| state\_cent_type | Centroid type |  
+| state\_cent\_dist_max | Distance from centroid to farther point in country |  km
+| is\_state_centroid | Do coordinates fall within likely centroid thresholds? |  
+| county\_cent_dist | Distance to closest county centroid |  km 
+| county\_cent\_dist_relative | Distance from centroid to observation, relative to distance from centroid to farther point in county |  
+| county\_cent_type | Centroid type  |  
+| county\_cent\_dist_max | Distance from centroid to farther point in country |  km
+| is\_county\_centroid | Do coordinates fall within likely centroid thresholds? |  
+| centroid\_dist\_km | Distance to centroid of most likely political division centroid (i.e., where is\_[poldiv]\_centroid=1 |  km 
+| centroid\_dist\_relative | Distance from centroid to observation, relative to distance from centroid to farther point in political division, of most likely political division centroid |  
+| centroid\_type | Centroid type, of most likely political division centroid |  
+| centroid\_dist\_max\_km | Distance from centroid to farther point in political division, of most likely political division centroid |  km
+| centroid\_poldiv | Political division type of most likely political division centroid |  
+| max_dist | Threshold parameter MAX\_DIST. Maximum distance in km from actual centroid to quality as likely centroid | km
+| max\_dist_rel  | Threshold parameter MAX\_DIST_REL. Relative maximum distance to quality as centroid (distance to centroid divided by distance from centroid to farthest possible point in polygon) | 
+| latlong\_err | Type of error of invalid coordinates |  
+| coordinate\_decimal\_places | Minimum decimal places of the verbatim lat, long values |  
+| coordinate\_inherent\_uncertainty\_m | Inherent uncertainty of the coordinates, due to the number of decimal places used |  m
 | geog | (internal use) |  
 | geom | (internal use) |  
 
