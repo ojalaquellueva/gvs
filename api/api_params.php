@@ -13,8 +13,7 @@ $err_show_sql=false;
 $MAX_ROWS=5000;	
 					
 // Number of batches
-$NBATCH=10000;	
-$NBATCH=25;				
+$NBATCH=20;				
 
 //////////////////////////////////////////////////
 // API user options

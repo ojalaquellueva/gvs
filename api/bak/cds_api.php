@@ -25,8 +25,8 @@ $filename_tmp = $basename . '_in.tsv';
 $file_tmp = $data_dir_tmp . $filename_tmp;
 
 // Results file name & path
-$results_filename = $basename . "_out.csv";
-//$results_filename = $basename . "_cds_scrubbed.csv";
+// Output of tnrs_batch command will be saved to this file
+$results_filename = $basename . "_out.tsv";
 
 # Full path and name of results file
 $results_file = $data_dir_tmp . $results_filename;
@@ -190,13 +190,6 @@ if ( $mode=="resolve" ) { 	// BEGIN mode_if
 	if ( isset($maxdist) ) $opt_maxdist = "-d $maxdist";
 	if ( isset($maxdistrel) ) $opt_maxdistrel = "-r $maxdistrel";
 
-	# Get parallel batch size, if set, otherwise use default
-	if ( isset($batches) ) {
-		$nbatches = $batches;
-	} else {
-		$nbatches = $NBATCH;
-	}
-
 	///////////////////////////////////////////
 	// Save data array to temp directory as 
 	// comma-delimited file, to be used as 
@@ -236,8 +229,8 @@ if ( $mode=="resolve" ) { 	// BEGIN mode_if
 
 	$data_dir_tmp_full = $data_dir_tmp . "/";
 	// Form the final command
-	//$cmd = $BATCH_DIR . "cds.sh -a $opt_maxdist $opt_maxdistrel -f '$file_tmp' -o '$results_file'";	// Single batch mode
-	$cmd = $BATCH_DIR . "cdspar.pl -in '$file_tmp'  -out '$results_file' -nbatch $nbatches ";		// Parallel mode
+// 	$cmd = $BATCH_DIR . "controller.pl $opt_mode $opt_matches -in '$file_tmp'  -out '$results_file' -sources '$sources' -class $class -nbatch $NBATCH -d t ";
+	$cmd = $BATCH_DIR . "cds.sh -a $opt_maxdist $opt_maxdistrel -f '$file_tmp' -o '$results_file'";
 	
 	// Execute the TNRSBatch command
 	exec($cmd, $output, $status);
@@ -294,6 +287,5 @@ echo $results_json;
 err:
 http_response_code($err_code);
 echo $err_msg;
-//echo "cmd:\n $cmd \n";	// For troubleshooting
 
 ?>

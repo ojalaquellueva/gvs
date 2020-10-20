@@ -20,6 +20,7 @@ require_once 'api_params.php';			// general api parameters
 
 // Path and name of file containing input names and political divisions
 $inputfile = $DATADIR."cds_testfile.csv";	// local test file
+$inputfile = $DATADIR."cds_testfile_big.csv";	// local test file (big)
 $inputfile = "https://bien.nceas.ucsb.edu/bien/wp-content/uploads/2020/10/cds_testfile.csv";
 
 // Desired response format
@@ -56,6 +57,9 @@ $mode="resolve";			// Resolve names
 $maxdist="";
 $maxdistrel="";
 
+// Number of batches for parallel processing
+$ppbatches=20;
+
 /////////////////////////////////////////
 // Display options
 // 
@@ -81,7 +85,7 @@ $time=true;					// Echo time elapsed
 // Get options, set defaults for optional parameters
 // Use default if unset
 $options = getopt("b:m:");
-$batches=isset($options["b"])?$options["b"]:"$NBATCH";	
+$batches=isset($options["b"])?$options["b"]:"$ppbatches";	
 // $matches=isset($options["m"])?$options["m"]:"$CDS_DEF_MATCHES";
 
 ////////////////////////////////////////////////////////////////

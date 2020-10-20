@@ -14,6 +14,9 @@ url = "http://vegbiendev.nceas.ucsb.edu:8775/cds_api.php"
 # Test file from BIEN website:
 names_file <- "https://bien.nceas.ucsb.edu/bien/wp-content/uploads/2020/10/cds_testfile.csv"
 
+# Large test file of 600 names
+names_file <- "https://bien.nceas.ucsb.edu/bien/wp-content/uploads/2020/10/cds_testfile_big.csv"
+
 #################################
 # Import the raw data
 #################################
@@ -39,7 +42,9 @@ data_json <- jsonlite::toJSON(unname(data))
 #################################
 
 # Set API options
-mode <- "resolve"					# Processing mode
+mode <- "resolve"			# Processing mode
+batches <- 25					# Number of batches, for parallel processing
+										# input file will be divided into this many batches
 
 # Threshold parameter options
 # Comment out to use application defaults
@@ -51,6 +56,7 @@ maxdistrel <- 0.1				# Maximum relative distance from centroid (relative to dist
 # Convert the options to data frame and then JSON
 opts <- data.frame( c(mode) )
 names(opts) <- c("mode")
+if ( exists("batches") ) opts$batches <- batches
 if ( exists("maxdist") ) opts$maxdist <- maxdist
 if ( exists("maxdistrel") ) opts$maxdistrel <- maxdistrel
 
@@ -64,8 +70,15 @@ input_json <- paste0('{"opts":', opts_json, ',"data":', data_json, '}' )
 # Construct the request
 headers <- list('Accept' = 'application/json', 'Content-Type' = 'application/json', 'charset' = 'UTF-8')
 
-# Send the API request
+# Send the API request (and time it)
+start_time <- Sys.time()
 results_json <- postForm(url, .opts=list(postfields= input_json, httpheader=headers))
+
+# Get processing time
+end_time <- Sys.time()
+ptime <- end_time - start_time
+print(paste0("Batches: ", batches))
+print(paste0("Processing time: ", ptime))
 
 # Convert JSON results to a data frame
 results <-  jsonlite::fromJSON(results_json)
