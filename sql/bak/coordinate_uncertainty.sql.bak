@@ -40,7 +40,7 @@ WHERE a.id=b.id
 AND job=:'job'
 ;
 
-
+/*
 --
 -- Estimate inherent uncertainty in m
 --
@@ -48,9 +48,8 @@ AND job=:'job'
 -- decimal places and same coordinates padded with 9s on the right,
 -- to DMAX decimal places
 -- 
--- For each coordinate, first CASE statement is special handling for 
--- zero decimal places, and second CASE statement omits padding with 9s
--- when decimal places of verbatim value is greater than DMAX 
+-- CASE statement is special handling for coordinates 
+-- with zero decimal places
 --
 
 UPDATE user_data a
@@ -67,11 +66,7 @@ CASE
 WHEN longitude_verbatim NOT LIKE '%.%' THEN longitude_verbatim || '.'
 ELSE longitude_verbatim
 END,
-CASE
-WHEN LENGTH(SPLIT_PART(REPLACE(longitude_verbatim,'-',''),'.',2))<:DMAX
-THEN (10^(:DMAX-LENGTH(SPLIT_PART(longitude_verbatim,'.',2)))-1)::text
-ELSE ''
-END::text
+(10^(:DMAX-LENGTH(SPLIT_PART(longitude_verbatim,'.',2)))-1)::text
 )::numeric
  || ' ' || 
 latitude::numeric(:PLAT,:DMAX)
@@ -84,11 +79,7 @@ CASE
 WHEN latitude_verbatim NOT LIKE '%.%' THEN latitude_verbatim || '.'
 ELSE latitude_verbatim
 END,
-CASE
-WHEN LENGTH(SPLIT_PART(REPLACE(latitude_verbatim,'-',''),'.',2))<:DMAX
-THEN (10^(:DMAX-LENGTH(SPLIT_PART(latitude_verbatim,'.',2)))-1)::text
-ELSE ''
-END::text
+(10^(:DMAX-LENGTH(SPLIT_PART(latitude_verbatim,'.',2)))-1)::text
 )::numeric
  || ')') AS geog_longmin_latmax
 FROM user_data
@@ -98,3 +89,4 @@ AND job=:'job'
 ) AS b
 WHERE a.id=b.id
 ;
+*/

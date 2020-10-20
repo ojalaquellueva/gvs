@@ -1614,3 +1614,76 @@ Calculating centroids:
 Determining consensus centroid...done (.14 sec)
 Saving threshold parameters...done (.14 sec)
 Dumping results to file 'data/cds_testfile_invalid_cds_results.csv'...done
+
+------ Process started at Tue Oct 20 12:38:58 PDT 2020 ------
+
+Importing user data:
+- Creating temp table "user_data_raw_job_20201020_1238223290131_27361"...done (.62 sec)
+- Importing raw data to temp table...done (.10 sec)
+- Inserting raw data to table "user_data"...done (.64 sec)
+- Dropping temp table...done (.13 sec)
+Validating coordinates...done (.33 sec)
+Calculating coordinate uncertainty...done (.29 sec)
+Populating political divisions...done (7.41 sec)
+Calculating centroids:
+- country...done (.15 sec)
+- state...done (.20 sec)
+- county...done (.69 sec)
+Determining consensus centroid...done (.12 sec)
+Saving threshold parameters...done (.12 sec)
+Dumping results to file 'data/cds_testfile_cds_results.csv'...done
+
+------ Process started at Tue Oct 20 12:40:47 PDT 2020 ------
+
+Importing user data:
+- Creating temp table "user_data_raw_job_20201020_1240754842131_27384"...done (.09 sec)
+- Importing raw data to temp table...done (.09 sec)
+- Inserting raw data to table "user_data"...done (.15 sec)
+- Dropping temp table...done (.09 sec)
+Validating coordinates...done (.19 sec)
+Calculating coordinate uncertainty...
+------ Process started at Tue Oct 20 12:50:24 PDT 2020 ------
+
+Importing user data:
+- Creating temp table "user_data_raw_job_20201020_1250896158202_14893"...done (.09 sec)
+- Importing raw data to temp table...done (.08 sec)
+- Inserting raw data to table "user_data"...done (.12 sec)
+- Dropping temp table...done (.09 sec)
+Validating coordinates...done (.17 sec)
+Calculating coordinate uncertainty...done (.12 sec)
+Populating political divisions...
+------ Process started at Tue Oct 20 14:08:20 PDT 2020 ------
+
+Importing user data:
+- Creating temp table "user_data_raw_job_20201020_1408461913786_4919"...done (.10 sec)
+- Importing raw data to temp table...done (.08 sec)
+- Inserting raw data to table "user_data"...done (.12 sec)
+- Dropping temp table...done (.08 sec)
+Validating coordinates...done (.17 sec)
+Calculating coordinate uncertainty...done (.16 sec)
+Populating political divisions...done (281.21 sec)
+Calculating centroids:
+- country...done (.26 sec)
+- state...done (1.15 sec)
+- county...done (10.59 sec)
+Determining consensus centroid...done (.14 sec)
+Saving threshold parameters...done (.15 sec)
+Dumping results to file 'data/cds_testfile_big_cds_results.csv'...done
+
+------ Process started at Tue Oct 20 14:19:22 PDT 2020 ------
+
+Importing user data:
+- Creating temp table "user_data_raw_job_20201020_1419712249889_31207"...done (.12 sec)
+- Importing raw data to temp table...done (.11 sec)
+- Inserting raw data to table "user_data"...done (.14 sec)
+- Dropping temp table...done (.13 sec)
+Validating coordinates...done (.15 sec)
+Calculating coordinate uncertainty...done (.15 sec)
+Populating political divisions...done (4.96 sec)
+Calculating centroids:
+- country...done (.16 sec)
+- state...done (.14 sec)
+- county...done (.15 sec)
+Determining consensus centroid...done (.11 sec)
+Saving threshold parameters...done (.11 sec)
+Dumping results to file 'data/cds_testfile_cds_results.csv'...done
