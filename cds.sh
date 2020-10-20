@@ -277,7 +277,7 @@ echoi $e -n "- Importing raw data to temp table..."
 # ///////////////// #
 # NOTE: need option to import user_id
 # ///////////////// #
-metacmd="\COPY $raw_data_tbl_temp(latitude,longitude) FROM '${infile}' DELIMITER ',' CSV $nullas  HEADER"
+metacmd="\COPY $raw_data_tbl_temp(latitude,longitude) FROM '${infile}' DELIMITER ',' CSV $nullas "
 cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user -d $DB_CDS --set ON_ERROR_STOP=1 -q -c \"$metacmd\""
 eval $cmd
 source "$DIR/includes/check_status.sh"

@@ -11,7 +11,10 @@ Date created: 24 March 2020
 [Dependencies](#dependencies)  
 [Permissions](#permissions)  
 [Installation and configuration](#installation-and-configuration)  
-[Usage](#usage)  
+[Usage](#usage):  
+[I. Build the CDS Database ](#I-build-cds-db)  
+[II. CDS batch application](#II-cds-batch)  
+[III. CDS parallel processing application](#II-cds-parallel)
 
 <a name="overview"></a>
 ## Overview
@@ -59,32 +62,56 @@ mv config ../
 <a name="usage"></a>
 ## Usage
 
-### Build the CDS Database
+<a name="I-build-cds-db"></a>
+### I. Build the CDS Database
 See README in `cds_db/`.
 
-### CDS
-
-1. Set parameters in `params.sh`.
-2. Set passwords and other sensitive parameters in `config/db_config.sh`.
-2. Run the master script, `cds.sh`.
+<a name="II-cds-batch"></a>
+### II. CDS batch application
+* Processes file of geocoordinates in single batch
 
 #### Syntax
 
 ```
-./cds.sh [options]
+./cds.sh -f <input_filename_and_path> [other options]
 ```
 
 #### Options
--m: Send notification emails  
--n: Non-interactive: suppress confirmations but not progress messages  
--s: Silent mode: suppress all confirmations & progress messages  
+
+Option | Meaning | Required? | Default value | 
+------ | ------- | -------  | ---------- | 
+-f     | Input file and path | Yes | |
+-o     | Output file and path | No | [input\_file\_name]\_cds\_results.csv | 
+-s     | Silent mode | No | Verbose/interactive mode by default |
+-m     | Send notification message at start and completion, or on fail | No (must be followed by valid email if included) | 
 
 #### Example:
 
 ```
-./cds.sh -m -s
+./cds.sh -f myfile.csv -m bboyle@email.arizona.edu
 ```
-* Runs silently without terminal echo
-* Sends notification message at start and completion
 
+<a name="II-cds-parallel"></a>
+### III. CDS parallel processing application
+* Processes file of geocoordinates in parallel mode (multiple batches)
 
+#### Syntax
+
+```
+./cdspar.pl -in <input_filename_and_path> -out <output_filename_and_path> -class "tropicos" -nbatch <batches> -opt <makeflow_options> -d <output_file_delimiter>
+```
+
+#### Options
+
+Option | Meaning | Required? | Default value | 
+------ | ------- | -------  | ---------- | 
+-in     | Input file and path | Yes | |
+-out     | Output file and path | No | [input\_file\_name]\_cds\_results.csv | 
+-nbatch     | Number of batches | Yes |  |
+-opt     | Makeflow options | No | 
+
+#### Example:
+
+```
+./cdspar.pl -in "data/cds_testfile.csv" -nbatch 3
+```
