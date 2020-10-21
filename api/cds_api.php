@@ -187,8 +187,10 @@ if ( $mode=="resolve" ) { 	// BEGIN mode_if
 	}
 	
 	# Set threshold parameter options, if provided
-	if ( isset($maxdist) ) $opt_maxdist = "-d $maxdist";
-	if ( isset($maxdistrel) ) $opt_maxdistrel = "-r $maxdistrel";
+// 	if ( isset($maxdist) ) $opt_maxdist = "-d $maxdist";
+// 	if ( isset($maxdistrel) ) $opt_maxdistrel = "-r $maxdistrel";
+	if ( isset($maxdist) ) $opt_maxdist = "-md $maxdist";
+	if ( isset($maxdistrel) ) $opt_maxdistrel = "-mdr $maxdistrel";
 
 	# Get parallel batch size, if set, otherwise use default
 	if ( isset($batches) ) {
@@ -237,7 +239,7 @@ if ( $mode=="resolve" ) { 	// BEGIN mode_if
 	$data_dir_tmp_full = $data_dir_tmp . "/";
 	// Form the final command
 	//$cmd = $BATCH_DIR . "cds.sh -a $opt_maxdist $opt_maxdistrel -f '$file_tmp' -o '$results_file'";	// Single batch mode
-	$cmd = $BATCH_DIR . "cdspar.pl -in '$file_tmp'  -out '$results_file' -nbatch $nbatches ";		// Parallel mode
+	$cmd = $BATCH_DIR . "cdspar.pl -in '$file_tmp'  -out '$results_file' -nbatch $nbatches $opt_maxdistrel $opt_maxdist ";		// Parallel mode
 	
 	// Execute the TNRSBatch command
 	exec($cmd, $output, $status);
@@ -285,6 +287,7 @@ header('Content-type: application/json');
 
 // Send data
 echo $results_json;
+//echo "cmd:\n $cmd \n";	// For troubleshooting
 
 ///////////////////////////////////
 // Error: return http status code

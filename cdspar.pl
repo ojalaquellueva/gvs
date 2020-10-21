@@ -22,15 +22,19 @@ my $CONSOLIDATE_SCR = "$binpath/consolidator.pl";
 # Master directory where all content saved
 my $tmpfoldermaster = "/tmp/cds/";
 
-my $infile  = '';    #Input file
-my $outfile = '';    #Optput file - optional
-my $nbatch  = '';    #Number of batches
-my $mf_opt  = '';    #makeflow options - optional
+my $infile  = '';    # Input file
+my $outfile = '';    # Optput file - optional
+my $maxdist  = '';   # MAX_DIST parameter
+my $maxdistrel  = '';    # MAX_DIST_REL parameter
+my $nbatch  = '';    # Number of batches
+my $mf_opt  = '';    # makeflow options - optional
 my $d = 'c';         # Output file delimiter, currently only 'c' (csv)
 
 GetOptions(
 	'in=s'      => \$infile,
 	'out:s'     => \$outfile,
+	'md=i'     => \$maxdist,
+	'mdr=f'     => \$maxdistrel,
 	'nbatch=i'  => \$nbatch,
 	'opt:s'     => \$mf_opt
 );
@@ -51,6 +55,18 @@ if ( !$outfile ) {
 	$outfile = $infile;
 	# Use the input file name w/o extension and append [appname]_scrubbed.csv
 	$outfile =~ s/(?:\.\w+)?$/_${APPNAME}_scrubbed.csv/;    
+}
+
+# Set maxdist parameter option
+my $opt_maxdist = '';	# If omitted will use application default
+if ( !$maxdist=='' ) {
+	$opt_maxdist = "-d $maxdist";
+}
+
+# Set maxdistrel parameter option
+my $opt_maxdistrel = '';	# If omitted will use application default
+if ( !$maxdistrel=='' ) {
+	$opt_maxdistrel = "-r $maxdistrel";
 }
 
 # Let the magic begin
@@ -200,16 +216,14 @@ sub _generate_mfconfig {
 		  "$tmpfolder/out_$i.txt: $tmpfolder/input/in_$i.txt \$APPBIN\n"; 
 		#Line 2: command
 		$operation .=
-#"\t\$APPBIN $mode $matches -f $tmpfolder/names/in_$i.txt -s $sources -l $classification -o $tmpfolder/out_$i.txt -d $d\n\n"; # TNRS version
-"\t\$APPBIN -s -a -f $tmpfolder/input/in_$i.txt -o $tmpfolder/out_$i.txt \n\n"; 
+"\t\$APPBIN -a -f $tmpfolder/input/in_$i.txt -o $tmpfolder/out_$i.txt $opt_maxdist $opt_maxdistrel \n\n"; 
 		$cmd = $cmd . $operation;
 		$filelist .= "$tmpfolder/out_$i.txt ";
 	}
 	
 	# Call to the consolidation script
 	#$cmd .= "$tmpfolder/output.csv: $CONSOLIDATE_SCR $tmpfolder $filelist\nLOCAL $CONSOLIDATE_SCR $tmpfolder\n\n";
-	$cmd .= "$tmpfolder/output.csv: $CONSOLIDATE_SCR $tmpfolder $filelist\n $CONSOLIDATE_SCR $tmpfolder $d\n\n";	# with delimiter option
-	#$cmd .= "$tmpfolder/output.csv: $CONSOLIDATE_SCR $tmpfolder $filelist\n $CONSOLIDATE_SCR $tmpfolder \n\n";		# w/o delimiter option
+	$cmd .= "$tmpfolder/output.csv: $CONSOLIDATE_SCR $tmpfolder $filelist\n $CONSOLIDATE_SCR $tmpfolder $d\n\n";
 
 	# Copy the consolidated output to the final destination
 	#$cmd .= "$outfile: $tmpfolder/output.csv\nLOCAL cp $tmpfolder/output.csv $outfile\n\n";

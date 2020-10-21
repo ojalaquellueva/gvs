@@ -94,9 +94,6 @@ while [ "$1" != "" ]; do
     case $1 in
         -a | --api )         	api="true"
                             	;;
-        -j | --job )        	shift
-                                job=$1
-                                ;;
         -f | --infile )        	shift
                                 infile=$1
                                 ;;

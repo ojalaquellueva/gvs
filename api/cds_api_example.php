@@ -54,8 +54,8 @@ $mode="resolve";			// Resolve names
 
 // Threshold parameter options
 // Set to empty string ("") to use defaults
-$maxdist="";
-$maxdistrel="";
+$maxdist=25;
+$maxdistrel=0.1;
 
 // Number of batches for parallel processing
 $ppbatches=20;
@@ -85,8 +85,7 @@ $time=true;					// Echo time elapsed
 // Get options, set defaults for optional parameters
 // Use default if unset
 $options = getopt("b:m:");
-$batches=isset($options["b"])?$options["b"]:"$ppbatches";	
-// $matches=isset($options["m"])?$options["m"]:"$CDS_DEF_MATCHES";
+$batches=isset($options["b"])?$options["b"]:$ppbatches;	
 
 ////////////////////////////////////////////////////////////////
 // Main
