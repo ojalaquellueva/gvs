@@ -15,7 +15,7 @@
 ##########################
 
 # Maximum distance (km) to true political division centroid
-MAX_DIST=10
+MAX_DIST=100
 
 # Maximum relative distance
 # Proportion of actual distance to true centroid
