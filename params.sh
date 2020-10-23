@@ -46,13 +46,13 @@ db_config_path="${BASEDIR}/config"
 # and will write results here, unless $data_dir_local_abs
 # is set (next parameter)
 # Omit trailing slash
-data_base_dir="data"		
+data_base_dir="../data"		
 
 # Absolute path to data directory
 # Use this if data directory outside root application directory
 # Comment out to use $data_base_dir (relative, above)
 # Omit trailing slash
-data_dir_local_abs="${BASEDIR}/src/data"
+data_dir_local_abs="${BASEDIR}/data"
 #data_dir_local_abs="/home/boyle/bien3/repos/cds/data/user_data"
 
 # For backward-compatibility

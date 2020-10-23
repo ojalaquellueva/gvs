@@ -1687,3 +1687,21 @@ Calculating centroids:
 Determining consensus centroid...done (.11 sec)
 Saving threshold parameters...done (.11 sec)
 Dumping results to file 'data/cds_testfile_cds_results.csv'...done
+
+------ Process started at Thu Oct 22 17:24:05 PDT 2020 ------
+
+Importing user data:
+- Creating temp table "user_data_raw_job_20201022_1724737276147_23704"...done (.09 sec)
+- Importing raw data to temp table...done (.07 sec)
+- Inserting raw data to table "user_data"...done (.37 sec)
+- Dropping temp table...done (.09 sec)
+Validating coordinates...done (.50 sec)
+Calculating coordinate uncertainty...done (.11 sec)
+Populating political divisions...done (6.40 sec)
+Calculating centroids:
+- country...done (.18 sec)
+- state...done (1.47 sec)
+- county...done (6.41 sec)
+Determining consensus centroid...done (.09 sec)
+Saving threshold parameters...done (.09 sec)
+Dumping results to file '../data/cds_testfile_cds_results.csv'...done

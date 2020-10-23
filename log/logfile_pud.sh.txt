@@ -1,0 +1,104 @@
+
+------ Process started at Wed Oct 21 17:13:35 PDT 2020 ------
+
+
+------ Process started at Wed Oct 21 17:16:14 PDT 2020 ------
+
+
+------ Process started at Wed Oct 21 17:16:23 PDT 2020 ------
+
+
+------ Process started at Wed Oct 21 17:18:03 PDT 2020 ------
+
+
+------ Process started at Thu Oct 22 16:42:10 PDT 2020 ------
+
+
+------ Process started at Thu Oct 22 16:43:03 PDT 2020 ------
+
+Creating duplicate table user_data_copy for testing...
+------ Process started at Thu Oct 22 16:43:16 PDT 2020 ------
+
+Creating duplicate table user_data_copy for testing...
+------ Process started at Thu Oct 22 16:46:55 PDT 2020 ------
+
+Creating duplicate table user_data_copy for testing...done (5.48 sec)
+
+------ Process started at Thu Oct 22 16:47:29 PDT 2020 ------
+
+Creating duplicate table user_data_copy for testing...done (5.94 sec)
+Purging table user_data
+- Clearing user_data...done (.21 sec)
+
+------ Process started at Thu Oct 22 16:49:48 PDT 2020 ------
+
+Creating duplicate table user_data_copy for testing...done (6.13 sec)
+Purging table user_data
+- Clearing records older than 1 weeks...done (.06 sec)
+
+------ Process started at Thu Oct 22 16:51:03 PDT 2020 ------
+
+Creating duplicate table user_data_copy for testing...done (5.86 sec)
+Purging table user_data
+- Clearing records older than 1 weeks...done (.09 sec)
+
+------ Process started at Thu Oct 22 17:04:20 PDT 2020 ------
+
+Creating duplicate table user_data_copy for testing...
+------ Process started at Thu Oct 22 17:05:23 PDT 2020 ------
+
+Creating duplicate table user_data_copy for testing...done (6.47 sec)
+Purging table user_data
+- Clearing records older than 1 weeks...done (.08 sec)
+
+------ Process started at Thu Oct 22 17:06:11 PDT 2020 ------
+
+Creating duplicate table user_data_copy for testing...done (6.28 sec)
+Purging table user_data
+- Clearing records older than 1 days...done (.28 sec)
+
+------ Process started at Thu Oct 22 17:08:11 PDT 2020 ------
+
+Creating duplicate table user_data_copy for testing...done (6.25 sec)
+Purging table user_data
+- Clearing records older than 1 days...done (.19 sec)
+
+------ Process started at Thu Oct 22 17:08:43 PDT 2020 ------
+
+Creating duplicate table user_data_copy for testing...done (6.38 sec)
+Purging table user_data
+- Clearing records older than 1 days...done (.36 sec)
+
+------ Process 'Purge user_data' completed in 6.77 seconds ------
+
+
+------ Process started at Thu Oct 22 17:12:04 PDT 2020 ------
+
+Creating duplicate table user_data_copy for testing...done (6.53 sec)
+Purging table user_data
+- Clearing records older than 1 days...done (.19 sec)
+
+------ Process started at Thu Oct 22 17:12:48 PDT 2020 ------
+
+Creating duplicate table user_data_copy for testing...done (6.45 sec)
+Purging table user_data
+- Clearing records older than 2 days...done (.10 sec)
+
+------ Process 'Purge user_data' completed in 6.58 seconds ------
+
+
+------ Process started at Thu Oct 22 17:17:49 PDT 2020 ------
+
+Purging table user_data
+- Clearing records older than 1 weeks...done (3.17 sec)
+
+------ Process 'Purge user_data' completed in 3.19 seconds ------
+
+
+------ Process started at Thu Oct 22 17:18:36 PDT 2020 ------
+
+Purging table user_data
+- Clearing records older than 1 days...done (3.26 sec)
+
+------ Process 'Purge user_data' completed in 3.27 seconds ------
+
