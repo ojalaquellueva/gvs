@@ -102,14 +102,6 @@ source "$includes_dir/start_process.sh"
 # Main
 #########################################################################
 
-
-
-# Skip the start
-: <<'COMMENT_BLOCK_1'
-
-
-
-
 ############################################
 # Create database in admin role & reassign
 # to principal non-admin user of database
@@ -217,6 +209,14 @@ source "$includes_dir/check_status.sh"
 echoi $e -n "- Removing dumpfile..."
 rm $dumpfile
 source "$includes_dir/check_status.sh"	
+
+
+
+
+# Skip the start
+: <<'COMMENT_BLOCK_1'
+
+
 
 ############################################
 # Build core tables

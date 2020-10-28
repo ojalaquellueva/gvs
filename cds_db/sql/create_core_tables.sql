@@ -30,6 +30,20 @@ cent_main_pos_dist_max numeric DEFAULT NULL,
 cent_main_bb_dist_max numeric DEFAULT NULL
 );
 
+DROP TABLE IF EXISTS centroid_country_multi;
+CREATE TABLE centroid_country_multi (
+id bigserial not null primary key,
+gid_0 text,
+country text,
+geom geometry(Geometry,4326),
+geog geography,
+centroid geometry(Point,4326),
+centroid_pos geometry(Point,4326),
+cent_dist_max numeric DEFAULT NULL,
+cent_pos_dist_max numeric DEFAULT NULL,
+cent_bb_dist_max numeric DEFAULT NULL
+);
+
 DROP TABLE IF EXISTS centroid_state_province;
 CREATE TABLE centroid_state_province (
 id bigserial not null primary key,
