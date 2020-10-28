@@ -39,6 +39,7 @@ geom geometry(Geometry,4326),
 geog geography,
 centroid geometry(Point,4326),
 centroid_pos geometry(Point,4326),
+centroid_bb geometry(Point,4326),
 cent_dist_max numeric DEFAULT NULL,
 cent_pos_dist_max numeric DEFAULT NULL,
 cent_bb_dist_max numeric DEFAULT NULL
