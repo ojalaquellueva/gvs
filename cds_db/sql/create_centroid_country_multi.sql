@@ -1,9 +1,10 @@
 -- -----------------------------------------------------------------
--- Populate table of countries and their centroids
+-- Populate table of country component polygons and their centroids
+-- Applied only to countries which are multipolygons
 -- -----------------------------------------------------------------
 
 --
--- Insert country subpolygons
+-- Insert component polygons
 --
 
 INSERT INTO centroid_country_multi (
@@ -14,7 +15,7 @@ geom
 SELECT 
 gid_0,
 country, 
-ST_Dump(geom)
+(ST_Dump(geom)).geom
 FROM centroid_country
 WHERE ST_GeometryType(geom)='ST_MultiPolygon'
 ;
@@ -75,16 +76,23 @@ SET cent_bb_dist_max=ST_MaxDistance(centroid_bb, geom)
 --
 
 -- Non-spatial indexes
-CREATE INDEX centroid_country_country_idx ON centroid_country_multi 
+CREATE INDEX centroid_country_multi_country_idx ON centroid_country_multi 
 	USING btree (country);
-CREATE INDEX centroid_country_gid_0_idx ON centroid_country_multi 
+CREATE INDEX centroid_country_multi_gid_0_idx ON centroid_country_multi 
 	USING btree (gid_0);
 	
--- Spatial index
-CREATE INDEX centroid_country_geom_idx ON centroid_country_multi USING GIST (geom);
-CREATE INDEX centroid_country_geog_idx ON centroid_country_multi USING GIST (geog);
-CREATE INDEX centroid_country_centroid_idx ON centroid_country_multi USING GIST (centroid);
-CREATE INDEX centroid_country_centroid_pos_idx ON centroid_country_multi USING GIST (centroid_pos);
-CREATE INDEX centroid_country_centroid_bb_idx ON centroid_country_multi USING GIST (centroid_bb);
+-- Spatial indexes
+CREATE INDEX centroid_country_multi_geom_idx ON centroid_country_multi USING GIST (geom);
+CREATE INDEX centroid_country_multi_geog_idx ON centroid_country_multi USING GIST (geog);
+CREATE INDEX centroid_country_multi_centroid_idx ON centroid_country_multi USING GIST (centroid);
+CREATE INDEX centroid_country_multi_centroid_pos_idx ON centroid_country_multi USING GIST (centroid_pos);
+CREATE INDEX centroid_country_multi_centroid_bb_idx ON centroid_country_multi USING GIST (centroid_bb);
+
+-- Indexes on distance columns
+CREATE INDEX centroid_country_multi_cent_dist_max_idx ON centroid_country_multi USING btree (cent_dist_max);
+CREATE INDEX centroid_country_multi_cent_pos_dist_max_idx ON centroid_country_multi USING btree (cent_pos_dist_max);
+CREATE INDEX centroid_country_multi_cent_bb_dist_max_idx ON centroid_country_multi USING btree (cent_bb_dist_max);
+
+
 
 

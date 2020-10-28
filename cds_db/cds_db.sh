@@ -102,6 +102,15 @@ source "$includes_dir/start_process.sh"
 # Main
 #########################################################################
 
+
+
+
+# Skip the start
+: <<'COMMENT_BLOCK_1'
+
+
+
+
 ############################################
 # Create database in admin role & reassign
 # to principal non-admin user of database
@@ -210,15 +219,6 @@ echoi $e -n "- Removing dumpfile..."
 rm $dumpfile
 source "$includes_dir/check_status.sh"	
 
-
-
-
-# Skip the start
-: <<'COMMENT_BLOCK_1'
-COMMENT_BLOCK_1
-
-
-
 ############################################
 # Build core tables
 ############################################
@@ -237,6 +237,24 @@ echoi $e -n "- centroid_country..."
 PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS --set ON_ERROR_STOP=1 -q -f $DIR/sql/create_centroid_country.sql
 source "$includes_dir/check_status.sh"  
 
+
+
+
+COMMENT_BLOCK_1
+
+
+
+echoi $e -n "- centroid_country_multi..."
+PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS --set ON_ERROR_STOP=1 -q -f $DIR/sql/create_centroid_country_multi.sql
+source "$includes_dir/check_status.sh"  
+
+
+
+: <<'COMMENT_BLOCK_2'
+
+
+
+
 echoi $e -n "- centroid_state_province..."
 PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS --set ON_ERROR_STOP=1 -q -f $DIR/sql/create_centroid_state_province.sql
 source "$includes_dir/check_status.sh"  
@@ -244,6 +262,14 @@ source "$includes_dir/check_status.sh"
 echoi $e -n "- centroid_county_parish..."
 PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS --set ON_ERROR_STOP=1 -q -f $DIR/sql/create_centroid_county_parish.sql
 source "$includes_dir/check_status.sh"  
+
+
+
+
+COMMENT_BLOCK_2
+
+
+
 
 ############################################
 # Alter ownership and permissions
