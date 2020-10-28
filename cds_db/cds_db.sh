@@ -215,6 +215,7 @@ source "$includes_dir/check_status.sh"
 
 # Skip the start
 : <<'COMMENT_BLOCK_1'
+COMMENT_BLOCK_1
 
 
 
@@ -243,12 +244,6 @@ source "$includes_dir/check_status.sh"
 echoi $e -n "- centroid_county_parish..."
 PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS --set ON_ERROR_STOP=1 -q -f $DIR/sql/create_centroid_county_parish.sql
 source "$includes_dir/check_status.sh"  
-
-
-
-COMMENT_BLOCK_1
-
-
 
 ############################################
 # Alter ownership and permissions

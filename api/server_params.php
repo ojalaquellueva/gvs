@@ -6,7 +6,7 @@
 /////////////////////////////////////////////////
 
 // Application base directory
-$BASE_DIR = "/home/boyle/bien/cds/";
+$BASE_DIR = "/home/boyle/bien/cds2/";
 
 // API directory
 $APP_DIR = $BASE_DIR."src/api/";

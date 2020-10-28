@@ -10,7 +10,7 @@ TBL_GEOM="gadm"		# World geometries table
 DB_GEOM="gadm"		# Source db for world geom table
 SCH_GEOM="public"	# Schema of world geom table
 
-# Name of database
+BASEDIR="/home/boyle/bien/cds2"
 
 # Path to db_config.sh
 # For production, keep outside app working directory & supply
@@ -18,15 +18,14 @@ SCH_GEOM="public"	# Schema of world geom table
 # For development, if keep inside working directory, then supply
 # relative path
 # Omit trailing slash
-db_config_path="/home/boyle/bien/cds/config"
+db_config_path="${BASEDIR}/config"
 
 # Path to general function directory
 # If directory is outside app working directory, supply
 # absolute path, otherwise supply relative path
 # Omit trailing slash
 #functions_path=""
-functions_path="/home/boyle/functions/sh"
-functions_path="/home/boyle/cds/src/includes"
+functions_path="${BASEDIR}/src/includes"
 
 # Path to data directory for database build
 # Recommend call this "data"
@@ -35,7 +34,7 @@ functions_path="/home/boyle/cds/src/includes"
 # forward slash at start).
 # Recommend keeping outside app directory
 # Omit trailing slash
-data_base_dir="/home/boyle/bien/cds/data"
+data_base_dir="${BASEDIR}/data"
 #data_base_dir="data"		 # Relative path
 
 # Makes user_admin the owner of the db and all objects in db
