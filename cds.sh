@@ -347,7 +347,7 @@ eval $cmd
 source "$DIR/includes/check_status.sh"
 
 echoi $e -n "- other subpolygons..."
-cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user  -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -v MAX_DIST=$MAX_DIST -v MAX_DIST_REL=$MAX_DIST_REL -f $DIR_LOCAL/sql/check_centroid_county_multi.sql"
+cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user  -d $DB_CDS --set ON_ERROR_STOP=1 -q -v job=$job -v MAX_DIST=$MAX_DIST -v MAX_DIST_REL=$MAX_DIST_REL -f $DIR_LOCAL/sql/check_centroid_subpoly.sql"
 eval $cmd
 source "$DIR/includes/check_status.sh"
 

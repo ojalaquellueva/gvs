@@ -54,6 +54,15 @@ FROM
 		WHERE is_county_centroid=1
 		AND job=:'job'
 		)
+		UNION ALL
+		(
+		SELECT id, 'other_subpolygon' AS poldiv, subpoly_cent_dist AS dist, 
+		subpoly_cent_dist_relative AS dist_relative, 
+		subpoly_cent_dist_max AS dist_max, subpoly_cent_type AS cent_type
+		FROM user_data
+		WHERE is_subpoly_centroid=1
+		AND job=:'job'
+		)
 	) candidate_centroids
 	ORDER BY id, dist ASC
 ) closest_centroid
