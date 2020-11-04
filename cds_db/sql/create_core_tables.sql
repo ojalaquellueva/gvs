@@ -30,8 +30,8 @@ cent_main_pos_dist_max numeric DEFAULT NULL,
 cent_main_bb_dist_max numeric DEFAULT NULL
 );
 
-DROP TABLE IF EXISTS centroid_country_multi;
-CREATE TABLE centroid_country_multi (
+DROP TABLE IF EXISTS centroid_subpoly;
+CREATE TABLE centroid_subpoly (
 id bigserial not null primary key,
 gid_0 text,
 country text,
@@ -133,6 +133,11 @@ county_cent_dist_relative numeric DEFAULT NULL,
 county_cent_type text DEFAULT NULL,
 county_cent_dist_max numeric DEFAULT NULL,
 is_county_centroid smallint DEFAULT NULL, 
+subpoly_cent_dist numeric DEFAULT NULL,
+subpoly_cent_dist_relative numeric DEFAULT NULL,
+subpoly_cent_type text DEFAULT NULL,
+subpoly_cent_dist_max numeric DEFAULT NULL,
+is_subpoly_centroid smallint DEFAULT NULL, 
 centroid_dist_km numeric DEFAULT NULL,
 centroid_dist_relative numeric DEFAULT NULL,
 centroid_type text DEFAULT NULL,
