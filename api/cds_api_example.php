@@ -20,8 +20,8 @@ require_once 'api_params.php';			// general api parameters
 
 // Path and name of file containing input names and political divisions
 $inputfile = $DATADIR."cds_testfile.csv";	// local test file
-$inputfile = $DATADIR."cds_testfile_big.csv";	// local test file (big)
-$inputfile = "https://bien.nceas.ucsb.edu/bien/wp-content/uploads/2020/10/cds_testfile.csv";
+// $inputfile = $DATADIR."cds_testfile_big.csv";	// local test file (big)
+// $inputfile = "https://bien.nceas.ucsb.edu/bien/wp-content/uploads/2020/10/cds_testfile.csv";
 
 // Desired response format
 //	Options: json*|xml
@@ -54,7 +54,7 @@ $mode="resolve";			// Resolve names
 
 // Threshold parameter options
 // Set to empty string ("") to use defaults
-$maxdist=25;
+$maxdist=1000;
 $maxdistrel=0.1;
 
 // Number of batches for parallel processing

@@ -56,7 +56,7 @@ FROM
 		)
 		UNION ALL
 		(
-		SELECT id, 'other_subpolygon' AS poldiv, subpoly_cent_dist AS dist, 
+		SELECT id, 'other' AS poldiv, subpoly_cent_dist AS dist, 
 		subpoly_cent_dist_relative AS dist_relative, 
 		subpoly_cent_dist_max AS dist_max, subpoly_cent_type AS cent_type
 		FROM user_data

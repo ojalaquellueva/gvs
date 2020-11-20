@@ -72,7 +72,7 @@ WHEN LENGTH(SPLIT_PART(REPLACE(longitude_verbatim,'-',''),'.',2))<:DMAX
 THEN (10^(:DMAX-LENGTH(SPLIT_PART(longitude_verbatim,'.',2)))-1)::text
 ELSE ''
 END::text
-)::numeric
+)
  || ' ' || 
 latitude::numeric(:PLAT,:DMAX)
  || ')') AS geog_longmax_latmin, 
@@ -89,7 +89,7 @@ WHEN LENGTH(SPLIT_PART(REPLACE(latitude_verbatim,'-',''),'.',2))<:DMAX
 THEN (10^(:DMAX-LENGTH(SPLIT_PART(latitude_verbatim,'.',2)))-1)::text
 ELSE ''
 END::text
-)::numeric
+)
  || ')') AS geog_longmin_latmax
 FROM user_data
 WHERE latlong_err IS NULL

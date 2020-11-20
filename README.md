@@ -94,11 +94,12 @@ Option | Meaning | Required? | Default value |
 <a name="II-cds-parallel"></a>
 ### III. CDS parallel processing application
 * Processes file of geocoordinates in parallel mode (multiple batches)
+* If you get a permission error, try running as sudo
 
 #### Syntax
 
 ```
-./cdspar.pl -in <input_filename_and_path> -out <output_filename_and_path> -class "tropicos" -nbatch <batches> -opt <makeflow_options> -d <output_file_delimiter>
+./cdspar.pl -in <input_filename_and_path> -out <output_filename_and_path> -nbatch <batches> -opt <makeflow_options>
 ```
 
 #### Options
