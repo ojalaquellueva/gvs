@@ -6,12 +6,23 @@
 -- Requires custom function isnumeric
 -- ----------------------------------------------------------
 
+
+-- Check missing coordinates
+UPDATE user_data
+SET latlong_err='One or more missing coordinates'
+WHERE (
+coalesce(latitude_verbatim, '')='' OR coalesce(longitude_verbatim, '')=''
+)
+AND job=:'job'
+;
+
 -- Verify that verbatim coordinates are numeric
 UPDATE user_data
 SET latlong_err='Coordinates non-numeric'
 WHERE (
 isnumeric(latitude_verbatim)='f' OR  isnumeric(longitude_verbatim)='f'
 )
+AND latlong_err IS NULL
 AND job=:'job'
 ;
 
@@ -29,6 +40,7 @@ SET latlong_err='Coordinate values out of bounds'
 WHERE (
 latitude>90 OR latitude<-90 OR longitude<-180 OR longitude>180
 )
+AND latlong_err IS NULL
 AND job=:'job'
 ;
 
