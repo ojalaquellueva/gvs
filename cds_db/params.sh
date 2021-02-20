@@ -10,7 +10,7 @@ TBL_GEOM="gadm"		# World geometries table
 DB_GEOM="gadm"		# Source db for world geom table
 SCH_GEOM="public"	# Schema of world geom table
 
-BASEDIR="/home/boyle/bien/cds2"
+BASEDIR="/home/boyle/bien/cds"
 
 # Path to db_config.sh
 # For production, keep outside app working directory & supply

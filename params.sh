@@ -34,7 +34,7 @@ CLEAR_USER_DATA="false"
 # to your installation
 ##########################
 
-BASEDIR="/home/boyle/bien/cds2"
+BASEDIR="/home/boyle/bien/cds"
 
 # Path to db_config.sh
 # For production, keep outside app directory & supply absolute path
