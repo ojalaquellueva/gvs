@@ -27,7 +27,8 @@ $LOGFILE_PATH = $APP_DIR;
 $LOGFILE = $LOGFILE_PATH . $LOGFILE_NAME;
 
 // Path to general php funcions and generic include files
-$utilities_path=$APP_DIR."php_includes/php/";	// Local submodule directory
+//$utilities_path=$APP_DIR."php_includes/php/";	// Local submodule directory
+$utilities_path=$APP_DIR."php_utilities/";	// Local submodule directory
 
 // General php funcions and generic include files
 include $utilities_path."functions.inc";
