@@ -1839,3 +1839,52 @@ Importing user data:
 Validating coordinates...done (1.26 sec)
 Calculating coordinate uncertainty...done (1.28 sec)
 Populating political divisions...
+------ Process started at Thu Mar  4 15:40:51 PST 2021 ------
+
+Importing user data:
+- Creating temp table "user_data_raw_job_20210304_1540716443881_18752"...done (1.27 sec)
+- Importing raw data to temp table...done (.08 sec)
+- Inserting raw data to table "user_data"...done (4.56 sec)
+- Dropping temp table...done (.24 sec)
+Validating coordinates...done (10.77 sec)
+Calculating coordinate uncertainty...done (.71 sec)
+Populating political divisions...done (65.35 sec)
+Calculating centroids:
+- country...done (.30 sec)
+- state...done (1.56 sec)
+- county...done (72.63 sec)
+- other subpolygons...done (21.63 sec)
+Determining consensus centroid...done (.20 sec)
+Saving threshold parameters...done (.12 sec)
+Dumping results to file '/home/boyle/bien/cds/data/cds_testfile_big_cds_results.csv'...done
+Importing user data:
+- Creating temp table "user_data_raw_job_20210304_1544666773696_6935"...done (.35 sec)
+- Importing raw data to temp table...done (.10 sec)
+- Inserting raw data to table "user_data"...done (1.45 sec)
+- Dropping temp table...done (.16 sec)
+Validating coordinates...done (.57 sec)
+Calculating coordinate uncertainty...done (.13 sec)
+Populating political divisions...done (39.80 sec)
+Calculating centroids:
+- country...done (.16 sec)
+- state...done (.25 sec)
+- county...done (.50 sec)
+- other subpolygons...done (11.80 sec)
+Determining consensus centroid...done (.19 sec)
+Saving threshold parameters...done (.15 sec)
+Dumping results to file '/home/boyle/bien/cds/data/cds_testfile_big_cds_results.csv'...Importing user data:
+- Creating temp table "user_data_raw_job_20210304_1550970343058_30942"...done (.22 sec)
+- Importing raw data to temp table...done (.11 sec)
+- Inserting raw data to table "user_data"...done (3.39 sec)
+- Dropping temp table...done (.24 sec)
+Validating coordinates...done (57.20 sec)
+Calculating coordinate uncertainty...done (.26 sec)
+Populating political divisions...done (543.54 sec)
+Calculating centroids:
+- country...done (1.14 sec)
+- state...done (1.01 sec)
+- county...done (1.80 sec)
+- other subpolygons...done (112.18 sec)
+Determining consensus centroid...done (.19 sec)
+Saving threshold parameters...done (.27 sec)
+Dumping results to file '/home/boyle/bien/cds/data/cds_testfile_big_cds_results.csv'...
