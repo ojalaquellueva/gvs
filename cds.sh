@@ -172,6 +172,8 @@ if [[ ! "$maxdist" == "" ]]; then
 		echo "ERROR: Option -d/--maxdist must be a positive inteter"
 		exit 1
 	fi
+else
+	MAX_DIST=$MAX_DIST_DEFAULT
 fi
 
 # Reset threshold parameter MAX_DIST_REL if supplied
@@ -183,6 +185,8 @@ if [[ ! "$maxdistrel" == "" ]]; then
 		echo "ERROR1: Option -r/--maxdistrel must be fraction over (0:1)"
 		exit 1
 	fi
+else
+	MAX_DIST_REL=$MAX_DIST_REL_DEFAULT
 fi
 
 # Set user and password for api access

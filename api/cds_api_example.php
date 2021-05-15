@@ -86,6 +86,7 @@ $time=true;					// Echo time elapsed
 // Use default if unset
 $options = getopt("b:m:");
 $batches=isset($options["b"])?$options["b"]:$ppbatches;	
+$mode=isset($options["m"])?$options["m"]:$mode;	
 
 ////////////////////////////////////////////////////////////////
 // Main

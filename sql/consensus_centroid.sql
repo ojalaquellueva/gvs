@@ -16,6 +16,8 @@ centroid_poldiv=NULL
 WHERE job=:'job'
 ;
 
+-- Note that the consensus centroid is the one with the 
+-- lowest *relative* distance (dist_relative)
 UPDATE user_data a
 SET 
 centroid_dist_km=closest_centroid.dist,
@@ -64,7 +66,7 @@ FROM
 		AND job=:'job'
 		)
 	) candidate_centroids
-	ORDER BY id, dist ASC
+	ORDER BY id, dist_relative ASC
 ) closest_centroid
 WHERE a.id=closest_centroid.id
 AND job=:'job'

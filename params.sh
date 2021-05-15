@@ -15,13 +15,13 @@
 ##########################
 
 # Maximum distance (km) to true political division centroid
-MAX_DIST=1000
+MAX_DIST_DEFAULT=1000
 
 # Maximum relative distance
 # Proportion of actual distance to true centroid
 # divided by maximum possible distance (from farthest
 # point on political division perimiter to true centroid)
-MAX_DIST_REL=0.002
+MAX_DIST_REL_DEFAULT=0.002
 
 # Complete clear all data from table user_data
 # For development only

@@ -15,7 +15,7 @@ url = "http://vegbiendev.nceas.ucsb.edu:8775/cds_api.php"
 names_file <- "https://bien.nceas.ucsb.edu/bien/wp-content/uploads/2020/10/cds_testfile.csv"
 
 # Large test file of 600 names
-names_file <- "https://bien.nceas.ucsb.edu/bien/wp-content/uploads/2020/10/cds_testfile_big.csv"
+#names_file <- "https://bien.nceas.ucsb.edu/bien/wp-content/uploads/2020/10/cds_testfile_big.csv"
 
 #################################
 # Import the raw data
@@ -91,7 +91,7 @@ head(results, 10)
 results.t <- as.data.frame( t( results[,1:ncol(results)] ) )
 results.t[,3,drop =FALSE]
 
-# A few columns showing coordinate validation
+# A few rows columns showing coordinate validation
 #results $match.score <- format(round(as.numeric(results $Overall_score),2), nsmall=2)
 results[ , c('latitude_verbatim', 'longitude_verbatim', 'latitude', 'longitude', 
 	'latlong_err', 'coordinate_decimal_places', 'coordinate_inherent_uncertainty_m')
