@@ -4,6 +4,8 @@
 -- Requires parameter :job	
 -- ----------------------------------------------------------
 
+
+
 UPDATE user_data a
 SET subpoly_cent_dist=mindist.dist/1000,  -- convert to km
 subpoly_cent_type=mindist.cent_type,
@@ -39,7 +41,11 @@ AND job=:'job'
 
 -- Populate _cent_dist_max 
 UPDATE user_data
-SET subpoly_cent_dist_max=subpoly_cent_dist/subpoly_cent_dist_relative
+SET subpoly_cent_dist_max=
+CASE
+WHEN subpoly_cent_dist_relative=0 THEN 0
+ELSE subpoly_cent_dist/subpoly_cent_dist_relative
+END
 WHERE subpoly_cent_dist IS NOT NULL AND subpoly_cent_dist_relative IS NOT NULL
 AND job=:'job'
 ;

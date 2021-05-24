@@ -1,6 +1,6 @@
 -- ----------------------------------------------------------
--- Determine coordinate precision and estimate inherent
--- uncertainty due to decimal places used
+-- Determine inherent uncertainty in m of coordinates due to 
+-- number of decimal places used
 -- 
 -- Requires external parameter job
 -- ----------------------------------------------------------

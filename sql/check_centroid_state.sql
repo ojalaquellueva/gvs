@@ -57,7 +57,11 @@ AND job=:'job'
 
 -- Populate _cent_dist_max 
 UPDATE user_data
-SET state_cent_dist_max=state_cent_dist/state_cent_dist_relative
+SET state_cent_dist_max=
+CASE 
+WHEN state_cent_dist_relative=0 THEN 0
+ELSE state_cent_dist/state_cent_dist_relative
+END
 WHERE state_cent_dist IS NOT NULL AND state_cent_dist_relative IS NOT NULL
 AND job=:'job'
 ;

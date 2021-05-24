@@ -57,11 +57,14 @@ AND job=:'job'
 
 -- Populate _cent_dist_max 
 UPDATE user_data
-SET county_cent_dist_max=county_cent_dist/county_cent_dist_relative
+SET county_cent_dist_max=
+CASE
+WHEN county_cent_dist_relative=0 THEN 0
+ELSE county_cent_dist/county_cent_dist_relative
+END
 WHERE county_cent_dist IS NOT NULL AND county_cent_dist_relative IS NOT NULL
 AND job=:'job'
 ;
-
 
 -- Flag potential true centroids
 UPDATE user_data
