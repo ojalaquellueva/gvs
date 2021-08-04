@@ -10,7 +10,7 @@ $err_show_sql=false;
 
 // Maximum permitted input rows per request
 // For no limit, set to 0
-$MAX_ROWS=5000;	
+$MAX_ROWS=5001;	
 					
 // Number of batches
 $NBATCH=20;				
