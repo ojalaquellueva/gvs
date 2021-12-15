@@ -6,12 +6,12 @@ Date created: 24 March 2020
 
 ## Contents
 
-1. [Overview](#overview)  
-2. [Installation and configuration](#installation-and-configuration)  
-  1. [Software](#software)  
-  2. [Dependencies](#dependencies)  
-  3. [Permissions](#permissions)  
-  4. [Setup](#setup)  
+- [1. Overview](#overview)  
+- [2. Installation and configuration](#installation-and-configuration)  
+  * [1. Software](#software)  
+  * [2. Dependencies](#dependencies)  
+  * [3. Permissions](#permissions)  
+  * [4. Setup](#setup)  
 3. [Input](#input)  
   1. [Raw data](#rawdata)  
   2. [Input format](#format)  
