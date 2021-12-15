@@ -6,24 +6,24 @@ Date created: 24 March 2020
 
 ## Contents
 
-- [1. Overview](#overview)  
-- [2. Installation and configuration](#installation-and-configuration)  
-  * [1. Software](#software)  
-  * [2. Dependencies](#dependencies)  
-  * [3. Permissions](#permissions)  
-  * [4. Setup](#setup)  
-3. [Input](#input)  
-  1. [Raw data](#rawdata)  
-  2. [Input format](#format)  
-4. [Output](#output)  
-  1. [Data dictionary](#dict)  
-  2. [Constrained values](#values)  
-5. [Usage](#usage):  
-  1. [Build the GSV Database ](#build-gvs-db)  
-  1. [GVS batch application](#gvs-batch)  
-  1. [GVS parallel processing application](#gvs-parallel)
-  1. [API](#api)  
-  1. [GVS R package](#rgvs)  
+- [Overview](#overview)  
+- [Installation and configuration](#installation-and-configuration)  
+  * [Software](#software)  
+  * [Dependencies](#dependencies)  
+  * [Permissions](#permissions)  
+  * [Setup](#setup)  
+- [Input](#input)  
+  * [Raw data](#rawdata)  
+  * [Input format](#format)  
+- [Output](#output)  
+  * [Data dictionary](#dict)  
+  * [Constrained values](#values)  
+- [Usage](#usage):  
+  * [Build the GSV Database ](#build-gvs-db)  
+  * [GVS batch application](#gvs-batch)  
+  * [GVS parallel processing application](#gvs-parallel)
+  * [API](#api)  
+  * [GVS R package](#rgvs)  
 
 <a name="overview"></a>
 ## Overview
