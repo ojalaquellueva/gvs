@@ -179,3 +179,4 @@ Below is a list of fields returned by the API and their definitions. GADM: Globa
 | coordinate\_decimal\_places | Minimum decimal places of the verbatim lat, long values |  
 | coordinate\_inherent\_uncertainty\_m | Inherent uncertainty of the coordinates, due to the number of decimal places used |  m
 
+d
