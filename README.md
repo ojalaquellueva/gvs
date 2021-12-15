@@ -1,7 +1,7 @@
 # Geocordinate Validation Service (GVS)
 
 Author: Brad Boyle (bboyle@email.arizona.edu)  
-Date created: 24 March 2020  
+Date created: 24 March 2020   
 
 
 ## Contents
