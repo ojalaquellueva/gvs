@@ -266,7 +266,7 @@ if ( $mode=="resolve" ) { 	// BEGIN mode_if
 		;
 		";
 	} else {
-		$err_msg="ERROR: Unknown opt mode '$mode'\r\n"; 
+		$err_msg="ERROR: Unknown value for opt parameter mode: '$mode'\r\n"; 
 		$err_code=400; goto err;
 	}
 	

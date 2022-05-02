@@ -221,7 +221,9 @@ if [ "$i" == "true" ]; then
 
 	Run process '$pname' using the following parameters: 
 
-	Current user:		$curr_user
+	Unix user:		$curr_user
+	Default postgres user: $USER
+	Actual postgres user: $opt_user
 	Input file:		$infile
 	Output file:		$outfile
 	MAX_DIST:		$MAX_DIST

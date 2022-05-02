@@ -29,12 +29,23 @@ MAX_DIST_REL_DEFAULT=0.002
 # TURN OFF DURING PRODUCTION!
 CLEAR_USER_DATA="false"
 
-##########################
-# Paths, adjust according  
-# to your installation
-##########################
+##############################################################
+# Application parameters
+##############################################################
 
-BASEDIR="/home/boyle/bien/cds"
+# Relative path to server-specific configuration file.
+# Currently contains only one parameter, $BASE_DIR, which
+# is the absolute path to the immediate parent of this
+# directory (i.e., the repo). Recommend keep server_config.sh
+# in $BASE_DIR/config/
+currdir=$(dirname ${BASH_SOURCE[0]})
+source "${currdir}/../config/server_config.sh";
+
+#################################
+# You should not need to change
+# the remaining parameters unless 
+# you alter default configuration
+#################################
 
 # Path to db_config.sh
 # For production, keep outside app directory & supply absolute path

@@ -76,6 +76,13 @@ git clone https://github.com/ojalaquellueva/gvs
 # Be sure to change paths to these directories (in params.sh) accordingly
 mv data ../
 mv config ../
+
+# Create application temp directory in /tmp
+# Used by parallel application `gvs_par.sh`
+sudo mkdir /tmp/gvs
+sudo chown www-data /tmp/gvs
+sudo chgrp www-data /tmp/gvs
+
 ```
 
 <a name="input"></a>
@@ -224,9 +231,10 @@ Option | Meaning | Required? | Default value |
 -opt     | Makeflow options | No | 
 
 #### Example:
+* In most OS configurations you will need to run as root using sudo to enable access to temp folder `/tmp/gvs`
 
 ```
-./cdspar.pl -in "data/cds_testfile.csv" -nbatch 3
+sudo ./cdspar.pl -in "data/cds_testfile.csv" -nbatch 3
 ```
 
 <a name="api"></a>

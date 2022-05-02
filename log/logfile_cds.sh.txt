@@ -1998,3 +1998,31 @@ Calculating centroids:
 Determining consensus centroid...done (.10 sec)
 Saving threshold parameters...done (.10 sec)
 Dumping results to file '/home/boyle/bien/cds/data/dbz/cds_input_bad_line_cds_results.csv'...done
+Importing user data:
+- Creating temp table "user_data_raw_job_20220428_1655972986265_2852"...
+------ Process started at Mon 02 May 2022 03:39:16 PM PDT ------
+
+Importing user data:
+- Creating temp table "user_data_raw_job_20220502_1539367632386_12689"...
+------ Process started at Mon 02 May 2022 04:02:22 PM PDT ------
+
+Importing user data:
+- Creating temp table "user_data_raw_job_20220502_1602808381947_22793"...
+------ Process started at Mon 02 May 2022 04:08:52 PM PDT ------
+
+Importing user data:
+- Creating temp table "user_data_raw_job_20220502_1608442949093_17159"...done (.47 sec)
+- Importing raw data to temp table...done (.07 sec)
+- Inserting raw data to table "user_data"...done (.44 sec)
+- Dropping temp table...done (.14 sec)
+Validating coordinates...done (.28 sec)
+Calculating coordinate uncertainty...done (.16 sec)
+Populating political divisions...done (5.22 sec)
+Calculating centroids:
+- country...done (.09 sec)
+- state...done (.11 sec)
+- county...done (.14 sec)
+- other subpolygons...done (5.15 sec)
+Determining consensus centroid...done (.07 sec)
+Saving threshold parameters...done (.07 sec)
+Dumping results to file '/home/boyle/bien/gvs/data/gvs_testfile_scrubbed.csv'...done
