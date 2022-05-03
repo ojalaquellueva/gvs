@@ -76,14 +76,9 @@ git clone https://github.com/ojalaquellueva/gvs
 # Be sure to change paths to these directories (in params.sh) accordingly
 mv data ../
 mv config ../
-
-# Create application temp directory in /tmp
-# Used by parallel application `gvs_par.sh`
-sudo mkdir /tmp/gvs
-sudo chown www-data /tmp/gvs
-sudo chgrp www-data /tmp/gvs
-
 ```
+
+Note: The temporary application data directory `/tmp/gvs` is now installed on the fly by the application. You no longer need to install it manually.
 
 <a name="input"></a>
 ## Input data

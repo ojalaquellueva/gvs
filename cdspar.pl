@@ -20,7 +20,7 @@ my $BINARY          = "$binpath/cds.sh";
 my $CONSOLIDATE_SCR = "$binpath/consolidator.pl";
 
 # Master directory where all content saved
-my $tmpfoldermaster = "/tmp/cds/";
+my $tmpfoldermaster = "/tmp/${APPNAME}/";
 
 my $infile  = '';    # Input file
 my $outfile = '';    # Optput file - optional
@@ -41,7 +41,7 @@ GetOptions(
 
 # The temporary folder needs to be in the /tmp directory 
 # (see the function _clean)
-# mkdir "/tmp/$APPNAME/" unless -d "/tmp/$APPNAME/"
+mkdir "$tmpfoldermaster" unless -d "$tmpfoldermaster";	# Create temp folder
 my $tmpfolder =
   $tmpfoldermaster . time() . int( rand(10000) );    #Create a temporary folder
 
