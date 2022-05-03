@@ -15,7 +15,7 @@
 // api base url 
 $base_url = "http://vegbiendev.nceas.ucsb.edu:8775/cds_api.php"; 
 
-require_once 'server_params.php';	// server-specific parameters 
+require_once 'params.php';	// server-specific parameters 
 require_once 'api_params.php';			// general api parameters
 
 // Path and name of file containing input names and political divisions

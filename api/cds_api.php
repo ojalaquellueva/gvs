@@ -8,8 +8,12 @@
 // Parameters
 ///////////////////////////////////
 
+// Increase memory limit for this script only
+// Allows sending of larger reponses
+ini_set('memory_limit','1000M');
+
 // parameters in ALL_CAPS set in the two params files
-require_once 'server_params.php';	// server-specific parameters
+require_once 'params.php';	// server-specific parameters
 require_once 'api_params.php';		// API option parameters
 
 // Temporary data directory

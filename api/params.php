@@ -1,12 +1,14 @@
 <?php
 
 /////////////////////////////////////////////////
-// Server-specific parameters
-// Keep outside repo to preserve settings
+// Paths and include files
 /////////////////////////////////////////////////
 
-// Application base directory
-$BASE_DIR = "/home/boyle/bien/cds/";
+// Server-specific parameters $APPNAME & $BASE_DIR loaded from 
+// server parameters file in config directory one
+// level above (outside) application directory (=repo). 
+// Template for this file is in src/config/server_params.php
+include "../../config/server_params.php";
 
 // API directory
 $APP_DIR = $BASE_DIR."src/api/";
