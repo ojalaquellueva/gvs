@@ -1,0 +1,19 @@
+<?php
+
+/////////////////////////////////////////////////
+// Server-specific parameters used by API
+// Keep in directory "config/" one level above 
+// application directory "src/" (i.e., outside of
+// repo
+/////////////////////////////////////////////////
+
+// Application name
+// Use lower case to enable use in file names and paths
+// If you follow the recommended setup, this parameter and the 
+// next should be the only ones you need to change
+$APPNAME = "gvs";
+
+// Application base directory
+$BASE_DIR = "/home/boyle/bien/$APPNAME/";
+
+?>

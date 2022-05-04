@@ -1,7 +1,7 @@
 <?php
 
 //////////////////////////////////////////////////////
-// Submits test data to CDS API & displays results
+// Submits test data to GVS API & displays results
 //
 // * Imports names from test file on local file system
 // * Displays input and output at various stages of
@@ -13,15 +13,15 @@
 /////////////////////
 
 // api base url 
-$base_url = "http://vegbiendev.nceas.ucsb.edu:8775/cds_api.php"; 
+$base_url = "http://vegbiendev.nceas.ucsb.edu:8775/gvs_api.php"; 
 
 require_once 'params.php';	// server-specific parameters 
 require_once 'api_params.php';			// general api parameters
 
 // Path and name of file containing input names and political divisions
-$inputfile = $DATADIR."cds_testfile.csv";	// local test file
-// $inputfile = $DATADIR."cds_testfile_big.csv";	// local test file (big)
-// $inputfile = "https://bien.nceas.ucsb.edu/bien/wp-content/uploads/2020/10/cds_testfile.csv";
+$inputfile = $DATADIR."gvs_testfile.csv";	// local test file
+// $inputfile = $DATADIR."gvs_testfile_big.csv";	// local test file (big)
+// $inputfile = "https://bien.nceas.ucsb.edu/bien/wp-content/uploads/2020/10/gvs_testfile.csv";
 
 // Desired response format
 //	Options: json*|xml
@@ -36,7 +36,7 @@ $lines = 10000000000;
 //$lines = 5;
 
 /////////////////////////////////////////
-// CDS options
+// GVS options
 //
 // UNDER CONSTRUCTION! - NOT ALL OPTIONS
 // CURRENTLY IMPLEMENTED
@@ -50,7 +50,7 @@ $lines = 10000000000;
 //	Options: resolve*|meta
 // 	E.g., $mode="meta"
 $mode="resolve";			// Resolve names
-//$mode="meta";			// Return metadata on CDS & sources
+//$mode="meta";			// Return metadata on GVS & sources
 
 // Threshold parameter options
 // Set to empty string ("") to use defaults
@@ -69,8 +69,8 @@ $ppbatches=20;
 
 $disp_data_array=false;		// Echo raw data as array
 $disp_combined_array=false;	// Echo combined options+data array
-$disp_opts_array=false;		// Echo CDS options as array
-$disp_opts=true;			// Echo CDS options
+$disp_opts_array=false;		// Echo GVS options as array
+$disp_opts=true;			// Echo GVS options
 $disp_json_data=true;		// Echo the options + raw data JSON POST data
 $disp_results_json=true;	// Echo results as array
 $disp_results_array=false;	// Echo results as array
@@ -167,7 +167,7 @@ if ($disp_opts_array) {
 if ($disp_opts) {
 	
 	// Echo the options
-	echo "CDS options:\r\n";
+	echo "GVS options:\r\n";
 	//echo "  mode: " . $mode . "\r\n";
 	//echo "  batches: " . $opts['batches'] . "\r\n";
 	foreach($opts_arr as $key => $value) {

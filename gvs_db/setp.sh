@@ -39,7 +39,7 @@ if [ -z ${master+x} ]; then
 	source "$includes_dir/startup_master.sh"
 
 	# # Set process name and confirm operation
-	pname="Set permissions for database $DB_CDS"
+	pname="Set permissions for database $DB_GVS"
 
 fi
 
@@ -64,7 +64,7 @@ if [ -z ${master+x} ] && [ "$i" == "true" ]; then
 
 	Run process '$pname' using the following parameters: 
 
-	DB name:		$DB_CDS
+	DB name:		$DB_GVS
 	Current user:		$curr_user
 	Admin user/db owner:	$USER_ADMIN
 	Read-only user:		$USER_READ
@@ -84,9 +84,9 @@ source "$includes_dir/start_process.sh"
 
 # Check if db already exists
 # Warn to drop manually. This is safer.
-if ! (psql -lqt | cut -d \| -f 1 | grep -qw "$DB_CDS"); then
+if ! (psql -lqt | cut -d \| -f 1 | grep -qw "$DB_GVS"); then
 	# Reset confirmation message
-	msg="Database '$DB_CDS' doesn't exist!"
+	msg="Database '$DB_GVS' doesn't exist!"
 	echo $msg; exit 1
 fi
 
@@ -101,16 +101,16 @@ if [[ "$USER_ADMIN" == "" ]]; then
 else
 	echoi $e ":"
 	echoi $e -n "-- Changing DB owner to '$USER_ADMIN'"
-	sudo -Hiu postgres PGOPTIONS='--client-min-messages=warning' psql --set ON_ERROR_STOP=1 -q -c "ALTER DATABASE $DB_CDS OWNER TO $USER_ADMIN" 
+	sudo -Hiu postgres PGOPTIONS='--client-min-messages=warning' psql --set ON_ERROR_STOP=1 -q -c "ALTER DATABASE $DB_GVS OWNER TO $USER_ADMIN" 
 	source "$includes_dir/check_status.sh"  
 
 	echoi $e -n "-- Granting permissions to '$USER_ADMIN'..."
 	sudo -Hiu postgres PGOPTIONS='--client-min-messages=warning' psql -q <<EOF
 	\set ON_ERROR_STOP on
-	REVOKE CONNECT ON DATABASE $DB_CDS FROM PUBLIC;
-	GRANT CONNECT ON DATABASE $DB_CDS TO $USER_ADMIN;
-	GRANT ALL PRIVILEGES ON DATABASE $DB_CDS TO $USER_ADMIN;
-	\c $DB_CDS
+	REVOKE CONNECT ON DATABASE $DB_GVS FROM PUBLIC;
+	GRANT CONNECT ON DATABASE $DB_GVS TO $USER_ADMIN;
+	GRANT ALL PRIVILEGES ON DATABASE $DB_GVS TO $USER_ADMIN;
+	\c $DB_GVS
 	GRANT USAGE ON SCHEMA public TO $USER_ADMIN;
 	GRANT SELECT ON ALL TABLES IN SCHEMA public TO $USER_ADMIN;
 	GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO $USER_ADMIN;
@@ -121,19 +121,19 @@ EOF
 	# Only postgis table should be spatial_ref_sys
 	
 	echoi $e -n "--- Tables..."
-#	for tbl in `psql -qAt -c "select tablename from pg_tables where schemaname='public' and tableowner<>'postgres';" $DB_CDS` ; do  sudo -Hiu postgres PGOPTIONS='--client-min-messages=warning' psql -q -c "alter table \"$tbl\" owner to $USER_ADMIN" $DB_CDS ; done
+#	for tbl in `psql -qAt -c "select tablename from pg_tables where schemaname='public' and tableowner<>'postgres';" $DB_GVS` ; do  sudo -Hiu postgres PGOPTIONS='--client-min-messages=warning' psql -q -c "alter table \"$tbl\" owner to $USER_ADMIN" $DB_GVS ; done
 	# Using "tablename not in (...)" instead of "tableowner<>'postgres'" 
 	# prevents ownership change being blocked for tables created manually 
 	# while logged in as postgres
-	for tbl in `psql -qAt -c "select tablename from pg_tables where schemaname='public' and tablename not in ('spatial_ref_sys');" $DB_CDS` ; do  sudo -Hiu postgres PGOPTIONS='--client-min-messages=warning' psql -q -c "alter table \"$tbl\" owner to $USER_ADMIN" $DB_CDS ; done
+	for tbl in `psql -qAt -c "select tablename from pg_tables where schemaname='public' and tablename not in ('spatial_ref_sys');" $DB_GVS` ; do  sudo -Hiu postgres PGOPTIONS='--client-min-messages=warning' psql -q -c "alter table \"$tbl\" owner to $USER_ADMIN" $DB_GVS ; done
 	source "$includes_dir/check_status.sh"  
 
 	echoi $e -n "--- Sequences..."
-	for tbl in `psql -qAt -c "select sequence_name from information_schema.sequences where sequence_schema = 'public';" $DB_CDS` ; do  sudo -Hiu postgres PGOPTIONS='--client-min-messages=warning' psql -q -c "alter sequence \"$tbl\" owner to $USER_ADMIN" $DB_CDS ; done
+	for tbl in `psql -qAt -c "select sequence_name from information_schema.sequences where sequence_schema = 'public';" $DB_GVS` ; do  sudo -Hiu postgres PGOPTIONS='--client-min-messages=warning' psql -q -c "alter sequence \"$tbl\" owner to $USER_ADMIN" $DB_GVS ; done
 	source "$includes_dir/check_status.sh"  
 	
 	echoi $e -n "--- Views..."
-	for tbl in `psql -qAt -c "select table_name from information_schema.views where table_schema = 'public' and table_name not in ('geography_columns','geometry_columns','raster_columns','raster_overviews');" $DB_CDS` ; do  psql -c "alter view \"$tbl\" owner to $USER_ADMIN" $DB_CDS ; done
+	for tbl in `psql -qAt -c "select table_name from information_schema.views where table_schema = 'public' and table_name not in ('geography_columns','geometry_columns','raster_columns','raster_overviews');" $DB_GVS` ; do  psql -c "alter view \"$tbl\" owner to $USER_ADMIN" $DB_GVS ; done
 	source "$includes_dir/check_status.sh"  
 fi
 
@@ -141,9 +141,9 @@ echoi $e -n "- Granting read access to read-only user \"$USER_READ\"..."
 if [[ ! "$USER_READ" == "" ]]; then
 	sudo -Hiu postgres PGOPTIONS='--client-min-messages=warning' psql -q <<EOF
 	\set ON_ERROR_STOP on
-	REVOKE CONNECT ON DATABASE $DB_CDS FROM PUBLIC;
-	GRANT CONNECT ON DATABASE $DB_CDS TO $USER_READ;
-	\c $DB_CDS
+	REVOKE CONNECT ON DATABASE $DB_GVS FROM PUBLIC;
+	GRANT CONNECT ON DATABASE $DB_GVS TO $USER_READ;
+	\c $DB_GVS
 	GRANT USAGE ON SCHEMA public TO $USER_READ;
 	GRANT SELECT ON ALL TABLES IN SCHEMA public TO $USER_READ;
 EOF

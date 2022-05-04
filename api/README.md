@@ -1,4 +1,4 @@
-# Centroid Detection Service (CDS) API
+# Geocoordinate Validation Service (GVS) API
 
 ## Contents
 
@@ -16,13 +16,13 @@
 <a name="introduction"></a>
 ## Introduction
 
-The CDS API is an API wrapper for cds.sh, the master script of the Centroid Detection Service (CDS). 
+The GVS API is an API wrapper for gvs.sh, the master script of the Geocoordinate Validation Service (GVS). 
 
-The CDS accepts a point of observation (PO; pair of latitude, longitude coordinates in decimal degrees) and returns the country, state and county in which the point is located. It also calculates the distance between the OP and six different types of centroids for each of the three political divisions (see [Centroid Types](#centroid_types)) and indicates for each political division if it is small enough for the OP itself to potentially be a centroid (see [Distance Thresholds](#thresholds). Finally, the CDS indicates which of the three potential political division centroids is the most likely, if any, based on the threshold parameter MAX\_DIST (distance to the actual centroid) and MAX\_DIST_REL (relative distance: distance to actual centroid / distance from actual centroid to the farthest point in the political division). In addition, the CDS validates the submitted coordinates and reports errors such as non-numeric values and values out of bounds. Valid coordinates which do not join to any political division are flagged as "Point in ocean".
+The GVS accepts a point of observation (PO; pair of latitude, longitude coordinates in decimal degrees) and returns the country, state and county in which the point is located. It also calculates the distance between the OP and six different types of centroids for each of the three political divisions (see [Centroid Types](#centroid_types)) and indicates for each political division if it is small enough for the OP itself to potentially be a centroid (see [Distance Thresholds](#thresholds). Finally, the GVS indicates which of the three potential political division centroids is the most likely, if any, based on the threshold parameter MAX\_DIST (distance to the actual centroid) and MAX\_DIST_REL (relative distance: distance to actual centroid / distance from actual centroid to the farthest point in the political division). In addition, the GVS validates the submitted coordinates and reports errors such as non-numeric values and values out of bounds. Valid coordinates which do not join to any political division are flagged as "Point in ocean".
 
-The CDS API accept comma separate pairs of latitude and longitude in decimal degrees. It accepts multiple coordinates at once, with each pair of coordinates on its own line. Each request is sent to the API as a POST, with options and data included in the request body as JSON.
+The GVS API accept comma separate pairs of latitude and longitude in decimal degrees. It accepts multiple coordinates at once, with each pair of coordinates on its own line. Each request is sent to the API as a POST, with options and data included in the request body as JSON.
 
-In addition to the coordinate resolution, the CDS offers metadata responses describing current code and database versions, and formatted acknowledgements and citations.
+In addition to the coordinate resolution, the GVS offers metadata responses describing current code and database versions, and formatted acknowledgements and citations.
 
 
 <a name="dependencies"></a>
@@ -64,11 +64,11 @@ latitude,longitude
 52.54731,-2.49544  
 -23.62,-65.43  
     
-Input data must be converted to JSON and combined as element "data" with the CDS options (element "opts"; see Options, below). The combined JSON object is sent to the API as POST data in the request body. The scripts below provide examples of how to do this in PHP and R. 
+Input data must be converted to JSON and combined as element "data" with the GVS options (element "opts"; see Options, below). The combined JSON object is sent to the API as POST data in the request body. The scripts below provide examples of how to do this in PHP and R. 
 
 #### Options
 
-The API accepts the following CDS options, which must be converted to JSON and combined as element "opts" along with the data (element "data") in the request body POST data.
+The API accepts the following GVS options, which must be converted to JSON and combined as element "opts" along with the data (element "data") in the request body POST data.
 
 
 | Mode | Meaning | Notes |
@@ -83,20 +83,20 @@ The API accepts the following CDS options, which must be converted to JSON and c
 
 #### PHP
 
-Example syntax for interacting with API using php\_curl is given in `cds_api_example.php`. To run the test script:
+Example syntax for interacting with API using php\_curl is given in `gvs_api_example.php`. To run the test script:
 
 ```
-php cds_api_example.php
+php gvs_api_example.php
 ```
 * Set parameters directly in script; no command line parameters
-* Also see API parameters section at start of `cds_api_example.php `
-* For CDS options and defaults, see `params.php`
-* Make sure that input file (`cds_testfile.csv`) is available in `$DATADIR` (as set in `params.php`)
+* Also see API parameters section at start of `gvs_api_example.php `
+* For GVS options and defaults, see `params.php`
+* Make sure that input file (`gvs_testfile.csv`) is available in `$DATADIR` (as set in `params.php`)
 
 #### R
 
-* See example script `cds_api_example.R`. 
-* Make sure that input file (`cds_testfile.csv`) is available in the same directory as the R script, or adjust file path in the R code.
+* See example script `gvs_api_example.R`. 
+* Make sure that input file (`gvs_testfile.csv`) is available in the same directory as the R script, or adjust file path in the R code.
 
 <a name="centroid-types"></a>
 ## Centroid types
@@ -141,7 +141,7 @@ Below is a list of fields returned by the API and their definitions. GADM: Globa
 
 | Field  | Definition | Units (if applicable)
 | ------ | ---- | ----------
-| id | Unique integer ID, assigned by CDS |  
+| id | Unique integer ID, assigned by GVS |  
 | latitude_verbatim | Verbatim latitude, as submitted |  
 | longitude_verbatim | Verbatim longitude, as submitted |  
 | latitude | Decimal latitude |  

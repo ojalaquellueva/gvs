@@ -174,7 +174,7 @@ fi
 
 # Copy table (for testing only)
 # echoi $e -n "Creating duplicate table user_data_copy for testing..."
-# cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user -d $DB_CDS --set ON_ERROR_STOP=1 -q -f $DIR_LOCAL/sql/user_data_copy.sql"
+# cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user -d $DB_GVS --set ON_ERROR_STOP=1 -q -f $DIR_LOCAL/sql/user_data_copy.sql"
 # eval $cmd
 # source "$DIR/includes/check_status.sh"
 
@@ -184,7 +184,7 @@ if [ "$deleteall" == "true" ]; then
 	# Empty entire table
 	echoi $e -n "- Clearing user_data..."
 	sql="TRUNCATE user_data RESTART IDENTITY"
-	cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user -d $DB_CDS --set ON_ERROR_STOP=1 -q -c \"$sql\""
+	cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user -d $DB_GVS --set ON_ERROR_STOP=1 -q -c \"$sql\""
 	eval $cmd
 	source "$DIR/includes/check_status.sh"
 else
@@ -192,7 +192,7 @@ else
 	intvl="$tnum $tunitfull"
 	echoi $e -n "- Clearing records older than $intvl..."
 	sql="DELETE FROM user_data WHERE date_created < NOW() - INTERVAL '"$intvl"'"
-	cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user -d $DB_CDS --set ON_ERROR_STOP=1 -q -c \"$sql\""
+	cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user -d $DB_GVS --set ON_ERROR_STOP=1 -q -c \"$sql\""
 	eval $cmd
 	source "$DIR/includes/check_status.sh"
 fi

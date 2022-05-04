@@ -1,5 +1,5 @@
 #! /usr/bin/perl
-# consolidator.pl: Consolidator for the Centroid Detection Service (CDS).
+# consolidator.pl: Consolidator for the Geocoordinate Validation Service (GVS).
 # Author: Naim Matasci <nmatasci@iplantcollaborative.org>
 ###############################################################################
 

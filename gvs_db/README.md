@@ -1,4 +1,4 @@
-# Build CDS Database
+# Build GVS Database
 
 Author: Brad Boyle (bboyle@email.arizona.edu)  
 
@@ -12,7 +12,7 @@ Author: Brad Boyle (bboyle@email.arizona.edu)
 <a name="overview"></a>
 ## Overview
 
-Builds PostgreSQL database used by CDS (Centroid Detections Service). Political divisions spatial object from Global Admininstrative Division Database (GADM; `https://gadm.org`) with political division names standardized against the geonames database (https://`www.geonames.org`) using the Geographic Name Resolution Service (GNRS; `https://github.com/ojalaquellueva/gnrs.git`)
+Builds PostgreSQL database used by GVS (Geocoordinate Validation Service). Political divisions spatial object from Global Admininstrative Division Database (GADM; `https://gadm.org`) with political division names standardized against the geonames database (https://`www.geonames.org`) using the Geographic Name Resolution Service (GNRS; `https://github.com/ojalaquellueva/gnrs.git`)
 
 <a name="software"></a>
 ## Software
@@ -37,7 +37,7 @@ PostgreSQL/psql 12.2, or higher (PostGIS extension installed by this script)
 ### Run
 
 ```
-./cds_db.sh [options]
+./gvs_db.sh [options]
 ```
 
 #### Options
@@ -48,7 +48,7 @@ PostgreSQL/psql 12.2, or higher (PostGIS extension installed by this script)
 #### Example:
 
 ```
-./cds_db.sh -m -s
+./gvs_db.sh -m -s
 ```
 * Runs silently without terminal echo
 * Sends notification message at start and completion

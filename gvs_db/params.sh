@@ -10,7 +10,7 @@ TBL_GEOM="gadm"		# World geometries table
 DB_GEOM="gadm"		# Source db for world geom table
 SCH_GEOM="public"	# Schema of world geom table
 
-BASEDIR="/home/boyle/bien/cds"
+BASEDIR="/home/boyle/bien/gvs"
 
 # Path to db_config.sh
 # For production, keep outside app working directory & supply
@@ -54,7 +54,7 @@ email="bboyle@email.arizona.edu"
 
 # Short name for this operation, for screen echo and 
 # notification emails. Number suffix matches script suffix
-pname="Build CDS database"
+pname="Build GVS database"
 
 # General process name prefix for email notifications
 pname_header_prefix="BIEN notification: process"

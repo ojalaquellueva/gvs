@@ -1,32 +1,36 @@
 <?php
 
 ////////////////////////////////////////////////////////
-// Accepts batch API POST requests and submits to cds.sh
+// Accepts batch API POST requests and submits to gvs.sh
 ////////////////////////////////////////////////////////
 
 ///////////////////////////////////
 // Parameters
 ///////////////////////////////////
 
+// Increase memory limit for this script only
+// Allows sending of larger reponses
+ini_set('memory_limit','1000M');
+
 // parameters in ALL_CAPS set in the two params files
-require_once 'server_params.php';	// server-specific parameters
+require_once 'params.php';	// server-specific parameters
 require_once 'api_params.php';		// API option parameters
 
 // Temporary data directory
 $data_dir_tmp = $DATADIR;
-$data_dir_tmp = "/tmp/cds/";
+$data_dir_tmp = "/tmp/gvs/";
 
 // Input file name & path
 // User JSON input saved to this file as pipe-delimited text
 // Becomes input for tnrs_batch command (`./controller.pl [...]`)
-$basename = "cds_" . uniqid(rand(), true);
+$basename = "gvs_" . uniqid(rand(), true);
 
 $filename_tmp = $basename . '_in.tsv';
 $file_tmp = $data_dir_tmp . $filename_tmp;
 
 // Results file name & path
-// Output of tnrs_batch command will be saved to this file
-$results_filename = $basename . "_out.tsv";
+$results_filename = $basename . "_out.csv";
+//$results_filename = $basename . "_gvs_scrubbed.csv";
 
 # Full path and name of results file
 $results_file = $data_dir_tmp . $results_filename;
@@ -70,13 +74,25 @@ function file_to_array_assoc($filepath, $delim) {
 	return $array;
 }
 
+/////////////////////////////////////////////////////
+// Send the POST response, with either data or error 
+// message in body. Body MUST be json.
+/////////////////////////////////////////////////////
+
+function send_response($status, $body) {
+	header("Access-Control-Allow-Origin: *");
+	header('Content-type: application/json');
+	http_response_code($status); 
+	echo $body;
+}
+
 ////////////////////////////////////////
 // Receive & validate the POST request
 ////////////////////////////////////////
 
 // Start by assuming no errors
 // Any run time errors and this will be set to true
-$err_code=0;
+$err_code=200;
 $err_msg="";
 $err=false;
 
@@ -187,13 +203,22 @@ if ( $mode=="resolve" ) { 	// BEGIN mode_if
 	}
 	
 	# Set threshold parameter options, if provided
-	if ( isset($maxdist) ) $opt_maxdist = "-d $maxdist";
-	if ( isset($maxdistrel) ) $opt_maxdistrel = "-r $maxdistrel";
+// 	if ( isset($maxdist) ) $opt_maxdist = "-d $maxdist";
+// 	if ( isset($maxdistrel) ) $opt_maxdistrel = "-r $maxdistrel";
+	if ( isset($maxdist) ) $opt_maxdist = "-md $maxdist";
+	if ( isset($maxdistrel) ) $opt_maxdistrel = "-mdr $maxdistrel";
+
+	# Get parallel batch size, if set, otherwise use default
+	if ( isset($batches) ) {
+		$nbatches = $batches;
+	} else {
+		$nbatches = $NBATCH;
+	}
 
 	///////////////////////////////////////////
 	// Save data array to temp directory as 
 	// comma-delimited file, to be used as 
-	// input for CDS core app
+	// input for GVS core app
 	///////////////////////////////////////////
 
 	// Make temporary data directory & file in /tmp 
@@ -229,13 +254,13 @@ if ( $mode=="resolve" ) { 	// BEGIN mode_if
 
 	$data_dir_tmp_full = $data_dir_tmp . "/";
 	// Form the final command
-// 	$cmd = $BATCH_DIR . "controller.pl $opt_mode $opt_matches -in '$file_tmp'  -out '$results_file' -sources '$sources' -class $class -nbatch $NBATCH -d t ";
-	$cmd = $BATCH_DIR . "cds.sh -a $opt_maxdist $opt_maxdistrel -f '$file_tmp' -o '$results_file'";
+	//$cmd = $BATCH_DIR . "gvs.sh -a $opt_maxdist $opt_maxdistrel -f '$file_tmp' -o '$results_file'";	// Single batch mode
+	$cmd = $BATCH_DIR . "gvspar.pl -in '$file_tmp'  -out '$results_file' -nbatch $nbatches $opt_maxdistrel $opt_maxdist ";		// Parallel mode
 	
 	// Execute the TNRSBatch command
 	exec($cmd, $output, $status);
 	if ($status) {
-		$err_msg="ERROR: cds exit status: $status\r\n";
+		$err_msg="ERROR: gvs exit status: $status\r\n";
 		$err_code=500; goto err;
 	}
 
@@ -257,27 +282,24 @@ if ( $mode=="resolve" ) { 	// BEGIN mode_if
 		;
 		";
 	} else {
-		$err_msg="ERROR: Unknown opt mode '$mode'\r\n"; 
+		$err_msg="ERROR: Unknown value for opt parameter mode: '$mode'\r\n"; 
 		$err_code=400; goto err;
 	}
 	
 	// Run the query and save results as $results_array
 	include("qy_db.php"); 
+	if ( $err_code!=200 ) goto err;
 
 }	// END mode_if
 
+///////////////////////////////////
+// Send the results
+///////////////////////////////////
+
 $results_json = json_encode($results_array);
-
-///////////////////////////////////
-// Send the response
-///////////////////////////////////
-
-// Send the header
-header("Access-Control-Allow-Origin: *");
-header('Content-type: application/json');
-
-// Send data
-echo $results_json;
+// Status ($err_code) should be 200
+send_response($err_code, $results_json);
+exit;
 
 ///////////////////////////////////
 // Error: return http status code
@@ -285,7 +307,7 @@ echo $results_json;
 ///////////////////////////////////
 
 err:
-http_response_code($err_code);
-echo $err_msg;
+$err_json = json_encode($err_msg);
+send_response($err_code, $err_json);
 
 ?>

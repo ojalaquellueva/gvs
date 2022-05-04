@@ -5,10 +5,6 @@
     <body>
         <h1>GVS Development API</h1>
 		<p>The Geocoordinate Validation Service development API is online!</p>
-		<!--
-		<p>Server: vegbiendev</p>
-		<p>Location: /home/bien/cds/src/api</p>
-		-->
     </body>
 </html>
 

@@ -1,9 +1,9 @@
 #!/bin/bash
 
 #########################################################################
-# Purpose: Creates and populates CDS database 
+# Purpose: Creates and populates GVS database 
 #
-# Usage:	./cds_db.sh
+# Usage:	./gvs_db.sh
 #
 # Authors: Brad Boyle (bboyle@email.arizona.edu)
 # Date created: 11 Mar 2020
@@ -47,7 +47,7 @@ includes_dir=$DIR"/../includes"
 source "$includes_dir/startup_master.sh"
 
 # # Set process name and confirm operation
-# pname="Build centroid validation database $DB_CDS"
+# pname="Build centroid validation database $DB_GVS"
 # source "$includes_dir/confirm.sh"
 
 # Set local directories to same as main
@@ -82,7 +82,7 @@ if [ "$i" == "true" ]; then
 
 	Run process '$pname' using the following parameters: 
 
-	CDS DB name:		$DB_CDS
+	GVS DB name:		$DB_GVS
 	GADM source db:		${SCH_GEOM}.${DB_GEOM}
 	GADM table:		$TBL_GEOM
 	Data directory:		$data_dir
@@ -118,28 +118,28 @@ source "$includes_dir/start_process.sh"
 
 # Check if db already exists
 # Warn to drop manually. This is safer.
-if psql -lqt | cut -d \| -f 1 | grep -qw "$DB_CDS"; then
+if psql -lqt | cut -d \| -f 1 | grep -qw "$DB_GVS"; then
 	# Reset confirmation message
-	msg="Database '$DB_CDS' already exists! Please drop first."
+	msg="Database '$DB_GVS' already exists! Please drop first."
 	echo $msg; exit 1
 fi
 
-echoi $e -n "Creating database '$DB_CDS'..."
-sudo -Hiu postgres PGOPTIONS='--client-min-messages=warning' psql --set ON_ERROR_STOP=1 -q -c "CREATE DATABASE $DB_CDS" 
+echoi $e -n "Creating database '$DB_GVS'..."
+sudo -Hiu postgres PGOPTIONS='--client-min-messages=warning' psql --set ON_ERROR_STOP=1 -q -c "CREATE DATABASE $DB_GVS" 
 source "$includes_dir/check_status.sh"  
 
 echoi $e -n "Changing owner to 'bien'..."
-sudo -Hiu postgres PGOPTIONS='--client-min-messages=warning' psql --set ON_ERROR_STOP=1 -q -c "ALTER DATABASE $DB_CDS OWNER TO bien" 
+sudo -Hiu postgres PGOPTIONS='--client-min-messages=warning' psql --set ON_ERROR_STOP=1 -q -c "ALTER DATABASE $DB_GVS OWNER TO bien" 
 source "$includes_dir/check_status.sh"  
 
 echoi $e -n "Granting permissions..."
 sudo -Hiu postgres PGOPTIONS='--client-min-messages=warning' psql -q <<EOF
 \set ON_ERROR_STOP on
-REVOKE CONNECT ON DATABASE $DB_CDS FROM PUBLIC;
-GRANT CONNECT ON DATABASE $DB_CDS TO bien;
-GRANT CONNECT ON DATABASE $DB_CDS TO public_bien;
-GRANT ALL PRIVILEGES ON DATABASE $DB_CDS TO bien;
-\c $DB_CDS
+REVOKE CONNECT ON DATABASE $DB_GVS FROM PUBLIC;
+GRANT CONNECT ON DATABASE $DB_GVS TO bien;
+GRANT CONNECT ON DATABASE $DB_GVS TO public_bien;
+GRANT ALL PRIVILEGES ON DATABASE $DB_GVS TO bien;
+\c $DB_GVS
 GRANT USAGE ON SCHEMA public TO public_bien;
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO public_bien;
 EOF
@@ -148,7 +148,7 @@ echoi $i "done"
 echoi $e "Installing extensions:"
 
 echoi $e -n "- fuzzystrmatch..."
-sudo -Hiu postgres PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS -q << EOF
+sudo -Hiu postgres PGOPTIONS='--client-min-messages=warning' psql -d $DB_GVS -q << EOF
 \set ON_ERROR_STOP on
 DROP EXTENSION IF EXISTS fuzzystrmatch;
 CREATE EXTENSION fuzzystrmatch;
@@ -157,7 +157,7 @@ echoi $i "done"
 
 # For trigram fuzzy matching
 echoi $e -n "- pg_trgm..."
-sudo -Hiu postgres PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS -q << EOF
+sudo -Hiu postgres PGOPTIONS='--client-min-messages=warning' psql -d $DB_GVS -q << EOF
 \set ON_ERROR_STOP on
 DROP EXTENSION IF EXISTS pg_trgm;
 CREATE EXTENSION pg_trgm;
@@ -166,7 +166,7 @@ echoi $i "done"
 
 # For generating unaccented versions of text
 echoi $e -n "- unaccent..."
-sudo -Hiu postgres PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS -q << EOF
+sudo -Hiu postgres PGOPTIONS='--client-min-messages=warning' psql -d $DB_GVS -q << EOF
 \set ON_ERROR_STOP on
 DROP EXTENSION IF EXISTS unaccent;
 CREATE EXTENSION unaccent;
@@ -175,7 +175,7 @@ echoi $i "done"
 
 # POSTGIS
 echoi $e -n "- postgis..."
-sudo -Hiu postgres PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS -q << EOF
+sudo -Hiu postgres PGOPTIONS='--client-min-messages=warning' psql -d $DB_GVS -q << EOF
 \set ON_ERROR_STOP on
 DROP EXTENSION IF EXISTS postgis;
 CREATE EXTENSION postgis;
@@ -184,7 +184,7 @@ echoi $i "done"
 
 # Functions
 echoi $e -n "Installing custom functions..."
-PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS --set ON_ERROR_STOP=1 -q -f $DIR/sql/functions.sql
+PGOPTIONS='--client-min-messages=warning' psql -d $DB_GVS --set ON_ERROR_STOP=1 -q -f $DIR/sql/functions.sql
 source "$includes_dir/check_status.sh"  
 
 ##########################################################
@@ -196,7 +196,7 @@ echoi $e "Importing table \"$TBL_GEOM\" from DB \"$DB_GEOM\":"
 
 # Dump table from source databse
 echoi $e -n "- Exporting dumpfile..."
-dumpfile="/tmp/cds_world_geom.sql"
+dumpfile="/tmp/gvs_world_geom.sql"
 sudo -Hiu postgres pg_dump --no-owner -t "${SCH_GEOM}.${TBL_GEOM}" "$DB_GEOM" > $dumpfile
 source "$includes_dir/check_status.sh"	
 
@@ -212,7 +212,7 @@ fi
 
 # Import table from dumpfile to target db & schema
 echoi $e -n "- Importing table from dumpfile..."
-PGOPTIONS='--client-min-messages=warning' psql -q --set ON_ERROR_STOP=1 $DB_CDS < $dumpfile >/dev/null
+PGOPTIONS='--client-min-messages=warning' psql -q --set ON_ERROR_STOP=1 $DB_GVS < $dumpfile >/dev/null
 source "$includes_dir/check_status.sh"	
 
 echoi $e -n "- Removing dumpfile..."
@@ -224,7 +224,7 @@ source "$includes_dir/check_status.sh"
 ############################################
 
 echoi $e -n "Creating core tables..."
-PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS --set ON_ERROR_STOP=1 -q -f $DIR/sql/create_core_tables.sql
+PGOPTIONS='--client-min-messages=warning' psql -d $DB_GVS --set ON_ERROR_STOP=1 -q -f $DIR/sql/create_core_tables.sql
 source "$includes_dir/check_status.sh"  
 
 ############################################
@@ -234,7 +234,7 @@ source "$includes_dir/check_status.sh"
 echoi $e "Creating centroid tables:"
 
 echoi $e -n "- centroid_country..."
-PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS --set ON_ERROR_STOP=1 -q -f $DIR/sql/create_centroid_country.sql
+PGOPTIONS='--client-min-messages=warning' psql -d $DB_GVS --set ON_ERROR_STOP=1 -q -f $DIR/sql/create_centroid_country.sql
 source "$includes_dir/check_status.sh"  
 
 
@@ -245,7 +245,7 @@ COMMENT_BLOCK_1
 
 
 echoi $e -n "- centroid_country_multi..."
-PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS --set ON_ERROR_STOP=1 -q -f $DIR/sql/create_centroid_country_multi.sql
+PGOPTIONS='--client-min-messages=warning' psql -d $DB_GVS --set ON_ERROR_STOP=1 -q -f $DIR/sql/create_centroid_country_multi.sql
 source "$includes_dir/check_status.sh"  
 
 
@@ -256,11 +256,11 @@ source "$includes_dir/check_status.sh"
 
 
 echoi $e -n "- centroid_state_province..."
-PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS --set ON_ERROR_STOP=1 -q -f $DIR/sql/create_centroid_state_province.sql
+PGOPTIONS='--client-min-messages=warning' psql -d $DB_GVS --set ON_ERROR_STOP=1 -q -f $DIR/sql/create_centroid_state_province.sql
 source "$includes_dir/check_status.sh"  
 
 echoi $e -n "- centroid_county_parish..."
-PGOPTIONS='--client-min-messages=warning' psql -d $DB_CDS --set ON_ERROR_STOP=1 -q -f $DIR/sql/create_centroid_county_parish.sql
+PGOPTIONS='--client-min-messages=warning' psql -d $DB_GVS --set ON_ERROR_STOP=1 -q -f $DIR/sql/create_centroid_county_parish.sql
 source "$includes_dir/check_status.sh"  
 
 

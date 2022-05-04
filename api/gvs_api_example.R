@@ -1,21 +1,21 @@
 ###############################################
-# CDS API Example
+# GVS API Example
 ###############################################
 
 #################################
 # Parameters
 #################################
 
-# Base URL for CDS api
-url = "http://vegbiendev.nceas.ucsb.edu:8775/cds_api.php" 
+# Base URL for GVS api
+url = "http://vegbiendev.nceas.ucsb.edu:8775/gvs_api.php" 
 
 # Path and name of input file of taxon names 
 # Comma-delimited CSV file, first column an integer ID, second column the name
 # Test file from BIEN website:
-names_file <- "https://bien.nceas.ucsb.edu/bien/wp-content/uploads/2020/10/cds_testfile.csv"
+names_file <- "https://bien.nceas.ucsb.edu/bien/wp-content/uploads/2020/10/gvs_testfile.csv"
 
 # Large test file of 600 names
-#names_file <- "https://bien.nceas.ucsb.edu/bien/wp-content/uploads/2020/10/cds_testfile_big.csv"
+#names_file <- "https://bien.nceas.ucsb.edu/bien/wp-content/uploads/2020/10/gvs_testfile_big.csv"
 
 #################################
 # Import the raw data
@@ -120,7 +120,7 @@ results[ results$latlong_err=='', c('latitude', 'longitude',
 
 #################################
 # Example 2: Get metadata for current 
-# CDS version
+# GVS version
 #################################
 rm( list = Filter( exists, c("results", "results_json") ) )
 

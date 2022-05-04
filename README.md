@@ -28,13 +28,15 @@ Date created: 24 March 2020
 <a name="overview"></a>
 ## Overview
 
-This service processes and validates batches of geocoordinates using GADM (Global Admininstrative Divisions; https://gadm.org) database of world administrative divisions.  Information returned includes (1) estimates of precision based on the number of decimals places in the original coordinates, (2) flagging and reporting of errors, such as coordinates our of range, (3) flagging of points in the ocean, (4) names and GADM identifiers of the admin_0, admin_1 and admin_2 political divisions (e.g., country, state, county) in which a point is located, (5) the absolute and relative distance to the centroid of each political division (see full list of output fields below). The GVS also provides an assessment of the likelihood that the point is a centroid, and, if applicable, the type of centroid and political division (country, state or county) of the likeliest centroid.
+This Geocoordinate Validation Service (GVS) performs a series of quality checks on georeferenced points in the form pairs of decimal latitude and longitude values, or "geocoordinates". It also returns the country, state- and country-level political divisions in which the point is located, and the probability that the point represents a political division centroid (as opposed to being a directly measured point on the Earth's surface). Political divisions are determined using the GADM database of world administrative divisions (Global Admininstrative Divisions; https://gadm.org).  
+
+Information returned by the GVS includes (1) estimates of precision based on the number of decimals places in the original coordinates, (2) flagging and reporting of errors, such as coordinates our of range, (3) flagging of points in the ocean, (4) names and GADM identifiers of the admin_0, admin_1 and admin_2 political divisions (e.g., country, state, county) in which a point is located, (5) the absolute and relative distance to the centroid of each political division (see full list of output fields below). The GVS also provides an assessment of the likelihood that the point is a centroid, and, if applicable, the type of centroid and political division (country, state or county) of the likeliest centroid.
 
 This service may be used in combination with the BIEN Geographic Name Resolution Service (GNRS; `https://github.com/ojalaquellueva/gnrs.git`) to perform "political geovalidation" of georeferenced biodiversity observations. Political geovalidation checks if all observed political divisions (i.e., the country, state and county in which the coordinates are located) match the declared political divisions (the country, state and county named in the original observation record). Operationally, this validation is most reliably performed by matching the GADM administrative division identifiers returned by the GVS with the GADM identifiers returned by the GNRS.
 
-**Note**
+**GVS, CDS...what's the difference?**
 
-The GVS was previously called the CVS (Centroid Detection Service). It has been renamed to reflect is broader purpose. AS source code is still in the process of renaming, some scripts and documentation may still contain the abbreviation "cds".
+The GVS was previously developed under the name CVS (Centroid Detection Service) as an application for the detection of political division centroids. It has been renamed to reflect the wider range of features added more recently. 
 
 <a name="installation-and-configuration"></a>
 ## Installation and configuration
@@ -44,7 +46,7 @@ The GVS was previously called the CVS (Centroid Detection Service). It has been 
 ### Software
 
 Ubuntu 16.04 or higher  
-PostgreSQL/psql 12.2 or higher (PostGIS extension installed by this script)
+PostgreSQL/psql 10 or higher (PostGIS extension installed by this script)
 
 <a name="dependencies"></a>
 ### Dependencies
@@ -54,7 +56,7 @@ Requires access to the GNRS (`https://github.com/ojalaquellueva/gnrs.git`) eithe
 <a name="permissions"></a>
 ### Permissions
 
-This script must be run by a user with sudo and authorization to connect to postgres (as specified in `pg_hba` file). The admin-level and read-only Postgres users for the gadm database (specified in `params.sh`) should already exist and must be authorized to connect to postgres (as specified in pg_hba file).
+This script must be run by a user with authorization to connect to postgres (as specified in `pg_hba` file). The admin-level and read-only Postgres users for the gadm database (specified in `params.sh`) should already exist and must be authorized to connect to postgres (as specified in pg_hba file).
 
 <a name="setup"></a>
 ### Setup
@@ -178,7 +180,7 @@ latlong\_error | In ocean | Point in ocean |
 
 <a name="build-gvs-db"></a>
 ### Build the GVS Database
-See README in `cds_db/`.
+See README in `gvs_db/`.
 
 <a name="gvs-batch"></a>
 ### GVS batch application
@@ -187,7 +189,7 @@ See README in `cds_db/`.
 #### Syntax
 
 ```
-./cds.sh -f <input_filename_and_path> [other options]
+./gvs.sh -f <input_filename_and_path> [other options]
 ```
 
 #### Options
@@ -195,14 +197,14 @@ See README in `cds_db/`.
 Option | Meaning | Required? | Default value | 
 ------ | ------- | -------  | ---------- | 
 -f     | Input file and path | Yes | |
--o     | Output file and path | No | [input\_file\_name]\_cds\_results.csv | 
+-o     | Output file and path | No | [input\_file\_name]\_gvs\_results.csv | 
 -s     | Silent mode | No | Verbose/interactive mode by default |
 -m     | Send notification message at start and completion, or on fail | No (must be followed by valid email if included) | 
 
 #### Example:
 
 ```
-./cds.sh -f myfile.csv -m bboyle@email.arizona.edu
+./gvs.sh -f myfile.csv -m bboyle@email.arizona.edu
 ```
 
 <a name="gvs-parallel"></a>
@@ -213,7 +215,7 @@ Option | Meaning | Required? | Default value |
 #### Syntax
 
 ```
-./cdspar.pl -in <input_filename_and_path> -out <output_filename_and_path> -nbatch <batches> -opt <makeflow_options>
+./gvspar.pl -in <input_filename_and_path> -out <output_filename_and_path> -nbatch <batches> -opt <makeflow_options>
 ```
 
 #### Options
@@ -221,15 +223,15 @@ Option | Meaning | Required? | Default value |
 Option | Meaning | Required? | Default value | 
 ------ | ------- | -------  | ---------- | 
 -in     | Input file and path | Yes | |
--out     | Output file and path | No | [input\_file\_name]\_cds\_results.csv | 
+-out     | Output file and path | No | [input\_file\_name]\_gvs\_results.csv | 
 -nbatch     | Number of batches | Yes |  |
 -opt     | Makeflow options | No | 
 
 #### Example:
-* In most OS configurations you will need to run as root using sudo to enable access to temp folder `/tmp/gvs`
+* On some operating system configurations you may need to run using sudo to enable access to temp folder `/tmp/gvs`, especially if this directory doesn't exist (in which case, the application will attempt to create it). Test first without sudo.
 
 ```
-sudo ./cdspar.pl -in "data/cds_testfile.csv" -nbatch 3
+./gvspar.pl -in "data/gvs_testfile.csv" -nbatch 3
 ```
 
 <a name="api"></a>
@@ -241,9 +243,9 @@ See `https://github.com/ojalaquellueva/gvs/tree/master/api#readme`.
 
 #### Example API usage
 
-PHP: `https://github.com/ojalaquellueva/gvs/blob/master/api/cds_api_example.php`.
+PHP: `https://github.com/ojalaquellueva/gvs/blob/master/api/gvs_api_example.php`.
 
-R: `https://github.com/ojalaquellueva/gvs/blob/master/api/cds_api_example.R`.
+R: `https://github.com/ojalaquellueva/gvs/blob/master/api/gvs_api_example.R`.
 
 <a name="rgvs"></a>
 ### GVS R package

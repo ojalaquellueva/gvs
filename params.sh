@@ -53,7 +53,7 @@ source "${currdir}/../config/server_config.sh";
 db_config_path="${BASEDIR}/config"
 
 # Relative data directory name
-# CDS will look here inside app directory for user input
+# GVS will look here inside app directory for user input
 # and will write results here, unless $data_dir_local_abs
 # is set (next parameter)
 # Omit trailing slash
@@ -64,7 +64,7 @@ data_base_dir="../data"
 # Comment out to use $data_base_dir (relative, above)
 # Omit trailing slash
 data_dir_local_abs="${BASEDIR}/data"
-#data_dir_local_abs="/home/boyle/bien3/repos/cds/data/user_data"
+#data_dir_local_abs="/home/boyle/bien/gvs/data/user_data"
 
 # For backward-compatibility
 data_dir_local=$data_dir_local_abs
@@ -80,10 +80,10 @@ data_dir_local=$data_dir_local_abs
 # Default name of the raw data file to be imported. 
 # This name will be used if no file name supplied as command line
 # parameter. Must be located in the user_data directory
-submitted_filename="cds_submitted.csv" 
+submitted_filename="gvs_submitted.csv" 
 
 # Default name of results file
-results_filename="cds_results.csv"
+results_filename="gvs_results.csv"
 
 ##########################
 # Input subsample parameters
@@ -105,7 +105,7 @@ email="bboyle@email.arizona.edu"
 
 # Short name for this operation, for screen echo and 
 # notification emails. Number suffix matches script suffix
-pname="CDS"
+pname="GVS"
 pname_local=$pname
 
 # General process name prefix for email notifications
