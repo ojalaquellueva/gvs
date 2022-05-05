@@ -44,3 +44,60 @@ Calculating centroids:
 Determining consensus centroid...done (.07 sec)
 Saving threshold parameters...done (.06 sec)
 Dumping results to file '/home/boyle/bien/gvs/data/gvs_testfile_scrubbed.csv'...done
+
+------ Process started at Wed 04 May 2022 06:28:14 PM PDT ------
+
+Importing user data:
+- Creating temp table "user_data_raw_job_20220504_1828282139679_20020"...done (.08 sec)
+- Importing raw data to temp table...done (.06 sec)
+- Inserting raw data to table "user_data"...done (.07 sec)
+- Dropping temp table...done (.11 sec)
+Validating coordinates...done (.07 sec)
+Calculating coordinate uncertainty...done (.08 sec)
+Populating political divisions...done (2.90 sec)
+Calculating centroids:
+- country...done (.09 sec)
+- state...done (.09 sec)
+- county...done (.09 sec)
+- other subpolygons...done (2.28 sec)
+Determining consensus centroid...done (.07 sec)
+Saving threshold parameters...done (.06 sec)
+Dumping results to file '/home/boyle/bien/gvs/data/gvs_testfile_scrubbed.csv'...done
+
+------ Process started at Wed 04 May 2022 06:32:16 PM PDT ------
+
+Importing user data:
+- Creating temp table "user_data_raw_job_20220504_1832135562681_15940"...done (.08 sec)
+- Importing raw data to temp table...done (.06 sec)
+- Inserting raw data to table "user_data"...done (.07 sec)
+- Dropping temp table...done (.11 sec)
+Validating coordinates...done (.07 sec)
+Calculating coordinate uncertainty...done (.08 sec)
+Populating political divisions...done (2.67 sec)
+Calculating centroids:
+- country...done (.09 sec)
+- state...done (.09 sec)
+- county...done (.08 sec)
+- other subpolygons...done (2.27 sec)
+Determining consensus centroid...done (.07 sec)
+Saving threshold parameters...done (.07 sec)
+Dumping results to file '/home/boyle/bien/gvs/data/gvs_testfile_scrubbed.csv'...done
+
+------ Process started at Wed 04 May 2022 06:35:48 PM PDT ------
+
+Importing user data:
+- Creating temp table "user_data_raw_job_20220504_1835010208733_30753"...done (.07 sec)
+- Importing raw data to temp table...done (.06 sec)
+- Inserting raw data to table "user_data"...done (.07 sec)
+- Dropping temp table...done (.10 sec)
+Validating coordinates...done (.08 sec)
+Calculating coordinate uncertainty...done (.08 sec)
+Populating political divisions...done (2.37 sec)
+Calculating centroids:
+- country...done (.09 sec)
+- state...done (.09 sec)
+- county...done (.08 sec)
+- other subpolygons...done (2.28 sec)
+Determining consensus centroid...done (.07 sec)
+Saving threshold parameters...done (.06 sec)
+Dumping results to file '/home/boyle/bien/gvs/data/gvs_testfile_scrubbed.csv'...done
