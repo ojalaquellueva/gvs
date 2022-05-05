@@ -28,7 +28,7 @@ Date created: 24 March 2020
 <a name="overview"></a>
 ## Overview
 
-This Geocoordinate Validation Service (GVS) performs a series of quality checks on georeferenced points in the form pairs of decimal latitude and longitude values, or "geocoordinates". It also returns the country, state- and country-level political divisions in which the point is located, and the probability that the point represents a political division centroid (as opposed to being a directly measured point on the Earth's surface). Political divisions are determined using the GADM database of world administrative divisions (Global Admininstrative Divisions; https://gadm.org).  
+This Geocoordinate Validation Service (GVS) performs quality checks on georeferenced points in the form of pairs of decimal latitude and longitude values, or "geocoordinates". It also returns the country, state- and country-level political divisions in which the point is located, and the probability that the point represents a political division centroid (as opposed to being a directly measured point on the Earth's surface). Political divisions are determined using the GADM database of world administrative divisions (Global Admininstrative Divisions; https://gadm.org).  
 
 Information returned by the GVS includes (1) estimates of precision based on the number of decimals places in the original coordinates, (2) flagging and reporting of errors, such as coordinates our of range, (3) flagging of points in the ocean, (4) names and GADM identifiers of the admin_0, admin_1 and admin_2 political divisions (e.g., country, state, county) in which a point is located, (5) the absolute and relative distance to the centroid of each political division (see full list of output fields below). The GVS also provides an assessment of the likelihood that the point is a centroid, and, if applicable, the type of centroid and political division (country, state or county) of the likeliest centroid.
 
@@ -40,7 +40,6 @@ The GVS was previously developed under the name CVS (Centroid Detection Service)
 
 <a name="installation-and-configuration"></a>
 ## Installation and configuration
-* Recommend the following setup:
 
 <a name="software"></a>
 ### Software
@@ -59,28 +58,31 @@ Requires access to the GNRS (`https://github.com/ojalaquellueva/gnrs.git`) eithe
 This script must be run by a user with authorization to connect to postgres (as specified in `pg_hba` file). The admin-level and read-only Postgres users for the gadm database (specified in `params.sh`) should already exist and must be authorized to connect to postgres (as specified in pg_hba file).
 
 <a name="setup"></a>
-### Setup
-* Recommend the following setup:
+### Recommended setup
 
 ```
-# Create application base directory (call it whatever you want)
+# Create application base directory
 mkdir -p gvs
 cd gvs
 
 # Create application code directory
 mkdir src
 
-# Install application code
+# Install application code from repository
 cd src
 git clone https://github.com/ojalaquellueva/gvs
 
 # Move data and sensitive parameters directories outside of code directory
-# Be sure to change paths to these directories (in params.sh) accordingly
 mv data ../
 mv config ../
 ```
 
-Note: The temporary application data directory `/tmp/gvs` is now installed on the fly by the application. You no longer need to install it manually.
+### Installation notes
+
+* After moving the config directory:
+   * Rename all config files by removing "example" from file names
+   * Set all passwords, paths and other parameter values in the config files
+* The temporary application data directory `/tmp/gvs` is now installed on the fly by the application. You no longer need to install it manually.
 
 <a name="input"></a>
 ## Input data
