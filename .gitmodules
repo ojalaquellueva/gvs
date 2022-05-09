@@ -3,4 +3,5 @@
 	url = https://github.com/ojalaquellueva/includes.git
 [submodule "api/php_utilities"]
 	path = api/php_utilities
-	url = git@github.com:ojalaquellueva/php_utilities.git
+#	url = git@github.com:ojalaquellueva/php_utilities.git
+	url = https://github.com/ojalaquellueva/php_utilities.git
