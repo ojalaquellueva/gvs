@@ -44,6 +44,4 @@ if (!$dbconn) {
 	pg_close($dbconn); 
 }
 
-*/
-
 ?>
