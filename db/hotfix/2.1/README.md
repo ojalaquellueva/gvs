@@ -1,6 +1,6 @@
 # Update for DB version 2.1
 
-***Not yet added to DB pipeline!!!***
+***Note: added to DB pipeline but not yet tested***
 
 ## Main changes
 * Add table source & populate with GADM attribution & citation

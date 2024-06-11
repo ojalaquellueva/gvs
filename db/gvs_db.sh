@@ -268,8 +268,37 @@ source "$includes_dir/check_status.sh"
 
 COMMENT_BLOCK_2
 
+###########################################
+# Populate metadata tables
+############################################
 
+echoi $e -n "Creating metadata tables..."
+PGOPTIONS='--client-min-messages=warning' psql -d $DB_GVS --set ON_ERROR_STOP=1 -q -f $DIR/sql/create_metadata_tables.sql
+source "$includes_dir/check_status.sh"
 
+echoi $e "Loading metadata tables:"
+
+echoi $e -n "- meta..."
+PGOPTIONS='--client-min-messages=warning' psql -d $DB_GVS --set ON_ERROR_STOP=1 -q -v VERSION="$VERSION" -v DB_VERSION="$DB_VERSION" -v VERSION_COMMENTS="$VERSION_COMMENTS" -f $DIR/sql/load_meta.sql
+source "$includes_dir/check_status.sh"
+
+echoi $e -n "- source..."
+PGOPTIONS='--client-min-messages=warning' psql -d $DB_GVS --set ON_ERROR_STOP=1 -q -v VERSION="$VERSION" -v DB_VERSION="$DB_VERSION" -f $DIR/sql/load_source.sql
+source "$includes_dir/check_status.sh"
+
+echoi $e -n "- collaborator..."
+sudo -Hiu postgres PGOPTIONS='--client-min-messages=warning' psql $DB_GVS --set ON_ERROR_STOP=1 -q <<EOT
+copy collaborator(collaborator_name, collaborator_name_full, collaborator_url, description, logo_path) from '${DATA_DIR}/${CSV_COLLABORATORS}' CSV HEADER;
+EOT
+source "$includes_dir/check_status.sh"
+
+############################################
+# Create GNRS output data dictionary
+############################################
+
+echoi $e -n "Creating output data dictionary..."
+PGOPTIONS='--client-min-messages=warning' psql -d $DB_GVS --set ON_ERROR_STOP=1 -q -f $DIR/sql/dd_output.sql
+source "$includes_dir/check_status.sh"
 
 ############################################
 # Alter ownership and permissions

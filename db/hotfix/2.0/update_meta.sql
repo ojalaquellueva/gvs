@@ -34,7 +34,7 @@ logo_path TEXT DEFAULT NULL
 
 -- Copy over original metadata
 INSERT INTO meta (
-db_version, 
+db_version, 	
 code_version, 
 db_build_date
 )
