@@ -63,6 +63,6 @@ DROP INDEX IF EXISTS dd_output_mode_idx;
 CREATE INDEX dd_output_mode_idx ON dd_output (mode);
 
 
-
+alter table dd_output owner to bien;
 
 

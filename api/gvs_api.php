@@ -288,10 +288,9 @@ if ( $mode=="resolve" ) { 	// BEGIN mode_if
 		WHERE id=(SELECT MAX(id) FROM meta)
 		;
 		";
-/* Activate the following sections when DB ready
 	} elseif ( $mode=="sources" ) { // CONTINUE mode_if 
 		$sql="
-		SELECT source_id, source_name, source_name_full, source_url,
+		SELECT id, source_name, source_name_full, source_url,
 		description, data_url, logo_path,
 		source_version as version, source_release_date, 
 		date_accessed
@@ -300,14 +299,9 @@ if ( $mode=="resolve" ) { 	// BEGIN mode_if
 		";
 	} elseif ( $mode=="citations" ) { // CONTINUE mode_if 
 		$sql="
-		SELECT 'gnrs.app' AS source, citation
+		SELECT 'gvs.app' AS source, citation
 		FROM meta
 		WHERE id=(SELECT MAX(id) FROM meta)
-		-- Uncomment when GVS publication available and added to source
-		-- UNION ALL
-		-- SELECT 'gvs.pub' AS source, publication AS citation
-		-- FROM meta
-		-- WHERE id=(SELECT MAX(id) FROM meta)
 		UNION ALL
 		SELECT source_name AS source, citation
 		FROM source
@@ -324,12 +318,10 @@ if ( $mode=="resolve" ) { 	// BEGIN mode_if
 	} else if ( $mode=="dd" ) { 
 		// Retrieve output data dictionary
 		$sql="
-		SELECT col_name, ordinal_position, data_type, description
-		FROM dd_output
-		ORDER BY ordinal_position
-		;
+		SELECT mode, col_name, ordinal_position, data_type, description 
+		FROM dd_output 
+		ORDER BY ordinal_position;
 		";
-*/
 	} else {
 		$err_msg="ERROR: Unknown value for parameter mode: '$mode'\r\n"; 
 		$err_code=400; goto err;

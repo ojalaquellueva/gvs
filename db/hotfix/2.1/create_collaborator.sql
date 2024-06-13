@@ -19,3 +19,5 @@ VALUES
 ('University of Arizona','The University of Arizona','https://www.arizona.edu/',NULL,'images/UA.png'),
 ('NSF','The National Science Foundation','https://www.nsf.gov/',NULL,'images/nsf.png')
 ;
+
+alter table collaborator owner to bien;

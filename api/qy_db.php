@@ -31,6 +31,8 @@ if (!$dbconn) {
 } elseif (!$qy_results = pg_query($dbconn, $sql)) {
 	pg_close($dbconn); 
 	$err_msg="ERROR: Query failed (mode '$mode')\r\n";
+// 	$err_msg=$err_msg."DB: $DB \r\n";
+// 	$err_msg=$err_msg."SQL: $sql \r\n";
 	$err_code=400;	
 } else {
 	// Create associative array of the query results

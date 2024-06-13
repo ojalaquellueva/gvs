@@ -19,9 +19,8 @@ $NBATCH=20;
 // API user options
 //////////////////////////////////////////////////
 
-# Options "resolve" & "parse" go to TNRSbatch, but other options
-# query database directly
-$MODES = array("resolve","meta");
+# Possible values of $mode
+$MODES = array("resolve","meta","citations","collaborators","sources","dd");
 
 
 //////////////////////////////////////////////////
