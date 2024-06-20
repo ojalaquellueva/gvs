@@ -24,7 +24,12 @@ centroid_dist_km=closest_centroid.dist,
 centroid_dist_relative=closest_centroid.dist_relative,
 centroid_type=closest_centroid.cent_type,
 centroid_dist_max_km=closest_centroid.dist_max,
-centroid_poldiv=closest_centroid.poldiv
+centroid_poldiv=closest_centroid.poldiv,
+latlong_err=
+CASE
+WHEN latlong_err IS NULL OR TRIM(latlong_err)='' THEN 'Possible centroid'
+ELSE TRIM(latlong_err) || ', Possible centroid'
+END
 FROM
 (
 	SELECT DISTINCT ON (id) id, dist, dist_relative, dist_max, cent_type, poldiv

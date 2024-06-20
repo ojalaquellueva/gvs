@@ -20,7 +20,11 @@ AND job=:'job'
 
 -- Add error message if country is null
 UPDATE user_data
-SET latlong_err='In ocean'
+SET latlong_err=
+CASE
+WHEN latlong_err IS NULL OR TRIM(latlong_err)='' THEN 'In ocean'
+ELSE TRIM(latlong_err) || ', In ocean'
+END
 WHERE geom IS NOT NULL AND country IS NULL
 AND job=:'job'
 ;
