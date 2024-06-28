@@ -136,7 +136,7 @@ Raw input is a plain text file of decimal coordinates (latitude first, then long
 
 <a name="output"></a>
 ## Output & definitions
-
+ 
 Below is a list of fields returned by the API and their definitions. GADM: Global administrative Divisions )https://gadm.org/).
 
 | Field  | Definition | Units (if applicable)
@@ -175,8 +175,21 @@ Below is a list of fields returned by the API and their definitions. GADM: Globa
 | centroid\_poldiv | Political division type of most likely political division centroid |  
 | max_dist | Threshold parameter MAX\_DIST. Maximum distance in km from actual centroid to quality as likely centroid | km
 | max\_dist_rel  | Threshold parameter MAX\_DIST_REL. Relative maximum distance to quality as centroid (distance to centroid divided by distance from centroid to farthest possible point in polygon) | 
-| latlong\_err | Type of error of invalid coordinates |  
+| latlong\_err | Error(s) detected for invalid coordinates |  
 | coordinate\_decimal\_places | Minimum decimal places of the verbatim lat, long values |  
 | coordinate\_inherent\_uncertainty\_m | Inherent uncertainty of the coordinates, due to the number of decimal places used |  m
 
-d
+<a name="error_definitions"></a>
+## Error definitions
+* Below are the meanings of types of error detected by the GVS and returned in field "latlong_err"
+* >1 error may be returned for the same set of coordinates
+
+| Message  | Definition 
+| ------ | ---- 
+| Coordinates non-numeric | Submitted values contain text and are therefore not decimal coordinates
+| Coordinate values out of bounds | Submitted values are numeric but one or both are outside the range [-90:90] required for latitude and [-180:180] required for longitude.
+| Possible centroid | Point may be a political division centroid rather than an exact location of observation, as indicated by one or more centroid tests exceeding either or both threshold values max_dist and max\_dist_rel. See consensus centroid fields for details (centroid\_dist\_km, centroid\_dist\_relative, centroid\_type, centroid\_dist\_max\_km, centroid\_poldiv).
+| In ocean | Point is in the ocean. This may or may not indicate an error, depending on the t
+
+
+ 

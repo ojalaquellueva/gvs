@@ -1,5 +1,6 @@
 -- -----------------------------------------------------------------
--- Create data dictionary of GNRS output -----------------------------------------------------------------
+-- Create data dictionary of GVS output field definitions
+-----------------------------------------------------------------
 
 DROP TABLE IF EXISTS dd_output;
 CREATE TABLE dd_output (

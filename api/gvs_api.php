@@ -322,6 +322,13 @@ if ( $mode=="resolve" ) { 	// BEGIN mode_if
 		FROM dd_output 
 		ORDER BY ordinal_position;
 		";
+	} else if ( $mode=="dd_vals" ) { 
+		// Retrieve data dictionary for constrained vocabulary 
+		$sql="
+		SELECT mode, col_name, value, description, ordinal_position 
+		FROM dd_output_values 
+		ORDER BY ordinal_position;
+		";
 	} else {
 		$err_msg="ERROR: Unknown value for parameter mode: '$mode'\r\n"; 
 		$err_code=400; goto err;

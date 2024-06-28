@@ -20,7 +20,7 @@ $NBATCH=20;
 //////////////////////////////////////////////////
 
 # Possible values of $mode
-$MODES = array("resolve","meta","citations","collaborators","sources","dd");
+$MODES = array("resolve","meta","citations","collaborators","sources","dd","dd_vals");
 
 
 //////////////////////////////////////////////////
