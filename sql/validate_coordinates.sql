@@ -44,6 +44,13 @@ AND latlong_err IS NULL
 AND job=:'job'
 ;
 
+-- Delete invalid coordinates from resolved lat/long columns
+UPDATE user_data
+SET latitude=NULL, longitude=NULL
+WHERE latlong_err='Coordinate values out of bounds'
+AND job=:'job'
+;
+
 -- Convert valid coordinates to geometry
 UPDATE user_data
 SET geom=ST_SetSRID(ST_MakePoint(longitude, latitude), 4326)
