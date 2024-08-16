@@ -1,0 +1,15 @@
+
+------ Process started at Tue 02 Jul 2024 07:16:02 AM PDT ------
+
+Setting ownership and permissions:
+- Setting permissions for admin user 'bien':
+-- Changing DB owner to 'bien'done (.56 sec)
+-- Granting permissions to 'bien'...done (.12 sec)
+-- Transferring ownership of non-postgis relations to user 'bien':
+--- Tables...done (.10 sec)
+--- Sequences...done (.09 sec)
+--- Views...done (.10 sec)
+- Granting read access to read-only user "bien_read"...done (.12 sec)
+
+------ Process 'Set permissions for database gvs_2_1_1' completed in 1.17 seconds ------
+
