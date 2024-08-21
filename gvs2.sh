@@ -1,7 +1,9 @@
 #!/bin/bash
 
 #########################################################################
-# Centroid Detection Service (gvs) core application
+# Centroid Detection Service (gvs) core application (parallel version)
+#
+# ***************** UNDER DEVELOPMENT! ********************
 #  
 # Purpose: Flags coordinates that are potential political division centroids 
 #
@@ -12,6 +14,13 @@
 #		standardized using GNRS
 #	2. Database & service gnrs (used to standardize table gadm)
 #	3. Database geonames (used to build database gnrs)
+#
+# Note: parallel version processes each batch in a separate, uniquely-named
+#	user-specific table named ("user_data_[UNIQUESUFFIX]") instead of 
+#	storing all batches in the same table ("user_data") and identify each
+#	batch with a unique job number ("job_id). The method used by this script
+# 	prevents table locks on table "user_data" during update operations, thus 
+# 	allowing postgres to process the batches fully in parallel.
 #
 # Authors: Brad Boyle (bboyle@email.arizona.edu)
 #########################################################################
@@ -253,13 +262,22 @@ fi
 # Main
 #########################################################################
 
-# Generate unique job ID
-# Date in nanoseconds plus random integer for good measure
-job="job_$(date +%Y%m%d_%H%M%N)_${RANDOM}"	
+# Generate unique suffix by concatenating date in nanoseconds
+# plus random integer for good measure
+uniqid="$(date +%Y%m%d_%H%M%N)_${RANDOM}"	
+
+# For testing only: all temp user data table have same name 
+# so I don't have to delete a ton of tables
+#uniqid="temp"
+
+# Create unique names for user data tables and job_id
+tbl_user_data="user_data_${uniqid}"
+tbl_user_data_raw="${tbl_user_data}_raw"
+job="job_${uniqid}"	
 
 # # Uncomment for testing
 # echo "Parameters:"
-# echo "This script: gvs.sh"
+# echo "This script: gvs2.sh"
 # echo "tbl_user_data=${tbl_user_data}"
 # echo "tbl_user_data_raw=${tbl_user_data_raw}"
 # echo "job=${job}"
@@ -277,27 +295,29 @@ job="job_$(date +%Y%m%d_%H%M%N)_${RANDOM}"
 # Import the input file
 echoi $e "Importing user data:"
 
-# Compose name of temporary, job-specific raw data table
-raw_data_tbl_temp="user_data_raw_${job}"
-
 # Create job-specific temp table to hold raw data
-echoi $e -n "- Creating temp table \"$raw_data_tbl_temp\"..."
-cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user -d $DB_GVS --set ON_ERROR_STOP=1 -q -v job=$job -v raw_data_tbl_temp="${raw_data_tbl_temp}" -f $DIR_LOCAL/sql/create_raw_data_temp.sql"
+echoi $e -n "- Creating user data tables..."
+cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user -d $DB_GVS --set ON_ERROR_STOP=1 -q -v tbl_user_data=${tbl_user_data} -v tbl_user_data_raw=${tbl_user_data_raw} -f $DIR_LOCAL/sql/create_user_data_tables.sql"
+# echo "\$cmd: "
+# echo $cmd
 eval $cmd
 source "$DIR/includes/check_status.sh"
 
 # Import the file to tempoprary raw data table
 # $nullas statement set as optional command line parameter
-echoi $e -n "- Importing raw data to temp table..."
+echoi $e -n "- Importing raw data to \"$tbl_user_data_raw\"..."
 
 # ///////////////// #
 # NOTE: need option to import user_id
 # ///////////////// #
-metacmd="\COPY $raw_data_tbl_temp(latitude,longitude) FROM '${infile}' DELIMITER ',' CSV $nullas "
+metacmd="\COPY $tbl_user_data_raw(latitude,longitude) FROM '${infile}' DELIMITER ',' CSV $nullas "
 cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user -d $DB_GVS --set ON_ERROR_STOP=1 -q -c \"$metacmd\""
 eval $cmd
 source "$DIR/includes/check_status.sh"
 
+: <<'COMMENT_BLOCK_clear_user_data'
+# Remove completely after testing
+# Not applicable when multiple process-specific user data tables used
 if [ "$CLEAR_USER_DATA" == "true" ]; then
 	# Admin-level option to completely clear table user_data, for testing
 	# Set in params file
@@ -307,16 +327,17 @@ if [ "$CLEAR_USER_DATA" == "true" ]; then
 	eval $cmd
 	source "$DIR/includes/check_status.sh"
 fi
+COMMENT_BLOCK_clear_user_data
 
 # Insert the raw data to user data table
-echoi $e -n "- Inserting raw data to table \"user_data\"..."
-cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user  -d $DB_GVS --set ON_ERROR_STOP=1 -q -v job=$job -v raw_data_tbl_temp="$raw_data_tbl_temp" -f $DIR_LOCAL/sql/load_user_data.sql"
+echoi $e -n "- Copying raw data to table \"$tbl_user_data\"..."
+cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user  -d $DB_GVS --set ON_ERROR_STOP=1 -q -v job=$job -v tbl_user_data=${tbl_user_data} -v tbl_user_data_raw=${tbl_user_data_raw} -f $DIR_LOCAL/sql/load_user_data2.sql"
 eval $cmd
 source "$DIR/includes/check_status.sh"
 
 # Drop the temp table
 echoi $e -n "- Dropping temp table..."
-sql="DROP TABLE $raw_data_tbl_temp"
+sql="DROP TABLE $tbl_user_data_raw"
 cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user -d $DB_GVS --set ON_ERROR_STOP=1 -q -c \"$sql\""
 eval $cmd
 source "$DIR/includes/check_status.sh"
@@ -326,12 +347,12 @@ source "$DIR/includes/check_status.sh"
 ############################################
 
 echoi $e -n "Validating coordinates..."
-cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user  -d $DB_GVS --set ON_ERROR_STOP=1 -q -v job=$job -f $DIR_LOCAL/sql/validate_coordinates.sql"
+cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user  -d $DB_GVS --set ON_ERROR_STOP=1 -q -v tbl_user_data='"$tbl_user_data"' -f $DIR_LOCAL/sql/validate_coordinates.sql"
 eval $cmd
 source "$DIR/includes/check_status.sh"
 
 echoi $e -n "Calculating coordinate uncertainty..."
-cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user  -d $DB_GVS --set ON_ERROR_STOP=1 -q -v job=$job -f $DIR_LOCAL/sql/coordinate_uncertainty.sql"
+cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user  -d $DB_GVS --set ON_ERROR_STOP=1 -q -v tbl_user_data=${tbl_user_data} -f $DIR_LOCAL/sql/coordinate_uncertainty2.sql"
 eval $cmd
 source "$DIR/includes/check_status.sh"
 
@@ -340,7 +361,7 @@ source "$DIR/includes/check_status.sh"
 ############################################
 
 echoi $e -n "Populating political divisions..."
-cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user  -d $DB_GVS --set ON_ERROR_STOP=1 -q -v job=$job -f $DIR_LOCAL/sql/populate_poldivs.sql"
+cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user  -d $DB_GVS --set ON_ERROR_STOP=1 -q -v tbl_user_data=${tbl_user_data} -f $DIR_LOCAL/sql/populate_poldivs2.sql"
 eval $cmd
 source "$DIR/includes/check_status.sh"
 
@@ -351,27 +372,27 @@ source "$DIR/includes/check_status.sh"
 echoi $e "Calculating centroids:"
 
 echoi $e -n "- country..."
-cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user  -d $DB_GVS --set ON_ERROR_STOP=1 -q -v job=$job -v MAX_DIST=$MAX_DIST -v MAX_DIST_REL=$MAX_DIST_REL -f $DIR_LOCAL/sql/check_centroid_country.sql"
+cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user  -d $DB_GVS --set ON_ERROR_STOP=1 -q -v tbl_user_data=${tbl_user_data} -v MAX_DIST=$MAX_DIST -v MAX_DIST_REL=$MAX_DIST_REL -f $DIR_LOCAL/sql/check_centroid_country2.sql"
 eval $cmd
 source "$DIR/includes/check_status.sh"
 
 echoi $e -n "- state..."
-cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user  -d $DB_GVS --set ON_ERROR_STOP=1 -q -v job=$job -v MAX_DIST=$MAX_DIST -v MAX_DIST_REL=$MAX_DIST_REL -f $DIR_LOCAL/sql/check_centroid_state.sql"
+cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user  -d $DB_GVS --set ON_ERROR_STOP=1 -q -v tbl_user_data=${tbl_user_data} -v MAX_DIST=$MAX_DIST -v MAX_DIST_REL=$MAX_DIST_REL -f $DIR_LOCAL/sql/check_centroid_state2.sql"
 eval $cmd
 source "$DIR/includes/check_status.sh"
 
 echoi $e -n "- county..."
-cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user  -d $DB_GVS --set ON_ERROR_STOP=1 -q -v job=$job -v MAX_DIST=$MAX_DIST -v MAX_DIST_REL=$MAX_DIST_REL -f $DIR_LOCAL/sql/check_centroid_county.sql"
+cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user  -d $DB_GVS --set ON_ERROR_STOP=1 -q -v tbl_user_data=${tbl_user_data} -v MAX_DIST=$MAX_DIST -v MAX_DIST_REL=$MAX_DIST_REL -f $DIR_LOCAL/sql/check_centroid_county2.sql"
 eval $cmd
 source "$DIR/includes/check_status.sh"
 
 echoi $e -n "- other subpolygons..."
-cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user  -d $DB_GVS --set ON_ERROR_STOP=1 -q -v job=$job -v MAX_DIST=$MAX_DIST -v MAX_DIST_REL=$MAX_DIST_REL -f $DIR_LOCAL/sql/check_centroid_subpoly.sql"
+cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user  -d $DB_GVS --set ON_ERROR_STOP=1 -q -v tbl_user_data=${tbl_user_data} -v MAX_DIST=$MAX_DIST -v MAX_DIST_REL=$MAX_DIST_REL -f $DIR_LOCAL/sql/check_centroid_subpoly2.sql"
 eval $cmd
 source "$DIR/includes/check_status.sh"
 
 echoi $e -n "Determining consensus centroid..."
-cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user  -d $DB_GVS --set ON_ERROR_STOP=1 -q -v job=$job -f $DIR_LOCAL/sql/consensus_centroid.sql"
+cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user  -d $DB_GVS --set ON_ERROR_STOP=1 -q -v tbl_user_data=${tbl_user_data} -f $DIR_LOCAL/sql/consensus_centroid2.sql"
 eval $cmd
 source "$DIR/includes/check_status.sh"
 
@@ -380,7 +401,7 @@ source "$DIR/includes/check_status.sh"
 ############################################
 
 echoi $e -n "Saving threshold parameters..."
-cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user  -d $DB_GVS --set ON_ERROR_STOP=1 -q -v job=$job -v MAX_DIST=$MAX_DIST -v MAX_DIST_REL=$MAX_DIST_REL -f $DIR_LOCAL/sql/save_params.sql"
+cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user  -d $DB_GVS --set ON_ERROR_STOP=1 -q -v tbl_user_data=${tbl_user_data} -v MAX_DIST=$MAX_DIST -v MAX_DIST_REL=$MAX_DIST_REL -f $DIR_LOCAL/sql/save_params2.sql"
 eval $cmd
 source "$DIR/includes/check_status.sh"
 
@@ -389,10 +410,20 @@ source "$DIR/includes/check_status.sh"
 ############################################
 
 echoi $e -n "Dumping results to file '$outfile'..."
-metacmd="\COPY ( SELECT id, latitude_verbatim, longitude_verbatim, latitude, longitude, user_id, gid_0, country, gid_1, state, gid_2, county, country_cent_dist, country_cent_dist_relative, country_cent_type, country_cent_dist_max, is_country_centroid, state_cent_dist, state_cent_dist_relative, state_cent_type, state_cent_dist_max, is_state_centroid, county_cent_dist, county_cent_dist_relative, county_cent_type, county_cent_dist_max, is_county_centroid, subpoly_cent_dist, subpoly_cent_dist_relative, subpoly_cent_type, subpoly_cent_dist_max, is_subpoly_centroid, centroid_dist_km, centroid_dist_relative, centroid_type, centroid_dist_max_km, centroid_poldiv, max_dist, max_dist_rel, latlong_err, coordinate_decimal_places, coordinate_inherent_uncertainty_m FROM user_data  WHERE job='"$job"') TO '${outfile}' CSV HEADER"
+metacmd="\COPY ( SELECT id, latitude_verbatim, longitude_verbatim, latitude, longitude, user_id, gid_0, country, gid_1, state, gid_2, county, country_cent_dist, country_cent_dist_relative, country_cent_type, country_cent_dist_max, is_country_centroid, state_cent_dist, state_cent_dist_relative, state_cent_type, state_cent_dist_max, is_state_centroid, county_cent_dist, county_cent_dist_relative, county_cent_type, county_cent_dist_max, is_county_centroid, subpoly_cent_dist, subpoly_cent_dist_relative, subpoly_cent_type, subpoly_cent_dist_max, is_subpoly_centroid, centroid_dist_km, centroid_dist_relative, centroid_type, centroid_dist_max_km, centroid_poldiv, max_dist, max_dist_rel, latlong_err, coordinate_decimal_places, coordinate_inherent_uncertainty_m FROM ${tbl_user_data} ) TO '${outfile}' CSV HEADER"
 cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user -d $DB_GVS --set ON_ERROR_STOP=1 -q -c \"$metacmd\""
 eval $cmd
 echoi $e "done"
+
+
+# Drop the job-specific user data table if requested
+if [ "$DROP_USER_DATA" == "true" ]; then
+	echoi $e -n "Dropping temporary user data table..."
+	sql="DROP TABLE $tbl_user_data"
+	cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user -d $DB_GVS --set ON_ERROR_STOP=1 -q -c \"$sql\""
+	eval $cmd
+	source "$DIR/includes/check_status.sh"
+fi
 
 ######################################################
 # Report total elapsed time and exit if running solo

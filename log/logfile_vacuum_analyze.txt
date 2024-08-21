@@ -1,0 +1,6 @@
+Executing module 'vacuum_analyze'
+ 
+Running vacuum analyze on schema public in database gvs_dev...done (217.38 sec)
+
+------ Process 'GVS' completed in 217.39 seconds ------
+

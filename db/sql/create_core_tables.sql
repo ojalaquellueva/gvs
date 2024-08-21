@@ -101,17 +101,22 @@ cent_main_pos_dist_max numeric DEFAULT NULL,
 cent_main_bb_dist_max numeric DEFAULT NULL
 );
 
-DROP TABLE IF EXISTS user_data_raw;
-CREATE TABLE user_data_raw (
+-- Empty template, actual raw user data tables are copied
+-- from this one and assigned unique names with job-specific
+-- suffix at end
+DROP TABLE IF EXISTS user_data_raw_template;
+CREATE TABLE user_data_raw_template (
 job text DEFAULT NULL,
 latitude text DEFAULT NULL,
 longitude text DEFAULT NULL,
 user_id text DEFAULT NULL
 );
 
--- Remove testing columns when done
-DROP TABLE IF EXISTS user_data;
-CREATE TABLE user_data (
+-- Empty template, actual user data tables are copied
+-- from this one and assigned unique names with job-specific
+-- suffix at end
+DROP TABLE IF EXISTS user_data_template;
+CREATE TABLE user_data_template (
 id BIGSERIAL NOT NULL PRIMARY KEY,
 job text DEFAULT NULL,
 date_created TIMESTAMP WITH TIME ZONE,
@@ -159,23 +164,23 @@ coordinate_inherent_uncertainty_m numeric DEFAULT NULL,
 geog GEOGRAPHY(Point)
 ) 
 ;
+
 -- Add the wgs84 point geometry column, including constraints
 -- See: https://postgis.net/docs/AddGeometryColumn.html
 -- Also: https://gis.stackexchange.com/questions/8699/creating-spatial-tables-with-postgis
-SELECT AddGeometryColumn ('public','user_data','geom',4326,'POINT',2, false);
+SELECT AddGeometryColumn ('public','user_data_template','geom',4326,'POINT',2, false);
 
 --
 -- Add indexes
 --
 
-
 -- Non-spatial indexes
-CREATE INDEX user_data_job_idx ON user_data USING btree (job);
-CREATE INDEX user_data_gid_0_idx ON user_data USING btree (gid_0);
-CREATE INDEX user_data_gid_1_idx ON user_data USING btree (gid_1);
-CREATE INDEX user_data_gid_2_idx ON user_data USING btree (gid_2);
-CREATE INDEX user_data_date_created_idx ON user_data USING btree (date_created);
+CREATE INDEX user_data_job_idx ON user_data_template USING btree (job);
+CREATE INDEX user_data_gid_0_idx ON user_data_template USING btree (gid_0);
+CREATE INDEX user_data_gid_1_idx ON user_data_template USING btree (gid_1);
+CREATE INDEX user_data_gid_2_idx ON user_data_template USING btree (gid_2);
+CREATE INDEX user_data_date_created_idx ON user_data_template USING btree (date_created);
 
 -- Spatial index
-CREATE INDEX user_data_geom_idx ON user_data USING GIST (geom);
-CREATE INDEX user_data_geog_idx ON user_data USING GIST (geog);
+CREATE INDEX user_data_geom_idx ON user_data_template USING GIST (geom);
+CREATE INDEX user_data_geog_idx ON user_data_template USING GIST (geog);
