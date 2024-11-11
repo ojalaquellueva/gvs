@@ -26,11 +26,11 @@ Author: Brad Boyle (bboyle@email.arizona.edu)
 <a name="overview"></a>
 ## Overview
 
-The Geocoordinate Validation Service (GVS) performs quality checks on decimal geocoordinates (georeferenced points represented as pairs of decimal latitude and longitude values). In addition to detecting common georeferencing errors, the GVS calculates the probability that a given point represents a political division centroid, as opposed to a directly measured point on the Earth's surface. The GVS also returns the country, state- and country-level political divisions in which the point is located. Political divisions are determined with reference to the GADM database of world administrative divisions (Global Admininstrative Divisions; https://gadm.org).  
+The Geocoordinate Validation Service (GVS) performs quality checks on decimal geocoordinates (georeferenced points represented as pairs of decimal latitude and longitude values). In addition to detecting common georeferencing errors, the GVS calculates the probability that a given point represents a political division centroid, as opposed to a directly measured point on the Earth's surface. The GVS also returns the country, state- and country-level political divisions in which the point is located. Political divisions are determined with reference to the GADM database of world administrative divisions (Global Admininstrative Divisions; https://gadm.org). For an online interface to the GVS, see https://gvs.biendata.org/.
 
 Information returned by the GVS includes:
-* Estimates of precision based on the number of decimals places in the original coordinates
-* Brief descriptions of the types errors detected, such as coordinates our of range
+* Estimate of inherent precision implied by the number of decimals places in the original coordinates
+* Brief descriptions of the types errors detected (e.g., "Coordinates our of range")
 * Flagging of points in the ocean
 * Names and GADM identifiers of the admin_0, admin_1 and admin_2 political divisions (e.g., country, state, county) in which a point is located
 * Absolute and relative distance to the centroid of each political division (see full list of output fields below)
@@ -241,8 +241,11 @@ Option | Meaning | Required? | Default value |
 ./gvspar.pl -in "data/gvs_testfile.csv" -nbatch 3
 ```
 
+<a name="interfaces"></a>
+## GVS interfaces
+
 <a name="api"></a>
-### API
+### GVS API
 
 #### General documentation
 
@@ -250,12 +253,16 @@ See `https://github.com/ojalaquellueva/gvs/tree/master/api#readme`.
 
 #### Example API usage in R
 
-R: `https://github.com/ojalaquellueva/gvs/blob/master/api/example_scripts/gvs_api_example.R`.
+https://github.com/ojalaquellueva/gvs/blob/master/api/example_scripts/gvs_api_example.R`
 
 <a name="rgvs"></a>
-### GVS R package
-See: `https://github.com/EnquistLab/RCDS`
-
+#### GVS R package
+https://github.com/EnquistLab/RCDS 
 
 *  Note: The GVS R package is currently called "RCDS"
+
+<a name="gvsweb"></a>
+### GVS graphical user interface
+***Website:*** https://gvs.biendata.org`  
+***Repository:*** https://github.com/EnquistLab/GVSweb  
 
