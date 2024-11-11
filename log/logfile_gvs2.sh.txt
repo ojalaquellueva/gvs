@@ -272,3 +272,68 @@ Determining consensus centroid...done (.11 sec)
 Saving threshold parameters...done (.09 sec)
 Dumping results to file '/home/boyle/bien/gvs/data/gvs_testfile_100_rows_scrubbed.csv'...done
 Dropping temporary user data table...done (.47 sec)
+
+------ Process started at Wed 21 Aug 2024 05:15:11 PM PDT ------
+
+Importing user data:
+- Creating user data tables...done (.19 sec)
+- Importing raw data to "user_data_20240821_1715725046920_25160_raw"...done (.09 sec)
+- Copying raw data to table "user_data_20240821_1715725046920_25160"...done (.09 sec)
+- Dropping temp table...done (.20 sec)
+Validating coordinates...
+------ Process started at Wed 21 Aug 2024 05:15:45 PM PDT ------
+
+Importing user data:
+- Creating user data tables...done (.25 sec)
+- Importing raw data to "user_data_20240821_1715558506796_13412_raw"...done (.09 sec)
+- Copying raw data to table "user_data_20240821_1715558506796_13412"...done (.10 sec)
+- Dropping temp table...done (.18 sec)
+Validating coordinates...done (.11 sec)
+Calculating coordinate uncertainty...done (.14 sec)
+Populating political divisions...done (3.84 sec)
+Calculating centroids:
+- country...done (.12 sec)
+- state...done (.13 sec)
+- county...done (.14 sec)
+- other subpolygons...done (2.45 sec)
+Determining consensus centroid...done (.10 sec)
+Saving threshold parameters...done (.10 sec)
+Dumping results to file '/home/boyle/bien/gvs/data/gvs_testfile_scrubbed_NEW.csv'...done
+Dropping temporary user data table...done (.31 sec)
+
+------ Process started at Wed 21 Aug 2024 05:16:13 PM PDT ------
+
+Importing user data:
+- Creating user data tables...done (.22 sec)
+- Importing raw data to "user_data_20240821_1716084916059_28156_raw"...done (.09 sec)
+- Copying raw data to table "user_data_20240821_1716084916059_28156"...done (.11 sec)
+- Dropping temp table...done (.17 sec)
+Validating coordinates...done (.11 sec)
+Calculating coordinate uncertainty...done (.10 sec)
+Populating political divisions...done (3.81 sec)
+Calculating centroids:
+- country...done (.13 sec)
+- state...done (.08 sec)
+- county...done (.12 sec)
+- other subpolygons...done (2.45 sec)
+Determining consensus centroid...done (.10 sec)
+Saving threshold parameters...done (.07 sec)
+Dumping results to file '/home/boyle/bien/gvs/data/gvs_testfile_scrubbed_NEW.csv'...done
+Dropping temporary user data table...done (.31 sec)
+Importing user data:
+- Creating user data tables...done (.23 sec)
+- Importing raw data to "user_data_20240821_1746506341324_1181_raw"...done (.11 sec)
+- Copying raw data to table "user_data_20240821_1746506341324_1181"...done (.13 sec)
+- Dropping temp table...done (.22 sec)
+Validating coordinates...done (.22 sec)
+Calculating coordinate uncertainty...done (.21 sec)
+Populating political divisions...done (96.67 sec)
+Calculating centroids:
+- country...done (.43 sec)
+- state...done (3.07 sec)
+- county...done (3.21 sec)
+- other subpolygons...done (85.27 sec)
+Determining consensus centroid...done (.20 sec)
+Saving threshold parameters...done (.17 sec)
+Dumping results to file '/home/boyle/bien/gvs/data/gvs_testfile_big_scrubbed_NEW.csv'...done
+Dropping temporary user data table...done (.36 sec)

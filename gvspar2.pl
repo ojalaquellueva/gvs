@@ -16,7 +16,8 @@ $binpath =~ s/\/?\w+\.?\w*$//;
 if ( !$binpath ) {
 	$binpath = '.';
 }
-my $BINARY          = "$binpath/gvs.sh";
+#my $BINARY          = "$binpath/gvs.sh";
+my $BINARY          = "$binpath/gvs2.sh";	# For testing fully parallel version
 my $CONSOLIDATE_SCR = "$binpath/consolidator.pl";
 
 # Master directory where all content saved

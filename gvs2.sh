@@ -347,7 +347,7 @@ source "$DIR/includes/check_status.sh"
 ############################################
 
 echoi $e -n "Validating coordinates..."
-cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user  -d $DB_GVS --set ON_ERROR_STOP=1 -q -v tbl_user_data='"$tbl_user_data"' -f $DIR_LOCAL/sql/validate_coordinates.sql"
+cmd="$opt_pgpassword PGOPTIONS='--client-min-messages=warning' psql $opt_user  -d $DB_GVS --set ON_ERROR_STOP=1 -q -v tbl_user_data='"$tbl_user_data"' -f $DIR_LOCAL/sql/validate_coordinates2.sql"
 eval $cmd
 source "$DIR/includes/check_status.sh"
 

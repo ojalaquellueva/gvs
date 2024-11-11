@@ -184,3 +184,9 @@ CREATE INDEX user_data_date_created_idx ON user_data_template USING btree (date_
 -- Spatial index
 CREATE INDEX user_data_geom_idx ON user_data_template USING GIST (geom);
 CREATE INDEX user_data_geog_idx ON user_data_template USING GIST (geog);
+
+-- Creating copy of "user_data_template" as "user_data"
+-- For backwards-compatibility with original GVS
+-- Remove one or the other once architecture stabilizes
+CREATE TABLE user_data ( LIKE user_data_template INCLUDING ALL );
+

@@ -23,6 +23,12 @@ MAX_DIST_DEFAULT=1000
 # point on political division perimiter to true centroid)
 MAX_DIST_REL_DEFAULT=0.002
 
+# Complete clear all data from table user_data
+# For development only
+# Any value other than true, does nothing
+# TURN OFF DURING PRODUCTION!
+CLEAR_USER_DATA="false"
+
 ##############################################################
 # Application parameters
 ##############################################################

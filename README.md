@@ -1,8 +1,6 @@
 # Geocordinate Validation Service (GVS)
 
 Author: Brad Boyle (bboyle@email.arizona.edu)  
-Date created: 24 March 2020   
-
 
 ## Contents
 
@@ -28,15 +26,22 @@ Date created: 24 March 2020
 <a name="overview"></a>
 ## Overview
 
-This Geocoordinate Validation Service (GVS) performs quality checks on georeferenced points in the form of pairs of decimal latitude and longitude values, or "geocoordinates". It also returns the country, state- and country-level political divisions in which the point is located, and the probability that the point represents a political division centroid (as opposed to being a directly measured point on the Earth's surface). Political divisions are determined using the GADM database of world administrative divisions (Global Admininstrative Divisions; https://gadm.org).  
+The Geocoordinate Validation Service (GVS) performs quality checks on decimal geocoordinates (georeferenced points represented as pairs of decimal latitude and longitude values). In addition to detecting common georeferencing errors, the GVS calculates the probability that a given point represents a political division centroid, as opposed to a directly measured point on the Earth's surface. The GVS also returns the country, state- and country-level political divisions in which the point is located. Political divisions are determined with reference to the GADM database of world administrative divisions (Global Admininstrative Divisions; https://gadm.org).  
 
-Information returned by the GVS includes (1) estimates of precision based on the number of decimals places in the original coordinates, (2) flagging and reporting of errors, such as coordinates our of range, (3) flagging of points in the ocean, (4) names and GADM identifiers of the admin_0, admin_1 and admin_2 political divisions (e.g., country, state, county) in which a point is located, (5) the absolute and relative distance to the centroid of each political division (see full list of output fields below). The GVS also provides an assessment of the likelihood that the point is a centroid, and, if applicable, the type of centroid and political division (country, state or county) of the likeliest centroid.
+Information returned by the GVS includes:
+* Estimates of precision based on the number of decimals places in the original coordinates
+* Brief descriptions of the types errors detected, such as coordinates our of range
+* Flagging of points in the ocean
+* Names and GADM identifiers of the admin_0, admin_1 and admin_2 political divisions (e.g., country, state, county) in which a point is located
+* Absolute and relative distance to the centroid of each political division (see full list of output fields below)
+* Probability that the point is a centroid, and, if applicable, the type of centroid and political division (country, state or county) of the likeliest centroid.
+* Flagging of points with a high probability of being a centroid, above a certain threshold (threshold can be adjusted by user)
 
-This service may be used in combination with the BIEN Geographic Name Resolution Service (GNRS; `https://github.com/ojalaquellueva/gnrs.git`) to perform "political geovalidation" of georeferenced biodiversity observations. Political geovalidation checks if all observed political divisions (i.e., the country, state and county in which the coordinates are located) match the declared political divisions (the country, state and county named in the original observation record). Operationally, this validation is most reliably performed by matching the GADM administrative division identifiers returned by the GVS with the GADM identifiers returned by the GNRS.
+This service may be used in combination with the BIEN Geographic Name Resolution Service (GNRS; `https://github.com/ojalaquellueva/gnrs.git`) to perform "political geovalidation" of georeferenced biodiversity observations. Political geovalidation checks if all detected political divisions (i.e., the country, state and county polygons in which the coordinates are located) match the declared political divisions (country, state and county names) of the original observation record. Operationally, this validation can be performed by checking that the GADM administrative division identifiers returned by the GVS match the GADM identifiers returned by the GNRS.
 
 **GVS, CDS...what's the difference?**
 
-The GVS was previously developed under the name CVS (Centroid Detection Service) as an application for the detection of political division centroids. It has been renamed to reflect the wider range of features added more recently. 
+The GVS was previously developed under the name CVS (Centroid Detection Service) as an application for the detection of political division centroids. It has been renamed to reflect the wider range of features currently available. 
 
 <a name="installation-and-configuration"></a>
 ## Installation and configuration
@@ -243,16 +248,14 @@ Option | Meaning | Required? | Default value |
 
 See `https://github.com/ojalaquellueva/gvs/tree/master/api#readme`. 
 
-#### Example API usage
+#### Example API usage in R
 
-PHP: `https://github.com/ojalaquellueva/gvs/blob/master/api/gvs_api_example.php`.
-
-R: `https://github.com/ojalaquellueva/gvs/blob/master/api/gvs_api_example.R`.
+R: `https://github.com/ojalaquellueva/gvs/blob/master/api/example_scripts/gvs_api_example.R`.
 
 <a name="rgvs"></a>
 ### GVS R package
 See: `https://github.com/EnquistLab/RCDS`
 
 
-*  Note: Currently called "RCDS"
+*  Note: The GVS R package is currently called "RCDS"
 
