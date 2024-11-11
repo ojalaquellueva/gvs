@@ -20,8 +20,10 @@ Author: Brad Boyle (bboyle@email.arizona.edu)
   * [Build the GSV Database ](#build-gvs-db)  
   * [GVS batch application](#gvs-batch)  
   * [GVS parallel processing application](#gvs-parallel)
+- [Interfaces](#interfaces):  
   * [API](#api)  
   * [GVS R package](#rgvs)  
+  * [GVS web interface](#gvsweb)  
 
 <a name="overview"></a>
 ## Overview
@@ -256,13 +258,13 @@ See `https://github.com/ojalaquellueva/gvs/tree/master/api#readme`.
 https://github.com/ojalaquellueva/gvs/blob/master/api/example_scripts/gvs_api_example.R`
 
 <a name="rgvs"></a>
-#### GVS R package
+### GVS R package
 https://github.com/EnquistLab/RCDS 
 
 *  Note: The GVS R package is currently called "RCDS"
 
 <a name="gvsweb"></a>
 ### GVS graphical user interface
-***Website:*** https://gvs.biendata.org`  
+***Web:*** https://gvs.biendata.org`  
 ***Repository:*** https://github.com/EnquistLab/GVSweb  
 
