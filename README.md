@@ -22,6 +22,7 @@ Author: Brad Boyle (bboyle@email.arizona.edu)
   * [GVS parallel processing application](#gvs-parallel)
 - [Interfaces](#interfaces):  
   * [API](#api)  
+    * [API Endpoint] (#api-endpoint) 
   * [GVS R package](#rgvs)  
   * [GVS web interface](#gvsweb)  
 
@@ -57,8 +58,7 @@ PostgreSQL/psql 10 or higher (PostGIS extension installed by this script)
 <a name="dependencies"></a>
 ### Dependencies
 
-Requires access to the GNRS (`https://github.com/ojalaquellueva/gnrs.git`) either as API or local batch service. Version in this repository uses the BIEN GNRS API (http://vegbiendev.nceas.ucsb.edu:8875/gnrs_ws.php).
-
+Requires access to the GNRS API at https://gnrsapi.xyz/ (base url https://gnrsapi.xyz/gnrs_api.php). For more details, see the GNRS GitHub repository at https://github.com/ojalaquellueva/gnrs.git.
 <a name="permissions"></a>
 ### Permissions
 
@@ -249,13 +249,22 @@ Option | Meaning | Required? | Default value |
 <a name="api"></a>
 ### GVS API
 
-#### General documentation
+<a name="api-endpoint"></a>
+#### API Endpoint:
 
-See `https://github.com/ojalaquellueva/gvs/tree/master/api#readme`. 
+The GNRS has a single endpoint only:
 
-#### Example API usage in R
+https://gnrsapi.xyz/gnrs_api.php
 
-https://github.com/ojalaquellueva/gvs/blob/master/api/example_scripts/gvs_api_example.R`
+API options are set in the JSON object attached to the request body, which also includes the request data. This architecture provided better support for handling very large requests (batch processing). See the "Example R Script" (below) for more information on preparing and sending GVS API requests.
+
+#### API documentation:
+
+For general instructions on how to use the GVS API, see the [GVS API README] (https://github.com/ojalaquellueva/gvs/tree/master/api#readme) in the [GVS API subdirectory] (https://github.com/ojalaquellueva/gnrs/tree/master/api). 
+
+#### Example R Script:
+
+[Example R Script] (https://github.com/ojalaquellueva/gvs/blob/master/api/example_scripts/gvs_api_example.R) demonstrating how to interact with the GVS API from R. 
 
 <a name="rgvs"></a>
 ### GVS R package

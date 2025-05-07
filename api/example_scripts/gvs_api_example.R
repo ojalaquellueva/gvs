@@ -8,13 +8,16 @@ rm(list=ls())
 # Parameters
 #################################
 
+#####################
 # Base URL for GVS api
-url = "http://vegbiendev.nceas.ucsb.edu:7775/gvs_api.php" 
+#####################
+
+url = "https://gvsapi.xyz/gvs_api.php"
 
 # Path and name of input file of taxon names 
 # Comma-delimited CSV file, first column an integer ID, second column the name
 # Test file from BIEN website:
-names_file <- "https://bien.nceas.ucsb.edu/bien/wp-content/uploads/2022/05/gvs_testfile.csv"
+names_file <- "gvs_testfile.csv"
 
 # Load libraries
 library(httr)		# API requests
@@ -29,6 +32,12 @@ data <- read.csv(names_file, header=FALSE)
 
 # Inspect the input data
 head(data,25)
+
+# Remove header if present
+if (any(head(data,1)=="latitude") || any(head(data,1)=="longitude") ) {
+  data <- data[-1,]
+  rownames(data) <- NULL
+}
 
 # # Uncomment this to work with smaller sample of the data
 # data <- head(data,10)
@@ -45,8 +54,8 @@ mode <- "resolve"					# Processing mode
 
 # Threshold parameter options
 # Comment out to use application defaults
-# maxdist <- 10					# Max distance from centroid to qualify as centroid
-# maxdistrel <- 0.1				# Max relative distance from centroid (relative to 
+maxdist <- 10					# Max distance from centroid to qualify as centroid
+maxdistrel <- 0.1				# Max relative distance from centroid (relative to
 										# distance from centroid to farthest point in political 
 										# division), to qualify as centroid
 
@@ -98,7 +107,7 @@ results[ results$latlong_err=='', c('latitude', 'longitude',
 	'county_cent_dist_max', 	'is_county_centroid'
 	)]
 
-# Consensue centroid 
+# Consensus centroid 
 results[ results$latlong_err=='', c('latitude', 'longitude', 
 	'is_country_centroid', 	'is_state_centroid', 'is_county_centroid', 
 	'centroid_dist_km', 
@@ -130,12 +139,12 @@ input_json <- paste0('{"opts":', opts_json, '}' )
 
 # Send the API request
 results_json <- POST(url = url,
-                     add_headers('Content-Type' = 'application/json'),
-                     add_headers('Accept' = 'application/json'),
-                     add_headers('charset' = 'UTF-8'),
-                     body = input_json,
-                     encode = "json"
-)
+                  add_headers('Content-Type' = 'application/json'),
+                  add_headers('Accept' = 'application/json'),
+                  add_headers('charset' = 'UTF-8'),
+                  body = input_json,
+                  encode = "json"
+                  )
 
 # Convert JSON results to a data frame
 results_raw <- fromJSON(rawToChar(results_json$content)) 
@@ -252,7 +261,7 @@ results <- as.data.frame(results_raw)
 print( results )
 
 #################################
-# Example 6: Data dictionary
+# Example 6: Data dictionary: field definitions
 #################################
 rm( list = Filter( exists, c("results", "results_raw", "results_json") ) )
 
@@ -286,3 +295,45 @@ results_raw <- fromJSON(rawToChar(results_json$content))
 results <- as.data.frame(results_raw)
 
 print( results )
+
+#################################
+# Example 7: Data dictionary: 
+# constrained vocabulary definitions
+#################################
+rm( list = Filter( exists, c("results", "results_raw", "results_json") ) )
+
+# All we need to do is reset option mode.
+# all other options will be ignored
+mode <- "dd_vals"		
+
+# Re-form the options json again
+# Note that only 'mode' is needed
+opts <- data.frame(c(mode))
+names(opts) <- c("mode")
+opts_json <- jsonlite::toJSON(opts)
+opts_json <- gsub('\\[','',opts_json)
+opts_json <- gsub('\\]','',opts_json)
+
+# Make the options
+# No data needed
+input_json <- paste0('{"opts":', opts_json, '}' )
+
+# Send the API request
+results_json <- POST(url = url,
+                     add_headers('Content-Type' = 'application/json'),
+                     add_headers('Accept' = 'application/json'),
+                     add_headers('charset' = 'UTF-8'),
+                     body = input_json,
+                     encode = "json"
+)
+
+# Convert JSON results to a data frame
+results_raw <- fromJSON(rawToChar(results_json$content)) 
+results <- as.data.frame(results_raw)
+
+print( results )
+
+
+
+
+

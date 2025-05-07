@@ -81,21 +81,9 @@ The API accepts the following GVS options, which must be converted to JSON and c
 <a name="examples"></a>
 ## Example scripts
 
-#### PHP
-
-Example syntax for interacting with API using php\_curl is given in `gvs_api_example.php`. To run the test script:
-
-```
-php gvs_api_example.php
-```
-* Set parameters directly in script; no command line parameters
-* Also see API parameters section at start of `gvs_api_example.php `
-* For GVS options and defaults, see `params.php`
-* Make sure that input file (`gvs_testfile.csv`) is available in `$DATADIR` (as set in `params.php`)
-
 #### R
 
-* See example script `gvs_api_example.R`. 
+* See example script [`gvs_api_example.R`] (https://github.com/ojalaquellueva/gvs/blob/master/api/example_scripts/gvs_api_example.R). 
 * Make sure that input file (`gvs_testfile.csv`) is available in the same directory as the R script, or adjust file path in the R code.
 
 <a name="centroid-types"></a>
